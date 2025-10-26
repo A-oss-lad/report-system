@@ -205,6 +205,10 @@
                         <label for="attachments" class="label">附件证据</label>
                         <input type="file" id="attachments" name="attachments" multiple class="input-field">
                         <p class="text-sm text-gray-500 mt-1">支持图片、视频等格式，最多5个文件</p>
+                        <!-- 图片预览区域 -->
+                        <div id="preview-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                            <!-- 预览图片将在这里动态添加 -->
+                        </div>
                     </div>
                     <div class="flex justify-end space-x-4">
                         <button type="button" class="btn-outline" id="cancel-report">取消</button>
@@ -688,6 +692,34 @@
         </div>
     </div>
 
+    <!-- 图片查看器弹窗 -->
+    <div id="image-viewer-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden">
+        <div class="relative max-w-6xl w-full max-h-[90vh] p-4">
+            <button id="close-image-viewer" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+                <i class="fa fa-times text-2xl"></i>
+            </button>
+            <div class="relative flex items-center justify-center h-full">
+                <img id="viewer-image" src="" alt="大图预览" class="max-w-full max-h-[80vh] object-contain">
+            </div>
+            <div class="absolute bottom-4 left-0 right-0 text-center">
+                <div class="bg-black bg-opacity-70 text-white p-2 rounded-md inline-block">
+                    <p id="viewer-image-name" class="text-lg"></p>
+                    <div class="flex justify-center space-x-4 mt-2">
+                        <button id="zoom-out" class="text-white hover:text-gray-300">
+                            <i class="fa fa-search-minus"></i> 缩小
+                        </button>
+                        <button id="zoom-in" class="text-white hover:text-gray-300">
+                            <i class="fa fa-search-plus"></i> 放大
+                        </button>
+                        <button id="reset-zoom" class="text-white hover:text-gray-300">
+                            <i class="fa fa-refresh"></i> 重置
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- 成功提示弹窗 -->
     <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 text-center">
@@ -702,7 +734,67 @@
 
     <!-- JavaScript -->
     <script>
-        // 处罚理由字符计数器
+        // 图片预览功能
+        function setupImagePreview() {
+            const fileInput = document.getElementById('attachments');
+            const previewContainer = document.getElementById('preview-container');
+            
+            if (fileInput && previewContainer) {
+                fileInput.addEventListener('change', function() {
+                    const files = this.files;
+                    previewContainer.innerHTML = ''; // 清空现有预览
+                    
+                    // 限制最多显示5个预览
+                    const maxPreviews = Math.min(files.length, 5);
+                    
+                    for (let i = 0; i < maxPreviews; i++) {
+                        const file = files[i];
+                        
+                        // 只预览图片文件
+                        if (file.type.startsWith('image/')) {
+                            const reader = new FileReader();
+                            
+                            reader.onload = function(e) {
+                                const previewItem = document.createElement('div');
+                                previewItem.className = 'relative';
+                                
+                                const img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.className = 'w-full h-40 object-cover rounded-md border border-gray-200';
+                                img.alt = file.name;
+                                
+                                // 添加删除按钮
+                                const deleteBtn = document.createElement('button');
+                                deleteBtn.className = 'absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600';
+                                deleteBtn.innerHTML = '<i class="fa fa-times"></i>';
+                                deleteBtn.onclick = function(e) {
+                                    e.preventDefault();
+                                    previewItem.remove();
+                                    
+                                    // 由于无法直接修改input的files列表，这里只能清空表单预览，但保留文件仍然会被上传
+                                    // 这里只是视觉上的删除
+                                };
+                                
+                                previewItem.appendChild(img);
+                                previewItem.appendChild(deleteBtn);
+                                previewContainer.appendChild(previewItem);
+                            };
+                            
+                            reader.readAsDataURL(file);
+                        }
+                    }
+                });
+            }
+        }
+        
+        // 处罚理由文件大小格式化
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
+            else return (bytes / 1048576).toFixed(2) + ' MB';
+        }
+        
+        // 处罚理由理由字符计数器
         function setupReasonCounter() {
             const reasonTextarea = document.getElementById('punishmentReason');
             const charCountSpan = document.getElementById('reason-char-count');
@@ -1049,51 +1141,86 @@
             const fileInput = document.getElementById('attachments');
             const files = fileInput.files;
             
-            // 模拟附件处理
+            // 处理附件
             const attachments = [];
-            for (let i = 0; i < files.length; i++) {
-                attachments.push({
-                    name: files[i].name,
-                    size: files[i].size,
-                    type: files[i].type
+            const filePromises = [];
+            
+            // 限制最多5个文件
+            const maxFiles = Math.min(files.length, 5);
+            
+            for (let i = 0; i < maxFiles; i++) {
+                const file = files[i];
+                
+                // 创建一个Promise来处理文件读取
+                const filePromise = new Promise((resolve) => {
+                    const reader = new FileReader();
+                    
+                    // 对于图片文件，读取为Base64
+                    if (file.type.startsWith('image/')) {
+                        reader.onload = function(e) {
+                            attachments.push({
+                                name: file.name,
+                                size: file.size,
+                                type: file.type,
+                                dataUrl: e.target.result // 保存Base64数据
+                            });
+                            resolve();
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        // 对于非图片文件，只保存基本信息
+                        attachments.push({
+                            name: file.name,
+                            size: file.size,
+                            type: file.type
+                        });
+                        resolve();
+                    }
                 });
+                
+                filePromises.push(filePromise);
             }
             
-            // 创建举报对象
-            const report = {
-                id: generateId(),
-                reportedUser: reportedUser,
-                reportedQQ: reportedQQ,
-                groupChat: groupChat,
-                violationType: violationType,
-                description: description,
-                attachments: attachments,
-                reportTime: new Date().toISOString(),
-                status: '待处理',
-                handler: '',
-                handleTime: '',
-                punishment: null,
-                appealStatus: '无'
-            };
-            
-            // 获取现有举报数据
-            const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-            
-            // 添加新举报
-            reports.push(report);
-            
-            // 保存到localStorage
-            localStorage.setItem('reports', JSON.stringify(reports));
-            
-            // 显示成功提示
-            document.getElementById('success-message').textContent = '举报已成功提交，我们将尽快处理！';
-            showModal('success-modal');
-            
-            // 重置表单
-            document.getElementById('report-form').reset();
-            
-            // 模拟发送邮件通知
-            sendEmailNotification(report);
+            // 等待所有所有文件处理完成后再提交
+            Promise.all(filePromises).then(() => {
+                // 创建举报对象
+                const report = {
+                    id: generateId(),
+                    reportedUser: reportedUser,
+                    reportedQQ: reportedQQ,
+                    groupChat: groupChat,
+                    violationType: violationType,
+                    description: description,
+                    attachments: attachments,
+                    reportTime: new Date().toISOString(),
+                    status: '待处理',
+                    handler: '',
+                    handleTime: '',
+                    punishment: null,
+                    appealStatus: '无'
+                };
+                
+                // 获取现有举报数据
+                const reports = JSON.parse(localStorage.getItem('reports') || '[]');
+                
+                // 添加新举报
+                reports.push(report);
+                
+                // 保存到localStorage
+                localStorage.setItem('reports', JSON.stringify(reports));
+                
+                // 显示成功提示
+                document.getElementById('success-message').textContent = '举报已成功提交，我们将尽快处理！';
+                showModal('success-modal');
+                
+                // 重置表单
+                document.getElementById('report-form').reset();
+                // 重置预览区域
+                document.getElementById('preview-container').innerHTML = '';
+                
+                // 模拟发送邮件通知
+                sendEmailNotification(report);
+            });
         }
 
         // 发送邮件通知
@@ -1233,15 +1360,33 @@
                 `;
                 
                 report.attachments.forEach(file => {
-                    content += `
-                        <div class="bg-gray-50 p-3 rounded-md flex items-center">
-                            <i class="fa fa-file-o text-primary mr-2"></i>
-                            <div>
-                                <p class="text-sm">${file.name}</p>
-                                <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
+                    // 检查是否是图片且有dataUrl
+                    if (file.type.startsWith('image/') && file.dataUrl) {
+                        content += `
+                            <div class="bg-gray-50 p-3 rounded-md cursor-pointer hover:shadow-lg transition-shadow duration-300" onclick="openImageViewer('${file.dataUrl}', '${file.name}')">
+                                <div class="relative">
+                                    <img src="${file.dataUrl}" alt="${file.name}" class="w-full h-48 object-cover rounded-md mb-2">
+                                    <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 flex items-center justify-center transition-all duration-300">
+                                        <i class="fa fa-search-plus text-white text-2xl opacity-0 hover:opacity-100 transition-opacity duration-300"></i>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <p class="text-sm">${file.name}</p>
+                                    <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    } else {
+                        content += `
+                            <div class="bg-gray-50 p-3 rounded-md flex items-center">
+                                <i class="fa fa-file-o text-primary mr-2"></i>
+                                <div>
+                                    <p class="text-sm">${file.name}</p>
+                                    <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
                 });
                 
                 content += `
@@ -1509,15 +1654,33 @@
                 `;
                 
                 report.attachments.forEach(file => {
-                    content += `
-                        <div class="bg-gray-50 p-3 rounded-md flex items-center">
-                            <i class="fa fa-file-o text-primary mr-2"></i>
-                            <div>
-                                <p class="text-sm">${file.name}</p>
-                                <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
+                    // 检查是否是图片且有dataUrl
+                    if (file.type.startsWith('image/') && file.dataUrl) {
+                        content += `
+                            <div class="bg-gray-50 p-3 rounded-md cursor-pointer hover:shadow-lg transition-shadow duration-300" onclick="openImageViewer('${file.dataUrl}', '${file.name}')">
+                                <div class="relative">
+                                    <img src="${file.dataUrl}" alt="${file.name}" class="w-full h-48 object-cover rounded-md mb-2">
+                                    <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 flex items-center justify-center transition-all duration-300">
+                                        <i class="fa fa-search-plus text-white text-2xl opacity-0 hover:opacity-100 transition-opacity duration-300"></i>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <p class="text-sm">${file.name}</p>
+                                    <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    } else {
+                        content += `
+                            <div class="bg-gray-50 p-3 rounded-md flex items-center">
+                                <i class="fa fa-file-o text-primary mr-2"></i>
+                                <div>
+                                    <p class="text-sm">${file.name}</p>
+                                    <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
                 });
                 
                 content += `
@@ -1887,8 +2050,56 @@
             }
         }
 
+        // 检查处罚是否到期
+        function checkPunishmentExpiry() {
+            const punishments = JSON.parse(localStorage.getItem('punishments') || '[]');
+            const now = new Date();
+            let updated = false;
+            
+            // 定义处罚时长对应的毫秒数
+            const durationMap = {
+                '永久': Infinity,
+                '30天': 30 * 24 * 60 * 60 * 1000,
+                '14天': 14 * 24 * 60 * 60 * 1000,
+                '7天': 7 * 24 * 60 * 60 * 1000,
+                '3天': 3 * 24 * 60 * 60 * 1000,
+                '1天': 24 * 60 * 60 * 1000,
+                '12小时': 12 * 60 * 60 * 1000,
+                '6小时': 6 * 60 * 60 * 1000,
+                '1小时': 60 * 60 * 1000,
+                '30分钟': 30 * 60 * 1000
+            };
+            
+            // 检查每个处罚是否到期
+            punishments.forEach(punishment => {
+                // 只检查状态为"执行中"的处罚
+                if (punishment.status === '执行中') {
+                    const punishmentTime = new Date(punishment.punishmentTime);
+                    const durationMs = durationMap[punishment.punishmentDuration] || Infinity;
+                    
+                    // 如果不是永久处罚，并且当前时间已经超过处罚开始时间加上处罚时长
+                    if (durationMs !== Infinity && now - punishmentTime >= durationMs) {
+                        punishment.status = '已失效';
+                        punishment.endTime = now.toISOString();
+                        updated = true;
+                    }
+                }
+            });
+            
+            // 如果有处罚状态被更新，保存到localStorage
+            if (updated) {
+                localStorage.setItem('punishments', JSON.stringify(punishments));
+                return true;
+            }
+            
+            return false;
+        }
+        
         // 加载处罚管理数据
         function loadPunishmentData() {
+            // 先检查处罚是否到期
+            checkPunishmentExpiry();
+            
             const punishments = JSON.parse(localStorage.getItem('punishments') || '[]');
             const tableBody = document.getElementById('punishment-table-body');
             
@@ -2116,6 +2327,114 @@
             }
         }
         
+        // 图片查看器功能
+        let currentZoom = 1;
+        let currentImageSrc = '';
+        
+        // 打开图片查看器
+        function openImageViewer(imageSrc, imageName) {
+            currentImageSrc = imageSrc;
+            currentZoom = 1;
+            
+            const modal = document.getElementById('image-viewer-modal');
+            const img = document.getElementById('viewer-image');
+            const nameElement = document.getElementById('viewer-image-name');
+            
+            img.src = imageSrc;
+            img.style.transform = `scale(${currentZoom})`;
+            nameElement.textContent = imageName;
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+            
+            // 添加关闭按钮事件（确保事件绑定）
+            document.getElementById('close-image-viewer').onclick = closeImageViewer;
+            
+            // 添加缩放按钮事件（确保事件绑定）
+            document.getElementById('zoom-in').onclick = () => zoomImage('in');
+            document.getElementById('zoom-out').onclick = () => zoomImage('out');
+            document.getElementById('reset-zoom').onclick = () => zoomImage('reset');
+        }
+        
+        // 关闭图片查看器
+        function closeImageViewer() {
+            const modal = document.getElementById('image-viewer-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = ''; // 恢复背景滚动
+        }
+        
+        // 图片缩放功能
+        function zoomImage(direction) {
+            const img = document.getElementById('viewer-image');
+            const maxZoom = 3;
+            const minZoom = 0.5;
+            const zoomStep = 0.2; // 增大缩放步长，使缩放更明显
+            
+            // 添加过渡效果
+            img.style.transition = 'transform 0.2s ease-in-out';
+            
+            if (direction === 'in') {
+                currentZoom = Math.min(currentZoom + zoomStep, maxZoom);
+            } else if (direction === 'out') {
+                currentZoom = Math.max(currentZoom - zoomStep, minZoom);
+            } else if (direction === 'reset') {
+                currentZoom = 1;
+            }
+            
+            img.style.transform = `scale(${currentZoom})`;
+            
+            // 移除过渡效果，避免影响其他变换
+            setTimeout(() => {
+                img.style.transition = '';
+            }, 200);
+        }
+        
+        // 图片查看器事件监听
+        function setupImageViewer() {
+            // 键盘事件
+            document.addEventListener('keydown', function(e) {
+                const modal = document.getElementById('image-viewer-modal');
+                if (!modal.classList.contains('hidden')) {
+                    if (e.key === 'Escape') {
+                        closeImageViewer();
+                    } else if (e.key === '+' || e.key === '=') {
+                        zoomImage('in');
+                    } else if (e.key === '-' || e.key === '_') {
+                        zoomImage('out');
+                    } else if (e.key === '0') {
+                        zoomImage('reset');
+                    }
+                }
+            });
+            
+            // 点击背景关闭
+            document.getElementById('image-viewer-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeImageViewer();
+                }
+            });
+            
+            // 鼠标滚轮缩放
+            const img = document.getElementById('viewer-image');
+            img.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                
+                const delta = e.deltaY > 0 ? 'out' : 'in';
+                zoomImage(delta);
+            });
+            
+            // 简化的右键菜单，只保留下载功能
+            document.getElementById('viewer-image').addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                
+                // 创建简单的下载链接
+                const a = document.createElement('a');
+                a.href = currentImageSrc;
+                a.download = 'evidence-image.png';
+                a.click();
+            });
+        }
+        
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             initData();
@@ -2123,6 +2442,25 @@
             setupEventListeners();
             updateNotificationBadge();
             setupReasonCounter();
+            setupImagePreview();
+            setupImageViewer();
+            
+            // 检查处罚是否到期
+            checkPunishmentExpiry();
+            
+            // 每5分钟定期检查一次处罚是否到期
+            setInterval(function() {
+                const updated = checkPunishmentExpiry();
+                
+                // 如果有处罚状态被更新，并且处罚管理页面刷新
+                if (updated) {
+                    // 检查当前是否在处罚管理页面
+                    const punishmentSection = document.getElementById('punishment-section');
+                    if (punishmentSection && !punishmentSection.classList.contains('hidden')) {
+                        loadPunishmentData();
+                    }
+                }
+            }, 5 * 60 * 1000); // 5分钟
         });
     </script>
 </body>
