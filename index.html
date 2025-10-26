@@ -222,26 +222,47 @@
         <section id="progress-section" class="hidden mb-8">
             <div class="bg-white rounded-lg shadow-md p-8">
                 <h2 class="text-2xl font-bold mb-6 text-primary">处理进度查询</h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="py-3 px-4 text-left">被举报人</th>
-                                <th class="py-3 px-4 text-left">QQ号码</th>
-                                <th class="py-3 px-4 text-left">群聊</th>
-                                <th class="py-3 px-4 text-left">违规类型</th>
-                                <th class="py-3 px-4 text-left">举报时间</th>
-                                <th class="py-3 px-4 text-left">处理状态</th>
-                                <th class="py-3 px-4 text-left">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="progress-table-body">
-                            <!-- 处理进度数据将通过JavaScript动态填充 -->
-                        </tbody>
-                    </table>
+                
+                <!-- 搜索和筛选 -->
+                <div class="mb-6 flex flex-col sm:flex-row gap-4">
+                    <div class="flex-grow">
+                        <div class="relative">
+                            <input type="text" id="progress-search" placeholder="搜索举报记录..." class="input-field pl-10">
+                            <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <select id="status-filter" class="input-field">
+                            <option value="all">所有状态</option>
+                            <option value="待处理">待处理</option>
+                            <option value="处理中">处理中</option>
+                            <option value="已处理">已处理</option>
+                            <option value="已驳回">已驳回</option>
+                        </select>
+                        <select id="group-filter" class="input-field">
+                            <option value="all">所有群聊</option>
+                            <option value="江西气象爱好者群">江西气象爱好者群</option>
+                            <option value="粤东气象爱好者群">粤东气象爱好者群</option>
+                        </select>
+                    </div>
                 </div>
+                
+                <!-- 卡片列表 -->
+                <div id="progress-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 处理进度数据将通过JavaScript动态填充为卡片 -->
+                </div>
+                
                 <div id="no-reports-message" class="text-center py-8 text-gray-500">
                     暂无举报记录
+                </div>
+                
+                <!-- 分页 -->
+                <div id="pagination" class="mt-8 flex justify-center hidden">
+                    <nav class="inline-flex rounded-md shadow">
+                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50" id="prev-page">上一页</a>
+                        <a href="#" class="py-2 px-4 bg-primary text-white border border-primary" id="current-page">1</a>
+                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50" id="next-page">下一页</a>
+                    </nav>
                 </div>
             </div>
         </section>
@@ -892,6 +913,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             // 初始化数据
             initData();
+            
+            // 设置处理进度筛选和搜索
+            setupProgressFilters();
 
             // 导航链接点击事件
             document.getElementById('home-link').addEventListener('click', function(e) {
@@ -1261,42 +1285,116 @@
         }
 
         // 加载处理进度数据
-        function loadProgressData() {
+        function loadProgressData(filters = {}) {
             const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-            const tableBody = document.getElementById('progress-table-body');
+            const cardsContainer = document.getElementById('progress-cards-container');
             const noReportsMessage = document.getElementById('no-reports-message');
+            const pagination = document.getElementById('pagination');
             
-            // 清空表格
-            tableBody.innerHTML = '';
+            // 清空卡片容器
+            cardsContainer.innerHTML = '';
+            
+            // 应用筛选
+            let filteredReports = reports;
+            
+            // 搜索筛选
+            if (filters.search) {
+                const searchTerm = filters.search.toLowerCase();
+                filteredReports = filteredReports.filter(report => 
+                    report.reportedUser.toLowerCase().includes(searchTerm) ||
+                    report.reportedQQ.toLowerCase().includes(searchTerm) ||
+                    report.groupChat.toLowerCase().includes(searchTerm) ||
+                    report.violationType.toLowerCase().includes(searchTerm) ||
+                    report.description.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // 状态筛选
+            if (filters.status && filters.status !== 'all') {
+                filteredReports = filteredReports.filter(report => report.status === filters.status);
+            }
+            
+            // 群聊筛选
+            if (filters.group && filters.group !== 'all') {
+                filteredReports = filteredReports.filter(report => report.groupChat === filters.group);
+            }
+            
+            // 按举报时间排序（最新的在前）
+            filteredReports.sort((a, b) => new Date(b.reportTime) - new Date(a.reportTime));
             
             // 检查是否有举报数据
-            if (reports.length === 0) {
+            if (filteredReports.length === 0) {
                 noReportsMessage.classList.remove('hidden');
+                cardsContainer.classList.add('hidden');
+                pagination.classList.add('hidden');
                 return;
             }
             
-            // 显示表格，隐藏无数据消息
+            // 显示卡片容器，隐藏无数据消息
             noReportsMessage.classList.add('hidden');
+            cardsContainer.classList.remove('hidden');
             
-            // 添加举报数据到表格
-            reports.forEach(report => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="py-2 px-4 border-b">${report.reportedUser}</td>
-                    <td class="py-2 px-4 border-b">${report.reportedQQ}</td>
-                    <td class="py-2 px-4 border-b">${report.groupChat}</td>
-                    <td class="py-2 px-4 border-b">${report.violationType}</td>
-                    <td class="py-2 px-4 border-b">${formatDate(report.reportTime)}</td>
-                    <td class="py-2 px-4 border-b">
-                        <span class="px-2 py-1 rounded ${getStatusClass(report.status)}">${report.status}</span>
-                    </td>
-                    <td class="py-2 px-4 border-b">
-                        <button class="text-primary hover:text-blue-700 view-detail-btn" data-report-id="${report.id}">
-                            查看详情
-                        </button>
-                    </td>
+            // 如果报告数量超过6个，显示分页
+            if (filteredReports.length > 6) {
+                pagination.classList.remove('hidden');
+            } else {
+                pagination.classList.add('hidden');
+            }
+            
+            // 添加举报数据到卡片容器
+            filteredReports.forEach(report => {
+                // 限制描述长度
+                const shortDescription = report.description.length > 100 
+                    ? report.description.substring(0, 100) + '...' 
+                    : report.description;
+                
+                // 获取状态样式类
+                const statusClass = getStatusClass(report.status);
+                
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-100';
+                card.innerHTML = `
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">${report.reportedUser}</h3>
+                                <p class="text-sm text-gray-500">QQ: ${report.reportedQQ}</p>
+                            </div>
+                            <span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">${report.status}</span>
+                        </div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center text-sm">
+                                <i class="fa fa-users text-gray-400 mr-2"></i>
+                                <span>${report.groupChat}</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <i class="fa fa-exclamation-triangle text-gray-400 mr-2"></i>
+                                <span>${report.violationType}</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <i class="fa fa-clock-o text-gray-400 mr-2"></i>
+                                <span>${formatDate(report.reportTime)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600 line-clamp-2">${shortDescription}</p>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="text-xs text-gray-500">
+                                ${report.attachments && report.attachments.length > 0 
+                                    ? `<i class="fa fa-paperclip mr-1"></i> ${report.attachments.length}个附件` 
+                                    : ''}
+                            </div>
+                            <button class="btn-primary-sm view-detail-btn" data-report-id="${report.id}">
+                                查看详情
+                            </button>
+                        </div>
+                    </div>
                 `;
-                tableBody.appendChild(row);
+                cardsContainer.appendChild(card);
             });
             
             // 添加查看详情按钮点击事件
@@ -1306,6 +1404,52 @@
                     viewReportDetail(reportId);
                 });
             });
+        }
+        
+        // 设置处理进度筛选和搜索
+        function setupProgressFilters() {
+            const searchInput = document.getElementById('progress-search');
+            const statusFilter = document.getElementById('status-filter');
+            const groupFilter = document.getElementById('group-filter');
+            
+            // 搜索输入事件
+            searchInput.addEventListener('input', function() {
+                applyProgressFilters();
+            });
+            
+            // 状态筛选事件
+            statusFilter.addEventListener('change', function() {
+                applyProgressFilters();
+            });
+            
+            // 群聊筛选事件
+            groupFilter.addEventListener('change', function() {
+                applyProgressFilters();
+            });
+            
+            // 分页事件
+            document.getElementById('prev-page').addEventListener('click', function(e) {
+                e.preventDefault();
+                // 实现分页逻辑
+                alert('上一页功能待实现');
+            });
+            
+            document.getElementById('next-page').addEventListener('click', function(e) {
+                e.preventDefault();
+                // 实现分页逻辑
+                alert('下一页功能待实现');
+            });
+        }
+        
+        // 应用处理进度筛选
+        function applyProgressFilters() {
+            const filters = {
+                search: document.getElementById('progress-search').value.trim(),
+                status: document.getElementById('status-filter').value,
+                group: document.getElementById('group-filter').value
+            };
+            
+            loadProgressData(filters);
         }
 
         // 查看举报详情
