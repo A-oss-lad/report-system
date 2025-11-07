@@ -1,0 +1,2195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>江西粤东气象社区交流安全中心 - 后台管理</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#9ca3af',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 侧边导航栏 -->
+        <aside class="w-64 bg-gray-800 text-white hidden md:block">
+            <div class="p-4 border-b border-gray-700">
+                <h1 class="text-lg font-bold">安全中心管理</h1>
+                <p class="text-xs text-gray-400">江西粤东气象社区</p>
+            </div>
+            <nav class="mt-4">
+                <a href="#dashboard" class="nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="dashboard-section">
+                    <i class="fa fa-dashboard w-6"></i>
+                    <span>控制台</span>
+                </a>
+                <a href="#users" class="nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="users-section">
+                    <i class="fa fa-users w-6"></i>
+                    <span>用户管理</span>
+                </a>
+                <a href="#teams" class="nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="teams-section">
+                    <i class="fa fa-users w-6"></i>
+                    <span>团队管理</span>
+                </a>
+                <a href="#reports" class="nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="reports-section">
+                    <i class="fa fa-flag w-6"></i>
+                    <span>举报处理</span>
+                </a>
+                <a href="#appeals" class="nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="appeals-section">
+                    <i class="fa fa-exclamation-circle w-6"></i>
+                    <span>申诉处理</span>
+                </a>
+                <a href="#opinions" class="nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="opinions-section">
+                    <i class="fa fa-comments w-6"></i>
+                    <span>意见处理</span>
+                </a>
+                <a href="#penalties" class="nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="penalties-section">
+                    <i class="fa fa-gavel w-6"></i>
+                    <span>处罚管理</span>
+                </a>
+                <a href="#rules" class="nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="rules-section">
+                    <i class="fa fa-book w-6"></i>
+                    <span>规范管理</span>
+                </a>
+                <a href="#announcements" class="nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="announcements-section">
+                    <i class="fa fa-bullhorn w-6"></i>
+                    <span>公告管理</span>
+                </a>
+                <a href="#settings" class="nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="settings-section">
+                    <i class="fa fa-cog w-6"></i>
+                    <span>系统设置</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 移动端侧边栏切换按钮 -->
+        <div class="md:hidden fixed bottom-4 right-4 z-50">
+            <button id="mobile-menu-btn" class="bg-primary text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- 移动端侧边栏 -->
+        <div id="mobile-menu" class="fixed inset-0 bg-gray-800 z-40 transform translate-x-full transition-transform duration-300 md:hidden">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h1 class="text-lg font-bold text-white">安全中心管理</h1>
+                <button id="close-mobile-menu" class="text-white">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <nav class="mt-4">
+                <a href="#dashboard" class="mobile-nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="dashboard-section">
+                    <i class="fa fa-dashboard w-6"></i>
+                    <span>控制台</span>
+                </a>
+                <a href="#users" class="mobile-nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="users-section">
+                    <i class="fa fa-users w-6"></i>
+                    <span>用户管理</span>
+                </a>
+                <a href="#teams" class="mobile-nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="teams-section">
+                    <i class="fa fa-users w-6"></i>
+                    <span>团队管理</span>
+                </a>
+                <a href="#reports" class="mobile-nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="reports-section">
+                    <i class="fa fa-flag w-6"></i>
+                    <span>举报处理</span>
+                </a>
+                <a href="#appeals" class="mobile-nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="appeals-section">
+                    <i class="fa fa-exclamation-circle w-6"></i>
+                    <span>申诉处理</span>
+                </a>
+                <a href="#opinions" class="mobile-nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="opinions-section">
+                    <i class="fa fa-comments w-6"></i>
+                    <span>意见处理</span>
+                </a>
+                <a href="#penalties" class="mobile-nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="penalties-section">
+                    <i class="fa fa-gavel w-6"></i>
+                    <span>处罚管理</span>
+                </a>
+                <a href="#rules" class="mobile-nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="rules-section">
+                    <i class="fa fa-book w-6"></i>
+                    <span>规范管理</span>
+                </a>
+                <a href="#announcements" class="mobile-nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="announcements-section">
+                    <i class="fa fa-bullhorn w-6"></i>
+                    <span>公告管理</span>
+                </a>
+                <a href="#settings" class="mobile-nav-link flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-all-300" data-target="settings-section">
+                    <i class="fa fa-cog w-6"></i>
+                    <span>系统设置</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- 主内容区域 -->
+        <main class="flex-1 overflow-y-auto bg-gray-100">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white shadow-sm">
+                <div class="flex justify-between items-center px-4 py-3">
+                    <div class="flex items-center">
+                        <h2 class="text-lg font-medium text-gray-800" id="page-title">控制台</h2>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="mr-4 text-sm text-gray-600">
+                            <span id="current-date"></span>
+                        </div>
+                        <div class="relative">
+                            <button id="user-menu-btn" class="flex items-center text-gray-700 hover:text-gray-900 focus:outline-none">
+                                <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                                    <i class="fa fa-user"></i>
+                                </div>
+                                <span class="ml-2 hidden md:block">管理员</span>
+                                <i class="fa fa-angle-down ml-1 hidden md:block"></i>
+                            </button>
+                            <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+                                <a href="#" id="change-password-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">修改密码</a>
+                                <a href="#" id="logout-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">退出登录</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="p-4 md:p-6">
+                <!-- 控制台 -->
+                <section id="dashboard-section" class="section-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-white rounded-lg shadow-card p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500">总用户数</p>
+                                    <p class="text-2xl font-bold text-gray-800" id="total-users">0</p>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2 text-xs text-green-500">
+                                <i class="fa fa-arrow-up"></i> 较上月增长 5%
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-card p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500">待处理举报</p>
+                                    <p class="text-2xl font-bold text-gray-800" id="pending-reports">0</p>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-500 flex items-center justify-center">
+                                    <i class="fa fa-flag"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2 text-xs text-red-500">
+                                <i class="fa fa-arrow-up"></i> 较上周增长 10%
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-card p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500">待处理申诉</p>
+                                    <p class="text-2xl font-bold text-gray-800" id="pending-appeals">0</p>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
+                                    <i class="fa fa-exclamation-circle"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2 text-xs text-green-500">
+                                <i class="fa fa-arrow-down"></i> 较上周下降 3%
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-card p-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500">本月处罚数</p>
+                                    <p class="text-2xl font-bold text-gray-800" id="monthly-penalties">0</p>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-500 flex items-center justify-center">
+                                    <i class="fa fa-gavel"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2 text-xs text-red-500">
+                                <i class="fa fa-arrow-up"></i> 较上月增长 8%
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow-card p-4">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">举报类型分布</h3>
+                            <div class="h-64">
+                                <canvas id="report-type-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow-card p-4">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">月度举报趋势</h3>
+                            <div class="h-64">
+                                <canvas id="report-trend-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-card p-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-medium text-gray-800">最近举报</h3>
+                            <a href="#reports" class="text-sm text-primary hover:text-blue-700 transition-all-300">查看全部</a>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">举报ID</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">举报人</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">被举报人</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">违规类型</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="recent-reports">
+                                    <!-- 最近举报数据将通过JavaScript动态生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 用户管理 -->
+                <section id="users-section" class="section-content hidden">
+                    <div class="bg-white rounded-lg shadow-card p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800 mb-2 md:mb-0">用户列表</h3>
+                            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                                <div class="relative">
+                                    <input type="text" id="user-search" class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="搜索用户...">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                                <button id="add-user-btn" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300 flex items-center justify-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加用户
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">用户ID</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">用户名</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">QQ号码</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">角色</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">注册时间</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">最后登录</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="users-list">
+                                    <!-- 用户列表将通过JavaScript动态生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 团队管理 -->
+                <section id="teams-section" class="section-content hidden">
+                    <div class="bg-white rounded-lg shadow-card p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800 mb-2 md:mb-0">团队列表</h3>
+                            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                                <div class="relative">
+                                    <input type="text" id="team-search" class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="搜索团队...">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                                <button id="add-team-btn" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300 flex items-center justify-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加团队
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">团队ID</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">团队名称</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">负责人</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">成员数量</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">创建时间</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="teams-list">
+                                    <!-- 团队列表将通过JavaScript动态生成 -->
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">team-001</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">江西气象管理团队</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">我就是天才</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">5</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2023-01-01</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                            <button class="text-primary hover:text-blue-700 mr-2">编辑</button>
+                                            <button class="text-red-500 hover:text-red-700">删除</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">team-002</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">粤东气象管理团队</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">气象专家</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">3</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2023-02-15</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                            <button class="text-primary hover:text-blue-700 mr-2">编辑</button>
+                                            <button class="text-red-500 hover:text-red-700">删除</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 举报处理 -->
+                <section id="reports-section" class="section-content hidden">
+                    <div class="bg-white rounded-lg shadow-card p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800 mb-2 md:mb-0">举报列表</h3>
+                            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                                <div class="relative">
+                                    <input type="text" id="report-search" class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="搜索举报...">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                                <select id="report-status-filter" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="all">全部状态</option>
+                                    <option value="pending">待处理</option>
+                                    <option value="processing">处理中</option>
+                                    <option value="completed">已完成</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">举报ID</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">举报人</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">被举报人</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">违规类型</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">时间</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="reports-list">
+                                    <!-- 举报列表将通过JavaScript动态生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 申诉处理 -->
+                <section id="appeals-section" class="section-content hidden">
+                    <div class="bg-white rounded-lg shadow-card p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800 mb-2 md:mb-0">申诉列表</h3>
+                            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                                <div class="relative">
+                                    <input type="text" id="appeal-search" class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="搜索申诉...">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                                <select id="appeal-status-filter" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="all">全部状态</option>
+                                    <option value="pending">待处理</option>
+                                    <option value="processing">处理中</option>
+                                    <option value="approved">已通过</option>
+                                    <option value="rejected">已拒绝</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">申诉ID</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">申诉人</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">处罚类型</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">时间</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="appeals-list">
+                                    <!-- 申诉列表将通过JavaScript动态生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 意见处理 -->
+                <section id="opinions-section" class="section-content hidden">
+                    <div class="bg-white rounded-lg shadow-card p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800 mb-2 md:mb-0">意见列表</h3>
+                            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                                <div class="relative">
+                                    <input type="text" id="opinion-search" class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="搜索意见...">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                                <select id="opinion-status-filter" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="all">全部状态</option>
+                                    <option value="pending">待处理</option>
+                                    <option value="processing">处理中</option>
+                                    <option value="completed">已完成</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">意见ID</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">提交人</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">类型</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">时间</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="opinions-list">
+                                    <!-- 意见列表将通过JavaScript动态生成 -->
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">opinion-001</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">气象爱好者</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">建议</td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">已完成</span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2023-07-01</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                            <button class="text-primary hover:text-blue-700">查看</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">opinion-002</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">天气观察员</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">问题反馈</td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">处理中</span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2023-07-10</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                            <button class="text-primary hover:text-blue-700">查看</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 处罚管理 -->
+                <section id="penalties-section" class="section-content hidden">
+                    <div class="bg-white rounded-lg shadow-card p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800 mb-2 md:mb-0">处罚列表</h3>
+                            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                                <div class="relative">
+                                    <input type="text" id="penalty-search" class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="搜索处罚...">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                                <button id="add-penalty-btn" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300 flex items-center justify-center">
+                                    <i class="fa fa-plus mr-2"></i> 添加处罚
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">处罚ID</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">用户</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">违规原因</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">处罚类型</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">生效时间</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="penalties-list">
+                                    <!-- 处罚列表将通过JavaScript动态生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 规范管理 -->
+                <section id="rules-section" class="section-content hidden">
+                    <div class="bg-white rounded-lg shadow-card p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800 mb-2 md:mb-0">社区规则</h3>
+                            <button id="add-rule-btn" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300 flex items-center justify-center">
+                                <i class="fa fa-plus mr-2"></i> 添加规则
+                            </button>
+                        </div>
+                        <div class="space-y-6" id="rules-list">
+                            <!-- 规则列表将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 公告管理 -->
+                <section id="announcements-section" class="section-content hidden">
+                    <div class="bg-white rounded-lg shadow-card p-4 mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-800 mb-2 md:mb-0">公告列表</h3>
+                            <button id="add-announcement-btn" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300 flex items-center justify-center">
+                                <i class="fa fa-plus mr-2"></i> 发布公告
+                            </button>
+                        </div>
+                        <div class="space-y-4" id="announcements-list">
+                            <!-- 公告列表将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 系统设置 -->
+                <section id="settings-section" class="section-content hidden">
+                    <div class="bg-white rounded-lg shadow-card p-4 mb-6">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4">系统设置</h3>
+                        <form id="settings-form" class="space-y-4">
+                            <div>
+                                <label for="system-name" class="block text-sm font-medium text-gray-700 mb-1">系统名称</label>
+                                <input type="text" id="system-name" name="systemName" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="江西粤东气象社区交流安全中心">
+                            </div>
+                            <div>
+                                <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">联系邮箱</label>
+                                <input type="email" id="contact-email" name="contactEmail" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="contact@weather-community.com">
+                            </div>
+                            <div>
+                                <label for="report-processing-time" class="block text-sm font-medium text-gray-700 mb-1">举报处理时限（小时）</label>
+                                <input type="number" id="report-processing-time" name="reportProcessingTime" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="24" min="1" max="72">
+                            </div>
+                            <div>
+                                <label for="appeal-processing-time" class="block text-sm font-medium text-gray-700 mb-1">申诉处理时限（天）</label>
+                                <input type="number" id="appeal-processing-time" name="appealProcessingTime" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3" min="1" max="7">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">系统状态</label>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="system-status" name="systemStatus" class="w-4 h-4 text-primary focus:ring-primary border-gray-300 rounded" checked>
+                                    <label for="system-status" class="ml-2 text-sm text-gray-700">启用系统</label>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                                    保存设置
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- 举报处理弹窗 -->
+    <div id="report-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800">举报详情</h3>
+                <button id="close-report-modal" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div id="report-details" class="space-y-4">
+                <!-- 举报详情将通过JavaScript动态生成 -->
+            </div>
+            <div id="report-action" class="mt-6 pt-4 border-t border-gray-200">
+                <h4 class="text-md font-medium text-gray-800 mb-2">处理操作</h4>
+                <div class="space-y-3">
+                    <div>
+                        <label for="report-result" class="block text-sm font-medium text-gray-700 mb-1">处理结果</label>
+                        <select id="report-result" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="">请选择处理结果</option>
+                            <option value="true">举报属实</option>
+                            <option value="false">举报不属实</option>
+                            <option value="pending">需要进一步调查</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="report-remarks" class="block text-sm font-medium text-gray-700 mb-1">处理备注</label>
+                        <textarea id="report-remarks" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入处理备注..."></textarea>
+                    </div>
+                    <div class="flex justify-end space-x-2">
+                        <button id="add-penalty-from-report" class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-all-300">
+                            添加处罚
+                        </button>
+                        <button id="submit-report-handling" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                            提交处理
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 申诉处理弹窗 -->
+    <div id="appeal-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800">申诉详情</h3>
+                <button id="close-appeal-modal" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div id="appeal-details" class="space-y-4">
+                <!-- 申诉详情将通过JavaScript动态生成 -->
+            </div>
+            <div id="appeal-action" class="mt-6 pt-4 border-t border-gray-200">
+                <h4 class="text-md font-medium text-gray-800 mb-2">处理操作</h4>
+                <div class="space-y-3">
+                    <div>
+                        <label for="appeal-result" class="block text-sm font-medium text-gray-700 mb-1">处理结果</label>
+                        <select id="appeal-result" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="">请选择处理结果</option>
+                            <option value="approved">申诉通过</option>
+                            <option value="rejected">申诉驳回</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="appeal-remarks" class="block text-sm font-medium text-gray-700 mb-1">处理备注</label>
+                        <textarea id="appeal-remarks" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入处理备注..."></textarea>
+                    </div>
+                    <div class="flex justify-end">
+                        <button id="submit-appeal-handling" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                            提交处理
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加处罚弹窗 -->
+    <div id="penalty-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-lg w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800">添加处罚</h3>
+                <button id="close-penalty-modal" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <form id="penalty-form" class="space-y-4">
+                <div>
+                    <label for="penalty-username" class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
+                    <input type="text" id="penalty-username" name="username" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入用户名" required>
+                </div>
+                <div>
+                    <label for="penalty-qq" class="block text-sm font-medium text-gray-700 mb-1">QQ号码</label>
+                    <input type="text" id="penalty-qq" name="qqNumber" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入QQ号码" required>
+                </div>
+                <div>
+                    <label for="penalty-group" class="block text-sm font-medium text-gray-700 mb-1">群聊</label>
+                    <select id="penalty-group" name="groupChat" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        <option value="">请选择群聊</option>
+                        <option value="江西气象爱好者">江西气象爱好者</option>
+                        <option value="粤东气象爱好者">粤东气象爱好者</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="penalty-reason" class="block text-sm font-medium text-gray-700 mb-1">违规原因</label>
+                    <select id="penalty-reason" name="violationReason" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        <option value="">请选择违规原因</option>
+                        <option value="色情低容/资源">色情低容/资源</option>
+                        <option value="政治敏感">政治敏感</option>
+                        <option value="辱骂/侮辱他人">辱骂/侮辱他人</option>
+                        <option value="虚假/谣言信息">虚假/谣言信息</option>
+                        <option value="无关的广告信息">无关的广告信息</option>
+                        <option value="私信骚扰">私信骚扰</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="penalty-type" class="block text-sm font-medium text-gray-700 mb-1">处罚类型</label>
+                    <select id="penalty-type" name="penaltyType" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        <option value="">请选择处罚类型</option>
+                        <option value="warning">警告</option>
+                        <option value="mute">禁言</option>
+                        <option value="ban">封禁权限</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="penalty-duration" class="block text-sm font-medium text-gray-700 mb-1">处罚时长</label>
+                    <select id="penalty-duration" name="duration" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        <option value="">请选择处罚时长</option>
+                        <option value="30分钟">30分钟</option>
+                        <option value="1小时">1小时</option>
+                        <option value="1天">1天</option>
+                        <option value="3天">3天</option>
+                        <option value="7天">7天</option>
+                        <option value="14天">14天</option>
+                        <option value="30天">30天</option>
+                        <option value="永久">永久</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="penalty-remarks" class="block text-sm font-medium text-gray-700 mb-1">处罚备注</label>
+                    <textarea id="penalty-remarks" name="remarks" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入处罚备注..."></textarea>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                        添加处罚
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 添加规则弹窗 -->
+    <div id="rule-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-lg w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800">添加规则</h3>
+                <button id="close-rule-modal" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <form id="rule-form" class="space-y-4">
+                <div>
+                    <label for="rule-title" class="block text-sm font-medium text-gray-700 mb-1">规则标题</label>
+                    <input type="text" id="rule-title" name="title" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入规则标题" required>
+                </div>
+                <div>
+                    <label for="rule-content" class="block text-sm font-medium text-gray-700 mb-1">规则内容</label>
+                    <textarea id="rule-content" name="content" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入规则内容..." required></textarea>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                        添加规则
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 发布公告弹窗 -->
+    <div id="announcement-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-lg w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800">发布公告</h3>
+                <button id="close-announcement-modal" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <form id="announcement-form" class="space-y-4">
+                <div>
+                    <label for="announcement-title" class="block text-sm font-medium text-gray-700 mb-1">公告标题</label>
+                    <input type="text" id="announcement-title" name="title" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入公告标题" required>
+                </div>
+                <div>
+                    <label for="announcement-content" class="block text-sm font-medium text-gray-700 mb-1">公告内容</label>
+                    <textarea id="announcement-content" name="content" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入公告内容..." required></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">发布状态</label>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="announcement-active" name="isActive" class="w-4 h-4 text-primary focus:ring-primary border-gray-300 rounded" checked>
+                        <label for="announcement-active" class="ml-2 text-sm text-gray-700">立即发布</label>
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                        发布公告
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 修改密码弹窗 -->
+    <div id="change-password-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-sm w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800">修改密码</h3>
+                <button id="close-password-modal" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <form id="change-password-form" class="space-y-4">
+                <div>
+                    <label for="current-password" class="block text-sm font-medium text-gray-700 mb-1">当前密码</label>
+                    <input type="password" id="current-password" name="currentPassword" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入当前密码" required>
+                </div>
+                <div>
+                    <label for="new-password" class="block text-sm font-medium text-gray-700 mb-1">新密码</label>
+                    <input type="password" id="new-password" name="newPassword" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入新密码" required>
+                </div>
+                <div>
+                    <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-1">确认新密码</label>
+                    <input type="password" id="confirm-password" name="confirmPassword" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请再次输入新密码" required>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                        确认修改
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 检查用户是否已登录且为管理员
+        function checkAdminLogin() {
+            const currentUser = sessionStorage.getItem('currentUser');
+            if (!currentUser) {
+                // 用户未登录，跳转到登录页面
+                window.location.href = 'login.html';
+                return null;
+            }
+            
+            const user = JSON.parse(currentUser);
+            if (user.role !== 'admin') {
+                // 用户不是管理员，跳转到首页
+                window.location.href = 'index.html';
+                return null;
+            }
+            
+            return user;
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // 获取状态对应的样式
+        function getStatusStyle(status) {
+            switch (status) {
+                case 'pending':
+                    return {
+                        bg: 'bg-yellow-100',
+                        text: 'text-yellow-800',
+                        label: '待处理'
+                    };
+                case 'processing':
+                    return {
+                        bg: 'bg-blue-100',
+                        text: 'text-blue-800',
+                        label: '处理中'
+                    };
+                case 'completed':
+                    return {
+                        bg: 'bg-green-100',
+                        text: 'text-green-800',
+                        label: '已完成'
+                    };
+                case 'approved':
+                    return {
+                        bg: 'bg-green-100',
+                        text: 'text-green-800',
+                        label: '已通过'
+                    };
+                case 'rejected':
+                    return {
+                        bg: 'bg-red-100',
+                        text: 'text-red-800',
+                        label: '已拒绝'
+                    };
+                case 'active':
+                    return {
+                        bg: 'bg-red-100',
+                        text: 'text-red-800',
+                        label: '生效中'
+                    };
+                case 'appealing':
+                    return {
+                        bg: 'bg-yellow-100',
+                        text: 'text-yellow-800',
+                        label: '申诉中'
+                    };
+                case 'lifted':
+                    return {
+                        bg: 'bg-green-100',
+                        text: 'text-green-800',
+                        label: '已解除'
+                    };
+                default:
+                    return {
+                        bg: 'bg-gray-100',
+                        text: 'text-gray-800',
+                        label: status
+                    };
+            }
+        }
+
+        // 获取处罚描述
+        function getPenaltyDescription(penalty) {
+            switch (penalty.penaltyType) {
+                case 'ban':
+                    return `封禁权限${penalty.duration !== '永久' ? penalty.duration : '永久'}`;
+                case 'mute':
+                    return `禁言${penalty.duration !== '永久' ? penalty.duration : '永久'}`;
+                case 'warning':
+                    return '警告';
+                default:
+                    return penalty.penaltyType;
+            }
+        }
+
+        // 加载控制台数据
+        function loadDashboardData() {
+            // 获取用户数据
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            document.getElementById('total-users').textContent = users.length;
+            
+            // 获取举报数据
+            const reports = JSON.parse(localStorage.getItem('reports')) || [];
+            const pendingReports = reports.filter(report => report.status === 'pending');
+            document.getElementById('pending-reports').textContent = pendingReports.length;
+            
+            // 获取申诉数据
+            const appeals = JSON.parse(localStorage.getItem('appeals')) || [];
+            const pendingAppeals = appeals.filter(appeal => appeal.status === 'pending' || appeal.status === 'processing');
+            document.getElementById('pending-appeals').textContent = pendingAppeals.length;
+            
+            // 获取处罚数据
+            const penalties = JSON.parse(localStorage.getItem('penalties')) || [];
+            const currentMonth = new Date().getMonth();
+            const monthlyPenalties = penalties.filter(penalty => new Date(penalty.createTime).getMonth() === currentMonth);
+            document.getElementById('monthly-penalties').textContent = monthlyPenalties.length;
+            
+            // 加载最近举报
+            loadRecentReports();
+            
+            // 加载图表
+            loadCharts();
+        }
+
+        // 加载最近举报
+        function loadRecentReports() {
+            const reports = JSON.parse(localStorage.getItem('reports')) || [];
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // 按时间倒序排序并取前5条
+            const recentReports = reports
+                .sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
+                .slice(0, 5);
+            
+            const recentReportsTable = document.getElementById('recent-reports');
+            
+            // 如果没有举报记录
+            if (recentReports.length === 0) {
+                recentReportsTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-4 py-4 text-center text-sm text-gray-500">暂无举报记录</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // 显示最近举报
+            recentReportsTable.innerHTML = recentReports.map(report => {
+                const reporter = users.find(user => user.id === report.reporterId);
+                const statusStyle = getStatusStyle(report.status);
+                
+                return `
+                    <tr>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${report.id}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${reporter ? reporter.username : '未知用户'}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${report.reportedUsername}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${report.violationType}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${statusStyle.bg} ${statusStyle.text}">${statusStyle.label}</span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${formatDate(report.createTime)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // 加载图表
+        function loadCharts() {
+            // 举报类型分布图表
+            const reports = JSON.parse(localStorage.getItem('reports')) || [];
+            
+            // 统计各类型举报数量
+            const reportTypes = {};
+            reports.forEach(report => {
+                if (reportTypes[report.violationType]) {
+                    reportTypes[report.violationType]++;
+                } else {
+                    reportTypes[report.violationType] = 1;
+                }
+            });
+            
+            const reportTypeCtx = document.getElementById('report-type-chart').getContext('2d');
+            new Chart(reportTypeCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(reportTypes),
+                    datasets: [{
+                        data: Object.values(reportTypes),
+                        backgroundColor: [
+                            '#3b82f6',
+                            '#ef4444',
+                            '#f59e0b',
+                            '#10b981',
+                            '#8b5cf6',
+                            '#ec4899',
+                            '#6b7280'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+            
+            // 月度举报趋势图表
+            const monthlyReports = {};
+            
+            // 初始化最近6个月的数据
+            for (let i = 5; i >= 0; i--) {
+                const date = new Date();
+                date.setMonth(date.getMonth() - i);
+                const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+                monthlyReports[monthKey] = 0;
+            }
+            
+            // 统计各月举报数量
+            reports.forEach(report => {
+                const reportDate = new Date(report.createTime);
+                const monthKey = `${reportDate.getFullYear()}-${(reportDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                if (monthlyReports[monthKey] !== undefined) {
+                    monthlyReports[monthKey]++;
+                }
+            });
+            
+            const reportTrendCtx = document.getElementById('report-trend-chart').getContext('2d');
+            new Chart(reportTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(monthlyReports),
+                    datasets: [{
+                        label: '举报数量',
+                        data: Object.values(monthlyReports),
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 加载用户列表
+        function loadUsersList() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const usersList = document.getElementById('users-list');
+            
+            // 如果没有用户记录
+            if (users.length === 0) {
+                usersList.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-4 py-4 text-center text-sm text-gray-500">暂无用户记录</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // 显示用户列表
+            usersList.innerHTML = users.map(user => `
+                <tr>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${user.id}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${user.username}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${user.qqNumber}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs font-medium rounded-full ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">${user.role === 'admin' ? '管理员' : '普通用户'}</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${formatDate(user.createTime)}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${user.lastLoginTime ? formatDate(user.lastLoginTime) : '从未登录'}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                        <button class="text-primary hover:text-blue-700 mr-2 edit-user-btn" data-user-id="${user.id}">编辑</button>
+                        ${user.role !== 'admin' ? `<button class="text-red-500 hover:text-red-700 delete-user-btn" data-user-id="${user.id}">删除</button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+            
+            // 添加编辑用户按钮点击事件
+            document.querySelectorAll('.edit-user-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const userId = button.getAttribute('data-user-id');
+                    // 编辑用户功能
+                    alert(`编辑用户: ${userId}`);
+                });
+            });
+            
+            // 添加删除用户按钮点击事件
+            document.querySelectorAll('.delete-user-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const userId = button.getAttribute('data-user-id');
+                    // 删除用户功能
+                    if (confirm(`确定要删除用户 ${userId} 吗？`)) {
+                        const users = JSON.parse(localStorage.getItem('users')) || [];
+                        const updatedUsers = users.filter(user => user.id !== userId);
+                        localStorage.setItem('users', JSON.stringify(updatedUsers));
+                        loadUsersList();
+                    }
+                });
+            });
+        }
+
+        // 加载举报列表
+        function loadReportsList() {
+            const reports = JSON.parse(localStorage.getItem('reports')) || [];
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const reportsList = document.getElementById('reports-list');
+            
+            // 如果没有举报记录
+            if (reports.length === 0) {
+                reportsList.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-4 py-4 text-center text-sm text-gray-500">暂无举报记录</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // 显示举报列表
+            reportsList.innerHTML = reports.map(report => {
+                const reporter = users.find(user => user.id === report.reporterId);
+                const statusStyle = getStatusStyle(report.status);
+                
+                return `
+                    <tr>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${report.id}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${reporter ? reporter.username : '未知用户'}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${report.reportedUsername}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${report.violationType}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${statusStyle.bg} ${statusStyle.text}">${statusStyle.label}</span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${formatDate(report.createTime)}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                            <button class="text-primary hover:text-blue-700 view-report-btn" data-report-id="${report.id}">查看</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // 添加查看举报按钮点击事件
+            document.querySelectorAll('.view-report-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const reportId = button.getAttribute('data-report-id');
+                    viewReportDetails(reportId);
+                });
+            });
+        }
+
+        // 查看举报详情
+        function viewReportDetails(reportId) {
+            const reports = JSON.parse(localStorage.getItem('reports')) || [];
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const report = reports.find(r => r.id === reportId);
+            
+            if (!report) {
+                alert('未找到举报记录');
+                return;
+            }
+            
+            const reporter = users.find(user => user.id === report.reporterId);
+            const statusStyle = getStatusStyle(report.status);
+            
+            // 更新举报详情
+            document.getElementById('report-details').innerHTML = `
+                <div>
+                    <h4 class="text-md font-medium text-gray-800 mb-2">基本信息</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <p class="text-sm text-gray-600"><span class="font-medium">举报ID：</span>${report.id}</p>
+                        <p class="text-sm text-gray-600"><span class="font-medium">举报时间：</span>${formatDate(report.createTime)}</p>
+                        <p class="text-sm text-gray-600"><span class="font-medium">举报人：</span>${reporter ? reporter.username : '未知用户'} (${reporter ? reporter.qqNumber : '未知QQ'})</p>
+                        <p class="text-sm text-gray-600"><span class="font-medium">状态：</span><span class="px-2 py-1 text-xs font-medium rounded-full ${statusStyle.bg} ${statusStyle.text}">${statusStyle.label}</span></p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-md font-medium text-gray-800 mb-2">被举报人信息</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <p class="text-sm text-gray-600"><span class="font-medium">用户名：</span>${report.reportedUsername}</p>
+                        <p class="text-sm text-gray-600"><span class="font-medium">QQ号码：</span>${report.reportedQqNumber}</p>
+                        <p class="text-sm text-gray-600"><span class="font-medium">群聊：</span>${report.groupChat}</p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-md font-medium text-gray-800 mb-2">违规信息</h4>
+                    <div class="space-y-2">
+                        <p class="text-sm text-gray-600"><span class="font-medium">违规类型：</span>${report.violationType}${report.otherReason ? `（${report.otherReason}）` : ''}</p>
+                        <p class="text-sm text-gray-600"><span class="font-medium">描述：</span>${report.description}</p>
+                        ${report.evidence && report.evidence.length > 0 ? `
+                            <p class="text-sm text-gray-600"><span class="font-medium">证据：</span></p>
+                            <div class="flex flex-wrap gap-2">
+                                ${report.evidence.map((file, index) => `
+                                    <div class="px-3 py-1 bg-gray-100 rounded-md text-xs text-gray-700 flex items-center">
+                                        <i class="fa fa-file-o mr-1"></i>
+                                        ${file.name}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+                ${report.status === 'completed' ? `
+                    <div>
+                        <h4 class="text-md font-medium text-gray-800 mb-2">处理结果</h4>
+                        <div class="space-y-2">
+                            <p class="text-sm text-gray-600"><span class="font-medium">处理时间：</span>${formatDate(report.updateTime)}</p>
+                            <p class="text-sm text-gray-600"><span class="font-medium">处理结果：</span>${report.result === 'true' ? '举报属实' : report.result === 'false' ? '举报不属实' : '需要进一步调查'}</p>
+                            ${report.remarks ? `<p class="text-sm text-gray-600"><span class="font-medium">处理备注：</span>${report.remarks}</p>` : ''}
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+            
+            // 显示举报处理弹窗
+            document.getElementById('report-modal').classList.remove('hidden');
+            
+            // 保存当前举报ID
+            document.getElementById('submit-report-handling').setAttribute('data-report-id', reportId);
+            document.getElementById('add-penalty-from-report').setAttribute('data-report-id', reportId);
+            
+            // 如果举报已处理，隐藏处理操作
+            if (report.status === 'completed') {
+                document.getElementById('report-action').classList.add('hidden');
+            } else {
+                document.getElementById('report-action').classList.remove('hidden');
+            }
+        }
+
+        // 加载申诉列表
+        function loadAppealsList() {
+            const appeals = JSON.parse(localStorage.getItem('appeals')) || [];
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const penalties = JSON.parse(localStorage.getItem('penalties')) || [];
+            const appealsList = document.getElementById('appeals-list');
+            
+            // 如果没有申诉记录
+            if (appeals.length === 0) {
+                appealsList.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-4 py-4 text-center text-sm text-gray-500">暂无申诉记录</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // 显示申诉列表
+            appealsList.innerHTML = appeals.map(appeal => {
+                const user = users.find(u => u.id === appeal.userId);
+                const penalty = penalties.find(p => p.id === appeal.penaltyId);
+                const statusStyle = getStatusStyle(appeal.status);
+                
+                return `
+                    <tr>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${appeal.id}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${user ? user.username : '未知用户'}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${penalty ? getPenaltyDescription(penalty) : '未知处罚'}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${statusStyle.bg} ${statusStyle.text}">${statusStyle.label}</span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${formatDate(appeal.createTime)}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                            <button class="text-primary hover:text-blue-700 view-appeal-btn" data-appeal-id="${appeal.id}">查看</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // 添加查看申诉按钮点击事件
+            document.querySelectorAll('.view-appeal-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const appealId = button.getAttribute('data-appeal-id');
+                    viewAppealDetails(appealId);
+                });
+            });
+        }
+
+        // 查看申诉详情
+        function viewAppealDetails(appealId) {
+            const appeals = JSON.parse(localStorage.getItem('appeals')) || [];
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const penalties = JSON.parse(localStorage.getItem('penalties')) || [];
+            const appeal = appeals.find(a => a.id === appealId);
+            
+            if (!appeal) {
+                alert('未找到申诉记录');
+                return;
+            }
+            
+            const user = users.find(u => u.id === appeal.userId);
+            const penalty = penalties.find(p => p.id === appeal.penaltyId);
+            const statusStyle = getStatusStyle(appeal.status);
+            
+            // 更新申诉详情
+            document.getElementById('appeal-details').innerHTML = `
+                <div>
+                    <h4 class="text-md font-medium text-gray-800 mb-2">基本信息</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <p class="text-sm text-gray-600"><span class="font-medium">申诉ID：</span>${appeal.id}</p>
+                        <p class="text-sm text-gray-600"><span class="font-medium">申诉时间：</span>${formatDate(appeal.createTime)}</p>
+                        <p class="text-sm text-gray-600"><span class="font-medium">申诉人：</span>${user ? user.username : '未知用户'} (${user ? user.qqNumber : '未知QQ'})</p>
+                        <p class="text-sm text-gray-600"><span class="font-medium">状态：</span><span class="px-2 py-1 text-xs font-medium rounded-full ${statusStyle.bg} ${statusStyle.text}">${statusStyle.label}</span></p>
+                    </div>
+                </div>
+                ${penalty ? `
+                    <div>
+                        <h4 class="text-md font-medium text-gray-800 mb-2">处罚信息</h4>
+                        <div class="space-y-2">
+                            <p class="text-sm text-gray-600"><span class="font-medium">处罚ID：</span>${penalty.id}</p>
+                            <p class="text-sm text-gray-600"><span class="font-medium">违规原因：</span>${penalty.violationReason}</p>
+                            <p class="text-sm text-gray-600"><span class="font-medium">处罚类型：</span>${getPenaltyDescription(penalty)}</p>
+                            <p class="text-sm text-gray-600"><span class="font-medium">生效时间：</span>${formatDate(penalty.effectiveTime)}</p>
+                            ${penalty.liftTime ? `<p class="text-sm text-gray-600"><span class="font-medium">${penalty.duration === '永久' ? '处罚时间：' : '解封时间：'}</span>${formatDate(penalty.liftTime)}</p>` : ''}
+                        </div>
+                    </div>
+                ` : ''}
+                <div>
+                    <h4 class="text-md font-medium text-gray-800 mb-2">申诉信息</h4>
+                    <div class="space-y-2">
+                        <p class="text-sm text-gray-600"><span class="font-medium">申诉理由：</span>${appeal.description}</p>
+                        ${appeal.evidence && appeal.evidence.length > 0 ? `
+                            <p class="text-sm text-gray-600"><span class="font-medium">证据：</span></p>
+                            <div class="flex flex-wrap gap-2">
+                                ${appeal.evidence.map((file, index) => `
+                                    <div class="px-3 py-1 bg-gray-100 rounded-md text-xs text-gray-700 flex items-center">
+                                        <i class="fa fa-file-o mr-1"></i>
+                                        ${file.name}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+                ${(appeal.status === 'approved' || appeal.status === 'rejected') ? `
+                    <div>
+                        <h4 class="text-md font-medium text-gray-800 mb-2">处理结果</h4>
+                        <div class="space-y-2">
+                            <p class="text-sm text-gray-600"><span class="font-medium">处理时间：</span>${formatDate(appeal.updateTime)}</p>
+                            <p class="text-sm text-gray-600"><span class="font-medium">处理结果：</span>${appeal.status === 'approved' ? '申诉通过' : '申诉驳回'}</p>
+                            ${appeal.remarks ? `<p class="text-sm text-gray-600"><span class="font-medium">处理备注：</span>${appeal.remarks}</p>` : ''}
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+            
+            // 显示申诉处理弹窗
+            document.getElementById('appeal-modal').classList.remove('hidden');
+            
+            // 保存当前申诉ID
+            document.getElementById('submit-appeal-handling').setAttribute('data-appeal-id', appealId);
+            
+            // 如果申诉已处理，隐藏处理操作
+            if (appeal.status === 'approved' || appeal.status === 'rejected') {
+                document.getElementById('appeal-action').classList.add('hidden');
+            } else {
+                document.getElementById('appeal-action').classList.remove('hidden');
+            }
+        }
+
+        // 加载处罚列表
+        function loadPenaltiesList() {
+            const penalties = JSON.parse(localStorage.getItem('penalties')) || [];
+            const penaltiesList = document.getElementById('penalties-list');
+            
+            // 如果没有处罚记录
+            if (penalties.length === 0) {
+                penaltiesList.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-4 py-4 text-center text-sm text-gray-500">暂无处罚记录</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // 显示处罚列表
+            penaltiesList.innerHTML = penalties.map(penalty => {
+                const statusStyle = getStatusStyle(penalty.status);
+                
+                return `
+                    <tr>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${penalty.id}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${penalty.username} (${penalty.qqNumber})</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${penalty.violationReason}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${getPenaltyDescription(penalty)}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${statusStyle.bg} ${statusStyle.text}">${statusStyle.label}</span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${formatDate(penalty.effectiveTime)}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                            <button class="text-primary hover:text-blue-700 mr-2 view-penalty-btn" data-penalty-id="${penalty.id}">查看</button>
+                            ${penalty.status === 'active' ? `<button class="text-green-500 hover:text-green-700 lift-penalty-btn" data-penalty-id="${penalty.id}">解除</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // 添加查看处罚按钮点击事件
+            document.querySelectorAll('.view-penalty-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const penaltyId = button.getAttribute('data-penalty-id');
+                    // 查看处罚详情
+                    alert(`查看处罚: ${penaltyId}`);
+                });
+            });
+            
+            // 添加解除处罚按钮点击事件
+            document.querySelectorAll('.lift-penalty-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const penaltyId = button.getAttribute('data-penalty-id');
+                    // 解除处罚
+                    if (confirm(`确定要解除处罚 ${penaltyId} 吗？`)) {
+                        const penalties = JSON.parse(localStorage.getItem('penalties')) || [];
+                        const penaltyIndex = penalties.findIndex(p => p.id === penaltyId);
+                        
+                        if (penaltyIndex !== -1) {
+                            penalties[penaltyIndex].status = 'lifted';
+                            penalties[penaltyIndex].updateTime = new Date().toISOString();
+                            localStorage.setItem('penalties', JSON.stringify(penalties));
+                            loadPenaltiesList();
+                        }
+                    }
+                });
+            });
+        }
+
+        // 加载规则列表
+        function loadRulesList() {
+            const rules = JSON.parse(localStorage.getItem('rules')) || [];
+            const rulesList = document.getElementById('rules-list');
+            
+            // 如果没有规则记录
+            if (rules.length === 0) {
+                rulesList.innerHTML = `
+                    <div class="text-center py-8">
+                        <p class="text-gray-500">暂无规则记录</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 显示规则列表
+            rulesList.innerHTML = rules.map(rule => `
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="text-md font-medium text-gray-800">${rule.title}</h4>
+                        <div>
+                            <button class="text-primary hover:text-blue-700 mr-2 edit-rule-btn" data-rule-id="${rule.id}">编辑</button>
+                            <button class="text-red-500 hover:text-red-700 delete-rule-btn" data-rule-id="${rule.id}">删除</button>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-600 whitespace-pre-line">${rule.content}</div>
+                    <div class="mt-3 text-xs text-gray-500">
+                        <p>创建时间：${formatDate(rule.createTime)}</p>
+                        ${rule.updateTime !== rule.createTime ? `<p>更新时间：${formatDate(rule.updateTime)}</p>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            // 添加编辑规则按钮点击事件
+            document.querySelectorAll('.edit-rule-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const ruleId = button.getAttribute('data-rule-id');
+                    const rules = JSON.parse(localStorage.getItem('rules')) || [];
+                    const rule = rules.find(r => r.id === ruleId);
+                    
+                    if (rule) {
+                        document.getElementById('rule-title').value = rule.title;
+                        document.getElementById('rule-content').value = rule.content;
+                        document.getElementById('rule-form').setAttribute('data-rule-id', ruleId);
+                        document.getElementById('rule-modal').classList.remove('hidden');
+                    }
+                });
+            });
+            
+            // 添加删除规则按钮点击事件
+            document.querySelectorAll('.delete-rule-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const ruleId = button.getAttribute('data-rule-id');
+                    
+                    if (confirm(`确定要删除规则 ${ruleId} 吗？`)) {
+                        const rules = JSON.parse(localStorage.getItem('rules')) || [];
+                        const updatedRules = rules.filter(rule => rule.id !== ruleId);
+                        localStorage.setItem('rules', JSON.stringify(updatedRules));
+                        loadRulesList();
+                    }
+                });
+            });
+        }
+
+        // 加载公告列表
+        function loadAnnouncementsList() {
+            const announcements = JSON.parse(localStorage.getItem('announcements')) || [];
+            const announcementsList = document.getElementById('announcements-list');
+            
+            // 如果没有公告记录
+            if (announcements.length === 0) {
+                announcementsList.innerHTML = `
+                    <div class="text-center py-8">
+                        <p class="text-gray-500">暂无公告记录</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 显示公告列表
+            announcementsList.innerHTML = announcements.map(announcement => `
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="text-md font-medium text-gray-800">${announcement.title}</h4>
+                        <div class="flex items-center">
+                            ${announcement.isActive ? `<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 mr-2">已发布</span>` : `<span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800 mr-2">未发布</span>`}
+                            <button class="text-primary hover:text-blue-700 mr-2 edit-announcement-btn" data-announcement-id="${announcement.id}">编辑</button>
+                            <button class="text-red-500 hover:text-red-700 delete-announcement-btn" data-announcement-id="${announcement.id}">删除</button>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-600 whitespace-pre-line">${announcement.content}</div>
+                    <div class="mt-3 text-xs text-gray-500">
+                        <p>创建时间：${formatDate(announcement.createTime)}</p>
+                        ${announcement.updateTime !== announcement.createTime ? `<p>更新时间：${formatDate(announcement.updateTime)}</p>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            // 添加编辑公告按钮点击事件
+            document.querySelectorAll('.edit-announcement-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const announcementId = button.getAttribute('data-announcement-id');
+                    const announcements = JSON.parse(localStorage.getItem('announcements')) || [];
+                    const announcement = announcements.find(a => a.id === announcementId);
+                    
+                    if (announcement) {
+                        document.getElementById('announcement-title').value = announcement.title;
+                        document.getElementById('announcement-content').value = announcement.content;
+                        document.getElementById('announcement-active').checked = announcement.isActive;
+                        document.getElementById('announcement-form').setAttribute('data-announcement-id', announcementId);
+                        document.getElementById('announcement-modal').classList.remove('hidden');
+                    }
+                });
+            });
+            
+            // 添加删除公告按钮点击事件
+            document.querySelectorAll('.delete-announcement-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const announcementId = button.getAttribute('data-announcement-id');
+                    
+                    if (confirm(`确定要删除公告 ${announcementId} 吗？`)) {
+                        const announcements = JSON.parse(localStorage.getItem('announcements')) || [];
+                        const updatedAnnouncements = announcements.filter(announcement => announcement.id !== announcementId);
+                        localStorage.setItem('announcements', JSON.stringify(updatedAnnouncements));
+                        loadAnnouncementsList();
+                    }
+                });
+            });
+        }
+
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminLogin();
+            
+            // 更新当前日期
+            const now = new Date();
+            document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+            });
+            
+            // 侧边导航栏切换
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            const sections = document.querySelectorAll('.section-content');
+            const pageTitle = document.getElementById('page-title');
+            
+            function switchSection(targetId) {
+                // 更新页面标题
+                const link = document.querySelector(`.nav-link[data-target="${targetId}"]`) || document.querySelector(`.mobile-nav-link[data-target="${targetId}"]`);
+                if (link) {
+                    pageTitle.textContent = link.querySelector('span').textContent;
+                }
+                
+                // 显示对应内容
+                sections.forEach(section => {
+                    section.classList.add('hidden');
+                });
+                document.getElementById(targetId).classList.remove('hidden');
+                
+                // 更新导航栏样式
+                navLinks.forEach(link => {
+                    if (link.getAttribute('data-target') === targetId) {
+                        link.classList.add('bg-gray-700', 'text-white');
+                        link.classList.remove('text-gray-300');
+                    } else {
+                        link.classList.remove('bg-gray-700', 'text-white');
+                        link.classList.add('text-gray-300');
+                    }
+                });
+                
+                // 关闭移动端侧边栏
+                document.getElementById('mobile-menu').classList.add('translate-x-full');
+            }
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('data-target');
+                    switchSection(targetId);
+                });
+            });
+            
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('data-target');
+                    switchSection(targetId);
+                });
+            });
+            
+            // 移动端侧边栏切换
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const closeMobileMenuBtn = document.getElementById('close-mobile-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.remove('translate-x-full');
+            });
+            
+            closeMobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.add('translate-x-full');
+            });
+            
+            // 用户菜单切换
+            const userMenuBtn = document.getElementById('user-menu-btn');
+            const userMenu = document.getElementById('user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('hidden');
+            });
+            
+            // 点击其他区域关闭用户菜单
+            document.addEventListener('click', (e) => {
+                if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
+            
+            // 退出登录
+            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                sessionStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            });
+            
+            // 修改密码
+            document.getElementById('change-password-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('change-password-modal').classList.remove('hidden');
+            });
+            
+            // 关闭修改密码弹窗
+            document.getElementById('close-password-modal').addEventListener('click', () => {
+                document.getElementById('change-password-modal').classList.add('hidden');
+            });
+            
+            // 修改密码表单提交
+            document.getElementById('change-password-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                // 验证密码
+                if (newPassword !== confirmPassword) {
+                    alert('两次输入的新密码不一致，请重新输入');
+                    return;
+                }
+                
+                // 获取用户数据
+                const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+                const users = JSON.parse(localStorage.getItem('users'));
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                
+                if (userIndex === -1) {
+                    alert('用户不存在');
+                    return;
+                }
+                
+                const user = users[userIndex];
+                
+                // 验证当前密码
+                if (user.password !== currentPassword) {
+                    alert('当前密码错误，请重新输入');
+                    return;
+                }
+                
+                // 更新密码
+                user.password = newPassword;
+                users[userIndex] = user;
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // 关闭弹窗并显示成功消息
+                document.getElementById('change-password-modal').classList.add('hidden');
+                alert('密码修改成功');
+            });
+            
+            // 关闭举报处理弹窗
+            document.getElementById('close-report-modal').addEventListener('click', () => {
+                document.getElementById('report-modal').classList.add('hidden');
+            });
+            
+            // 关闭申诉处理弹窗
+            document.getElementById('close-appeal-modal').addEventListener('click', () => {
+                document.getElementById('appeal-modal').classList.add('hidden');
+            });
+            
+            // 关闭添加处罚弹窗
+            document.getElementById('close-penalty-modal').addEventListener('click', () => {
+                document.getElementById('penalty-modal').classList.add('hidden');
+            });
+            
+            // 关闭添加规则弹窗
+            document.getElementById('close-rule-modal').addEventListener('click', () => {
+                document.getElementById('rule-modal').classList.add('hidden');
+            });
+            
+            // 关闭发布公告弹窗
+            document.getElementById('close-announcement-modal').addEventListener('click', () => {
+                document.getElementById('announcement-modal').classList.add('hidden');
+            });
+            
+            // 提交举报处理
+            document.getElementById('submit-report-handling').addEventListener('click', () => {
+                const reportId = document.getElementById('submit-report-handling').getAttribute('data-report-id');
+                const result = document.getElementById('report-result').value;
+                const remarks = document.getElementById('report-remarks').value;
+                
+                if (!result) {
+                    alert('请选择处理结果');
+                    return;
+                }
+                
+                // 更新举报状态
+                const reports = JSON.parse(localStorage.getItem('reports')) || [];
+                const reportIndex = reports.findIndex(r => r.id === reportId);
+                
+                if (reportIndex !== -1) {
+                    reports[reportIndex].status = 'completed';
+                    reports[reportIndex].result = result;
+                    reports[reportIndex].remarks = remarks;
+                    reports[reportIndex].updateTime = new Date().toISOString();
+                    localStorage.setItem('reports', JSON.stringify(reports));
+                    
+                    // 关闭弹窗并显示成功消息
+                    document.getElementById('report-modal').classList.add('hidden');
+                    alert('举报处理成功');
+                    
+                    // 重新加载举报列表
+                    loadReportsList();
+                    loadDashboardData();
+                }
+            });
+            
+            // 提交申诉处理
+            document.getElementById('submit-appeal-handling').addEventListener('click', () => {
+                const appealId = document.getElementById('submit-appeal-handling').getAttribute('data-appeal-id');
+                const result = document.getElementById('appeal-result').value;
+                const remarks = document.getElementById('appeal-remarks').value;
+                
+                if (!result) {
+                    alert('请选择处理结果');
+                    return;
+                }
+                
+                // 更新申诉状态
+                const appeals = JSON.parse(localStorage.getItem('appeals')) || [];
+                const appealIndex = appeals.findIndex(a => a.id === appealId);
+                
+                if (appealIndex !== -1) {
+                    appeals[appealIndex].status = result;
+                    appeals[appealIndex].remarks = remarks;
+                    appeals[appealIndex].updateTime = new Date().toISOString();
+                    
+                    // 如果申诉通过，更新对应处罚状态
+                    if (result === 'approved') {
+                        const penaltyId = appeals[appealIndex].penaltyId;
+                        const penalties = JSON.parse(localStorage.getItem('penalties')) || [];
+                        const penaltyIndex = penalties.findIndex(p => p.id === penaltyId);
+                        
+                        if (penaltyIndex !== -1) {
+                            penalties[penaltyIndex].status = 'lifted';
+                            penalties[penaltyIndex].updateTime = new Date().toISOString();
+                            localStorage.setItem('penalties', JSON.stringify(penalties));
+                        }
+                    }
+                    
+                    localStorage.setItem('appeals', JSON.stringify(appeals));
+                    
+                    // 关闭弹窗并显示成功消息
+                    document.getElementById('appeal-modal').classList.add('hidden');
+                    alert('申诉处理成功');
+                    
+                    // 重新加载申诉列表
+                    loadAppealsList();
+                    loadDashboardData();
+                }
+            });
+            
+            // 添加处罚按钮点击事件
+            document.getElementById('add-penalty-btn').addEventListener('click', () => {
+                document.getElementById('penalty-form').reset();
+                document.getElementById('penalty-form').removeAttribute('data-report-id');
+                document.getElementById('penalty-modal').classList.remove('hidden');
+            });
+            
+            // 从举报添加处罚按钮点击事件
+            document.getElementById('add-penalty-from-report').addEventListener('click', () => {
+                const reportId = document.getElementById('add-penalty-from-report').getAttribute('data-report-id');
+                const reports = JSON.parse(localStorage.getItem('reports')) || [];
+                const report = reports.find(r => r.id === reportId);
+                
+                if (report) {
+                    document.getElementById('penalty-username').value = report.reportedUsername;
+                    document.getElementById('penalty-qq').value = report.reportedQqNumber;
+                    document.getElementById('penalty-group').value = report.groupChat;
+                    document.getElementById('penalty-reason').value = report.violationType;
+                    document.getElementById('penalty-form').setAttribute('data-report-id', reportId);
+                    document.getElementById('report-modal').classList.add('hidden');
+                    document.getElementById('penalty-modal').classList.remove('hidden');
+                }
+            });
+            
+            // 添加处罚表单提交
+            document.getElementById('penalty-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(e.target);
+                const username = formData.get('username');
+                const qqNumber = formData.get('qqNumber');
+                const groupChat = formData.get('groupChat');
+                const violationReason = formData.get('violationReason');
+                const penaltyType = formData.get('penaltyType');
+                const duration = formData.get('duration');
+                const remarks = formData.get('remarks');
+                const reportId = e.target.getAttribute('data-report-id');
+                
+                // 创建处罚对象
+                const penalty = {
+                    id: 'penalty-' + Date.now(),
+                    userId: null, // 实际应用中应该根据QQ号码查找用户ID
+                    username: username,
+                    qqNumber: qqNumber,
+                    groupChat: groupChat,
+                    violationReason: violationReason,
+                    penaltyType: penaltyType,
+                    duration: duration,
+                    effectiveTime: new Date().toISOString(),
+                    liftTime: duration === '永久' ? null : new Date(Date.now() + getDurationMs(duration)).toISOString(),
+                    status: 'active',
+                    createTime: new Date().toISOString(),
+                    updateTime: new Date().toISOString(),
+                    handlerId: JSON.parse(sessionStorage.getItem('currentUser')).id,
+                    remarks: remarks
+                };
+                
+                // 保存处罚数据
+                const penalties = JSON.parse(localStorage.getItem('penalties')) || [];
+                penalties.push(penalty);
+                localStorage.setItem('penalties', JSON.stringify(penalties));
+                
+                // 如果是从举报添加的处罚，更新举报状态
+                if (reportId) {
+                    const reports = JSON.parse(localStorage.getItem('reports')) || [];
+                    const reportIndex = reports.findIndex(r => r.id === reportId);
+                    
+                    if (reportIndex !== -1) {
+                        reports[reportIndex].status = 'completed';
+                        reports[reportIndex].result = 'true';
+                        reports[reportIndex].remarks = `已对被举报人做出${getPenaltyDescription(penalty)}的处罚`;
+                        reports[reportIndex].updateTime = new Date().toISOString();
+                        localStorage.setItem('reports', JSON.stringify(reports));
+                    }
+                }
+                
+                // 关闭弹窗并显示成功消息
+                document.getElementById('penalty-modal').classList.add('hidden');
+                alert('处罚添加成功');
+                
+                // 重新加载处罚列表
+                loadPenaltiesList();
+                loadDashboardData();
+            });
+            
+            // 添加规则按钮点击事件
+            document.getElementById('add-rule-btn').addEventListener('click', () => {
+                document.getElementById('rule-form').reset();
+                document.getElementById('rule-form').removeAttribute('data-rule-id');
+                document.getElementById('rule-modal').classList.remove('hidden');
+            });
+            
+            // 添加规则表单提交
+            document.getElementById('rule-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(e.target);
+                const title = formData.get('title');
+                const content = formData.get('content');
+                const ruleId = e.target.getAttribute('data-rule-id');
+                
+                const rules = JSON.parse(localStorage.getItem('rules')) || [];
+                const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+                
+                if (ruleId) {
+                    // 编辑规则
+                    const ruleIndex = rules.findIndex(r => r.id === ruleId);
+                    
+                    if (ruleIndex !== -1) {
+                        rules[ruleIndex].title = title;
+                        rules[ruleIndex].content = content;
+                        rules[ruleIndex].updateTime = new Date().toISOString();
+                        localStorage.setItem('rules', JSON.stringify(rules));
+                        alert('规则更新成功');
+                    }
+                } else {
+                    // 添加规则
+                    const rule = {
+                        id: 'rule-' + Date.now(),
+                        title: title,
+                        content: content,
+                        createTime: new Date().toISOString(),
+                        updateTime: new Date().toISOString(),
+                        authorId: currentUser.id
+                    };
+                    
+                    rules.push(rule);
+                    localStorage.setItem('rules', JSON.stringify(rules));
+                    alert('规则添加成功');
+                }
+                
+                // 关闭弹窗
+                document.getElementById('rule-modal').classList.add('hidden');
+                
+                // 重新加载规则列表
+                loadRulesList();
+            });
+            
+            // 发布公告按钮点击事件
+            document.getElementById('add-announcement-btn').addEventListener('click', () => {
+                document.getElementById('announcement-form').reset();
+                document.getElementById('announcement-form').removeAttribute('data-announcement-id');
+                document.getElementById('announcement-modal').classList.remove('hidden');
+            });
+            
+            // 发布公告表单提交
+            document.getElementById('announcement-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(e.target);
+                const title = formData.get('title');
+                const content = formData.get('content');
+                const isActive = formData.has('isActive');
+                const announcementId = e.target.getAttribute('data-announcement-id');
+                
+                const announcements = JSON.parse(localStorage.getItem('announcements')) || [];
+                const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+                
+                if (announcementId) {
+                    // 编辑公告
+                    const announcementIndex = announcements.findIndex(a => a.id === announcementId);
+                    
+                    if (announcementIndex !== -1) {
+                        announcements[announcementIndex].title = title;
+                        announcements[announcementIndex].content = content;
+                        announcements[announcementIndex].isActive = isActive;
+                        announcements[announcementIndex].updateTime = new Date().toISOString();
+                        localStorage.setItem('announcements', JSON.stringify(announcements));
+                        alert('公告更新成功');
+                    }
+                } else {
+                    // 添加公告
+                    const announcement = {
+                        id: 'announcement-' + Date.now(),
+                        title: title,
+                        content: content,
+                        createTime: new Date().toISOString(),
+                        updateTime: new Date().toISOString(),
+                        authorId: currentUser.id,
+                        isActive: isActive
+                    };
+                    
+                    announcements.push(announcement);
+                    localStorage.setItem('announcements', JSON.stringify(announcements));
+                    alert('公告发布成功');
+                }
+                
+                // 关闭弹窗
+                document.getElementById('announcement-modal').classList.add('hidden');
+                
+                // 重新加载公告列表
+                loadAnnouncementsList();
+            });
+            
+            // 系统设置表单提交
+            document.getElementById('settings-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(e.target);
+                const systemName = formData.get('systemName');
+                const contactEmail = formData.get('contactEmail');
+                const reportProcessingTime = formData.get('reportProcessingTime');
+                const appealProcessingTime = formData.get('appealProcessingTime');
+                const systemStatus = formData.has('systemStatus');
+                
+                // 保存设置
+                const settings = {
+                    systemName: systemName,
+                    contactEmail: contactEmail,
+                    reportProcessingTime: reportProcessingTime,
+                    appealProcessingTime: appealProcessingTime,
+                    systemStatus: systemStatus,
+                    updateTime: new Date().toISOString()
+                };
+                
+                localStorage.setItem('settings', JSON.stringify(settings));
+                alert('设置保存成功');
+            });
+            
+            // 加载控制台数据
+            loadDashboardData();
+            
+            // 加载用户列表
+            loadUsersList();
+            
+            // 加载举报列表
+            loadReportsList();
+            
+            // 加载申诉列表
+            loadAppealsList();
+            
+            // 加载处罚列表
+            loadPenaltiesList();
+            
+            // 加载规则列表
+            loadRulesList();
+            
+            // 加载公告列表
+            loadAnnouncementsList();
+            
+            // 加载系统设置
+            const settings = JSON.parse(localStorage.getItem('settings')) || {};
+            document.getElementById('system-name').value = settings.systemName || '江西粤东气象社区交流安全中心';
+            document.getElementById('contact-email').value = settings.contactEmail || 'contact@weather-community.com';
+            document.getElementById('report-processing-time').value = settings.reportProcessingTime || '24';
+            document.getElementById('appeal-processing-time').value = settings.appealProcessingTime || '3';
+            document.getElementById('system-status').checked = settings.systemStatus !== false;
+        });
+
+        // 获取时长毫秒数
+        function getDurationMs(duration) {
+            const durationMap = {
+                '30分钟': 30 * 60 * 1000,
+                '1小时': 60 * 60 * 1000,
+                '1天': 24 * 60 * 60 * 1000,
+                '3天': 3 * 24 * 60 * 60 * 1000,
+                '7天': 7 * 24 * 60 * 60 * 1000,
+                '14天': 14 * 24 * 60 * 60 * 1000,
+                '30天': 30 * 24 * 60 * 60 * 1000
+            };
+            
+            return durationMap[duration] || 0;
+        }
+    </script>
+</body>
+</html>

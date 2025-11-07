@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>江西粤东气象社区交流安全中心 - 违规处罚通知</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#9ca3af',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-20">
+    <!-- 顶部导航栏 -->
+    <header class="bg-primary text-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex items-center">
+            <button id="back-btn" class="mr-4 text-white hover:text-gray-200 transition-all-300">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <h1 class="text-lg font-bold">违规处罚通知</h1>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- 状态筛选 -->
+        <div class="bg-white rounded-xl shadow-card p-4 mb-6">
+            <div class="flex overflow-x-auto space-x-2 pb-2 -mx-2 px-2">
+                <button class="status-filter flex-shrink-0 px-4 py-2 rounded-full bg-primary text-white text-sm font-medium transition-all-300" data-status="all">
+                    全部
+                </button>
+                <button class="status-filter flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium transition-all-300" data-status="active">
+                    生效中
+                </button>
+                <button class="status-filter flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium transition-all-300" data-status="appealing">
+                    申诉中
+                </button>
+                <button class="status-filter flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium transition-all-300" data-status="lifted">
+                    已解除
+                </button>
+            </div>
+        </div>
+
+        <!-- 通知列表 -->
+        <div id="notice-list" class="space-y-4">
+            <!-- 通知卡片将通过JavaScript动态生成 -->
+            <!-- 示例卡片 -->
+            <div class="notice-card bg-white rounded-xl shadow-card overflow-hidden card-hover" data-status="active">
+                <div class="p-4 border-b border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-gray-800">违规处罚通知</h3>
+                            <p class="text-sm text-gray-600 mt-1">违规类型：辱骂/侮辱他人</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            生效中
+                        </span>
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-sm text-gray-600 line-clamp-2">
+                            您在江西气象爱好者群内因辱骂他人，违反了社区规则，现对您做出禁言7天的处罚。
+                        </p>
+                    </div>
+                    <div class="mt-3 flex justify-between items-center">
+                        <span class="text-xs text-neutral-dark">2023-07-15 14:30</span>
+                        <div class="flex space-x-2">
+                            <button class="view-details text-primary text-sm hover:text-blue-700 transition-all-300 flex items-center">
+                                查看详情 <i class="fa fa-angle-right ml-1"></i>
+                            </button>
+                            <button class="appeal-btn text-red-500 text-sm hover:text-red-700 transition-all-300 flex items-center">
+                                申诉 <i class="fa fa-exclamation-circle ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notice-details hidden p-4 bg-gray-50 border-t border-gray-100">
+                    <div class="space-y-3">
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">处罚信息</h4>
+                            <p class="text-sm text-gray-600">用户名：气象爱好者（QQ: 123456789）</p>
+                            <p class="text-sm text-gray-600">违规原因：在群内辱骂其他成员，使用侮辱性语言</p>
+                            <p class="text-sm text-gray-600">处罚结果：禁言7天</p>
+                            <p class="text-sm text-gray-600">生效时间：2023-07-15 14:30</p>
+                            <p class="text-sm text-gray-600">解封时间：2023-07-22 14:30</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">具体解释</h4>
+                            <p class="text-sm text-gray-600">
+                                根据《江西粤东气象社区交流规范》第三条规定："尊重他人，友善交流，禁止辱骂、侮辱他人。"
+                                您在2023年7月15日14:00左右在江西气象爱好者群内使用侮辱性语言辱骂其他成员，
+                                违反了社区规则。经管理员审核，决定对您做出禁言7天的处罚。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notice-card bg-white rounded-xl shadow-card overflow-hidden card-hover" data-status="appealing">
+                <div class="p-4 border-b border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-gray-800">违规处罚通知</h3>
+                            <p class="text-sm text-gray-600 mt-1">违规类型：无关的广告信息</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            申诉中
+                        </span>
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-sm text-gray-600 line-clamp-2">
+                            您在粤东气象爱好者群内发布无关广告信息，违反了社区规则，现对您做出禁言3天的处罚。
+                        </p>
+                    </div>
+                    <div class="mt-3 flex justify-between items-center">
+                        <span class="text-xs text-neutral-dark">2023-07-10 09:15</span>
+                        <div class="flex space-x-2">
+                            <button class="view-details text-primary text-sm hover:text-blue-700 transition-all-300 flex items-center">
+                                查看详情 <i class="fa fa-angle-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notice-details hidden p-4 bg-gray-50 border-t border-gray-100">
+                    <div class="space-y-3">
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">处罚信息</h4>
+                            <p class="text-sm text-gray-600">用户名：气象爱好者（QQ: 123456789）</p>
+                            <p class="text-sm text-gray-600">违规原因：在群内发布与气象无关的广告信息</p>
+                            <p class="text-sm text-gray-600">处罚结果：禁言3天</p>
+                            <p class="text-sm text-gray-600">生效时间：2023-07-10 09:15</p>
+                            <p class="text-sm text-gray-600">解封时间：2023-07-13 09:15</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">具体解释</h4>
+                            <p class="text-sm text-gray-600">
+                                根据《QQ群聊交流规范》第三条规定："禁止在群内发布广告、推广等无关信息。"
+                                您在2023年7月10日09:00左右在粤东气象爱好者群内发布了与气象无关的商品广告，
+                                违反了社区规则。经管理员审核，决定对您做出禁言3天的处罚。
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">申诉状态</h4>
+                            <p class="text-sm text-gray-600">您已提交申诉，管理员正在审核中，请耐心等待。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notice-card bg-white rounded-xl shadow-card overflow-hidden card-hover" data-status="lifted">
+                <div class="p-4 border-b border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-gray-800">违规处罚通知</h3>
+                            <p class="text-sm text-gray-600 mt-1">违规类型：虚假/谣言信息</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            已解除
+                        </span>
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-sm text-gray-600 line-clamp-2">
+                            您在江西气象爱好者群内发布虚假气象信息，违反了社区规则，现对您做出警告处罚。
+                        </p>
+                    </div>
+                    <div class="mt-3 flex justify-between items-center">
+                        <span class="text-xs text-neutral-dark">2023-07-01 16:45</span>
+                        <button class="view-details text-primary text-sm hover:text-blue-700 transition-all-300 flex items-center">
+                            查看详情 <i class="fa fa-angle-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="notice-details hidden p-4 bg-gray-50 border-t border-gray-100">
+                    <div class="space-y-3">
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">处罚信息</h4>
+                            <p class="text-sm text-gray-600">用户名：气象爱好者（QQ: 123456789）</p>
+                            <p class="text-sm text-gray-600">违规原因：在群内发布虚假气象信息</p>
+                            <p class="text-sm text-gray-600">处罚结果：警告</p>
+                            <p class="text-sm text-gray-600">生效时间：2023-07-01 16:45</p>
+                            <p class="text-sm text-gray-600">解除时间：2023-07-02 16:45</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">具体解释</h4>
+                            <p class="text-sm text-gray-600">
+                                根据《江西粤东气象社区交流规范》第四条规定："禁止发布虚假/谣言信息。"
+                                您在2023年7月1日16:30左右在江西气象爱好者群内发布了未经核实的气象信息，
+                                可能会引起不必要的恐慌。经管理员审核，决定对您做出警告处罚。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 无通知提示 -->
+        <div id="no-notices" class="hidden bg-white rounded-xl shadow-card p-8 text-center">
+            <div class="w-16 h-16 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-2xl mx-auto mb-4">
+                <i class="fa fa-bell-o"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-800 mb-2">暂无违规处罚通知</h3>
+            <p class="text-gray-600">
+                您目前没有收到任何违规处罚通知，继续保持良好的社区行为。
+            </p>
+        </div>
+    </main>
+
+    <!-- 底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-10">
+        <div class="flex justify-around">
+            <a href="index.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-home text-xl"></i>
+                <span class="text-xs mt-1">首页</span>
+            </a>
+            <a href="report.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-flag text-xl"></i>
+                <span class="text-xs mt-1">我要举报</span>
+            </a>
+            <a href="progress.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-tasks text-xl"></i>
+                <span class="text-xs mt-1">处理进度</span>
+            </a>
+            <a href="more.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-ellipsis-h text-xl"></i>
+                <span class="text-xs mt-1">更多</span>
+            </a>
+            <a href="user-center.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-user text-xl"></i>
+                <span class="text-xs mt-1">我</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        // 检查本地存储是否可用
+        function isStorageAvailable(type) {
+            try {
+                const storage = window[type];
+                const x = '__storage_test__';
+                storage.setItem(x, x);
+                storage.removeItem(x);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // 创建模拟用户数据
+        function createMockUser() {
+            return {
+                id: 'user-001',
+                username: '测试用户',
+                qqNumber: '123456789',
+                role: 'user'
+            };
+        }
+
+        // 显示登录提示
+        function showLoginPrompt() {
+            const promptDiv = document.createElement('div');
+            promptDiv.className = 'fixed top-0 left-0 right-0 bg-yellow-50 border-b border-yellow-200 text-yellow-800 p-3 text-center z-50';
+            promptDiv.innerHTML = `
+                <div class="container mx-auto flex items-center justify-center">
+                    <i class="fa fa-info-circle mr-2"></i>
+                    <span>您正在以访客模式浏览，部分功能可能受限。</span>
+                    <a href="login.html" class="ml-3 bg-primary text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                        登录
+                    </a>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.body.insertBefore(promptDiv, document.body.firstChild);
+        }
+
+        // 检查用户是否已登录
+        function checkLogin() {
+            // 检查URL参数，如果有skipLogin=true，则直接返回模拟用户
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('skipLogin') && urlParams.get('skipLogin') === 'true') {
+                console.log('跳过登录检查，使用模拟用户');
+                return createMockUser();
+            }
+            
+            // 检查sessionStorage是否可用
+            if (!isStorageAvailable('sessionStorage')) {
+                console.warn('sessionStorage不可用，使用模拟登录状态');
+                showLoginPrompt();
+                return createMockUser();
+            }
+            
+            const currentUser = sessionStorage.getItem('currentUser');
+            if (!currentUser) {
+                // 用户未登录，显示提示信息而不是跳转
+                showLoginPrompt();
+                return createMockUser(); // 返回模拟用户以显示页面
+            }
+            
+            try {
+                return JSON.parse(currentUser);
+            } catch (e) {
+                console.error('解析用户数据失败', e);
+                return createMockUser();
+            }
+        }
+
+        // 获取状态对应的样式
+        function getStatusStyle(status) {
+            switch (status) {
+                case 'active':
+                    return {
+                        bg: 'bg-red-100',
+                        text: 'text-red-800',
+                        label: '生效中'
+                    };
+                case 'appealing':
+                    return {
+                        bg: 'bg-yellow-100',
+                        text: 'text-yellow-800',
+                        label: '申诉中'
+                    };
+                case 'lifted':
+                    return {
+                        bg: 'bg-green-100',
+                        text: 'text-green-800',
+                        label: '已解除'
+                    };
+                default:
+                    return {
+                        bg: 'bg-gray-100',
+                        text: 'text-gray-800',
+                        label: '未知'
+                    };
+            }
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // 加载用户的处罚通知
+        function loadUserNotices() {
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            const penalties = JSON.parse(localStorage.getItem('penalties')) || [];
+            
+            // 筛选当前用户的处罚记录
+            const userPenalties = penalties.filter(penalty => penalty.qqNumber === currentUser.qqNumber);
+            
+            // 按时间倒序排序
+            userPenalties.sort((a, b) => new Date(b.createTime) - new Date(a.createTime));
+            
+            const noticeList = document.getElementById('notice-list');
+            const noNotices = document.getElementById('no-notices');
+            
+            // 如果没有处罚记录，显示无记录提示
+            if (userPenalties.length === 0) {
+                noticeList.classList.add('hidden');
+                noNotices.classList.remove('hidden');
+                return;
+            }
+            
+            // 显示通知列表，隐藏无记录提示
+            noticeList.classList.remove('hidden');
+            noNotices.classList.add('hidden');
+            
+            // 清空现有列表
+            noticeList.innerHTML = '';
+            
+            // 生成通知卡片
+            userPenalties.forEach(penalty => {
+                const statusStyle = getStatusStyle(penalty.status);
+                
+                // 获取对应的申诉信息
+                const appeals = JSON.parse(localStorage.getItem('appeals')) || [];
+                const relatedAppeal = appeals.find(appeal => appeal.penaltyId === penalty.id);
+                
+                // 创建通知卡片
+                const noticeCard = document.createElement('div');
+                noticeCard.className = `notice-card bg-white rounded-xl shadow-card overflow-hidden card-hover`;
+                noticeCard.setAttribute('data-status', penalty.status);
+                noticeCard.innerHTML = `
+                    <div class="p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-medium text-gray-800">违规处罚通知</h3>
+                                <p class="text-sm text-gray-600 mt-1">违规类型：${penalty.violationReason}</p>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-xs font-medium ${statusStyle.bg} ${statusStyle.text}">
+                                ${statusStyle.label}
+                            </span>
+                        </div>
+                        <div class="mt-3">
+                            <p class="text-sm text-gray-600 line-clamp-2">
+                                您在${penalty.groupChat || '社区'}因${penalty.violationReason}，违反了社区规则，现对您做出${getPenaltyDescription(penalty)}的处罚。
+                            </p>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="text-xs text-neutral-dark">${formatDate(penalty.createTime)}</span>
+                            <div class="flex space-x-2">
+                                <button class="view-details text-primary text-sm hover:text-blue-700 transition-all-300 flex items-center">
+                                    查看详情 <i class="fa fa-angle-right ml-1"></i>
+                                </button>
+                                ${penalty.status === 'active' ? `
+                                    <button class="appeal-btn text-red-500 text-sm hover:text-red-700 transition-all-300 flex items-center" data-penalty-id="${penalty.id}">
+                                        申诉 <i class="fa fa-exclamation-circle ml-1"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notice-details hidden p-4 bg-gray-50 border-t border-gray-100">
+                        <div class="space-y-3">
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-700">处罚信息</h4>
+                                <p class="text-sm text-gray-600">用户名：${penalty.username}（QQ: ${penalty.qqNumber}）</p>
+                                <p class="text-sm text-gray-600">违规原因：${penalty.violationReason}</p>
+                                <p class="text-sm text-gray-600">处罚结果：${getPenaltyDescription(penalty)}</p>
+                                <p class="text-sm text-gray-600">生效时间：${formatDate(penalty.effectiveTime)}</p>
+                                ${penalty.liftTime ? `<p class="text-sm text-gray-600">${penalty.duration === '永久' ? '处罚时间：永久' : '解封时间：' + formatDate(penalty.liftTime)}</p>` : ''}
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-700">具体解释</h4>
+                                <p class="text-sm text-gray-600">
+                                    ${penalty.remarks || generateExplanation(penalty)}
+                                </p>
+                            </div>
+                            ${relatedAppeal ? `
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700">申诉状态</h4>
+                                    <p class="text-sm text-gray-600">
+                                        ${getAppealStatusDescription(relatedAppeal)}
+                                    </p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                noticeList.appendChild(noticeCard);
+            });
+            
+            // 添加查看详情按钮点击事件
+            document.querySelectorAll('.view-details').forEach(button => {
+                button.addEventListener('click', () => {
+                    const noticeCard = button.closest('.notice-card');
+                    const noticeDetails = noticeCard.querySelector('.notice-details');
+                    
+                    // 切换详情显示状态
+                    if (noticeDetails.classList.contains('hidden')) {
+                        noticeDetails.classList.remove('hidden');
+                        button.innerHTML = '收起详情 <i class="fa fa-angle-up ml-1"></i>';
+                    } else {
+                        noticeDetails.classList.add('hidden');
+                        button.innerHTML = '查看详情 <i class="fa fa-angle-right ml-1"></i>';
+                    }
+                });
+            });
+            
+            // 添加申诉按钮点击事件
+            document.querySelectorAll('.appeal-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const penaltyId = button.getAttribute('data-penalty-id');
+                    window.location.href = `appeal.html?penaltyId=${penaltyId}`;
+                });
+            });
+        }
+
+        // 获取处罚描述
+        function getPenaltyDescription(penalty) {
+            switch (penalty.penaltyType) {
+                case 'ban':
+                    return `封禁权限${penalty.duration !== '永久' ? penalty.duration : '永久'}`;
+                case 'mute':
+                    return `禁言${penalty.duration !== '永久' ? penalty.duration : '永久'}`;
+                case 'warning':
+                    return '警告';
+                default:
+                    return penalty.penaltyType;
+            }
+        }
+
+        // 获取申诉状态描述
+        function getAppealStatusDescription(appeal) {
+            switch (appeal.status) {
+                case 'pending':
+                    return '您已提交申诉，管理员正在审核中，请耐心等待。';
+                case 'processing':
+                    return '您的申诉正在处理中，管理员将尽快给出结果。';
+                case 'approved':
+                    return '您的申诉已通过，处罚已解除。';
+                case 'rejected':
+                    return `您的申诉未通过，原处罚继续生效。原因：${appeal.remarks || '不符合申诉条件'}`;
+                default:
+                    return '申诉状态未知';
+            }
+        }
+
+        // 生成处罚解释（模拟AI生成）
+        function generateExplanation(penalty) {
+            const explanations = {
+                '辱骂/侮辱他人': `
+                    根据《江西粤东气象社区交流规范》第三条规定："尊重他人，友善交流，禁止辱骂、侮辱他人。"
+                    您在群内使用侮辱性语言辱骂其他成员，违反了社区规则。这种行为不仅伤害了其他成员的感情，
+                    也破坏了社区的和谐氛围。经管理员审核，决定对您做出${getPenaltyDescription(penalty)}的处罚。
+                `,
+                '虚假/谣言信息': `
+                    根据《江西粤东气象社区交流规范》第四条规定："禁止发布虚假/谣言信息。"
+                    您在群内发布了未经核实的气象信息，可能会引起不必要的恐慌。在气象社区中，
+                    信息的准确性至关重要，虚假信息可能会误导他人做出错误的决策。经管理员审核，
+                    决定对您做出${getPenaltyDescription(penalty)}的处罚。
+                `,
+                '无关的广告信息': `
+                    根据《QQ群聊交流规范》第三条规定："禁止在群内发布广告、推广等无关信息。"
+                    您在群内发布了与气象无关的商品广告，影响了群内的正常交流。本群旨在为气象爱好者
+                    提供一个交流学习的平台，请保持群内内容的专业性和相关性。经管理员审核，
+                    决定对您做出${getPenaltyDescription(penalty)}的处罚。
+                `,
+                '色情低容/资源': `
+                    根据《江西粤东气象社区交流规范》第三条规定："禁止发布色情、暴力、血腥等不良内容。"
+                    您在群内发布了包含色情内容的信息，严重违反了社区规则。我们致力于维护一个健康、
+                    积极的交流环境，请遵守相关规定。经管理员审核，决定对您做出${getPenaltyDescription(penalty)}的处罚。
+                `,
+                '政治敏感': `
+                    根据《江西粤东气象社区交流规范》第四条规定："禁止发布政治敏感信息和谣言。"
+                    您在群内发布了涉及政治敏感话题的内容，违反了社区规则。本群专注于气象相关话题的交流，
+                    请避免讨论与气象无关的敏感话题。经管理员审核，决定对您做出${getPenaltyDescription(penalty)}的处罚。
+                `,
+                '私信骚扰': `
+                    根据《江西粤东气象社区交流规范》第六条规定："禁止私信骚扰他人。"
+                    您通过私信对其他成员进行骚扰，违反了社区规则。尊重他人的隐私和意愿是基本的社交礼仪，
+                    请停止此类行为。经管理员审核，决定对您做出${getPenaltyDescription(penalty)}的处罚。
+                `
+            };
+            
+            return explanations[penalty.violationReason] || `
+                根据社区规则，您的行为违反了相关规定。请遵守社区规范，共同维护良好的交流环境。
+                经管理员审核，决定对您做出${getPenaltyDescription(penalty)}的处罚。
+            `;
+        }
+
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLogin();
+            
+            // 返回按钮点击事件
+            document.getElementById('back-btn').addEventListener('click', () => {
+                window.history.back();
+            });
+            
+            // 加载用户的处罚通知
+            loadUserNotices();
+            
+            // 状态筛选按钮点击事件
+            document.querySelectorAll('.status-filter').forEach(button => {
+                button.addEventListener('click', () => {
+                    // 更新按钮样式
+                    document.querySelectorAll('.status-filter').forEach(btn => {
+                        btn.classList.remove('bg-primary', 'text-white');
+                        btn.classList.add('bg-gray-100', 'text-gray-700');
+                    });
+                    button.classList.remove('bg-gray-100', 'text-gray-700');
+                    button.classList.add('bg-primary', 'text-white');
+                    
+                    // 筛选通知记录
+                    const status = button.getAttribute('data-status');
+                    const noticeCards = document.querySelectorAll('.notice-card');
+                    
+                    noticeCards.forEach(card => {
+                        if (status === 'all' || card.getAttribute('data-status') === status) {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    });
+                    
+                    // 检查是否有显示的通知记录
+                    const visibleCards = document.querySelectorAll('.notice-card:not(.hidden)');
+                    const noNotices = document.getElementById('no-notices');
+                    
+                    if (visibleCards.length === 0) {
+                        noNotices.classList.remove('hidden');
+                    } else {
+                        noNotices.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>江西粤东气象社区交流安全中心 - 处理进度</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#9ca3af',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-20">
+    <!-- 顶部导航栏 -->
+    <header class="bg-primary text-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex items-center">
+            <button id="back-btn" class="mr-4 text-white hover:text-gray-200 transition-all-300">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <h1 class="text-lg font-bold">处理进度</h1>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- 状态筛选 -->
+        <div class="bg-white rounded-xl shadow-card p-4 mb-6">
+            <div class="flex overflow-x-auto space-x-2 pb-2 -mx-2 px-2">
+                <button class="status-filter flex-shrink-0 px-4 py-2 rounded-full bg-primary text-white text-sm font-medium transition-all-300" data-status="all">
+                    全部
+                </button>
+                <button class="status-filter flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium transition-all-300" data-status="pending">
+                    待处理
+                </button>
+                <button class="status-filter flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium transition-all-300" data-status="processing">
+                    处理中
+                </button>
+                <button class="status-filter flex-shrink-0 px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium transition-all-300" data-status="completed">
+                    已处理
+                </button>
+            </div>
+        </div>
+
+        <!-- 举报列表 -->
+        <div id="report-list" class="space-y-4">
+            <!-- 举报卡片将通过JavaScript动态生成 -->
+            <!-- 示例卡片 -->
+            <div class="report-card bg-white rounded-xl shadow-card overflow-hidden card-hover" data-status="pending">
+                <div class="p-4 border-b border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-gray-800">举报用户：张三</h3>
+                            <p class="text-sm text-gray-600 mt-1">群聊：江西气象爱好者</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            待处理
+                        </span>
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-sm text-gray-600 line-clamp-2">
+                            该用户在群内发布虚假气象信息，声称近期将有强台风登陆，但经核实为虚假信息。
+                        </p>
+                    </div>
+                    <div class="mt-3 flex justify-between items-center">
+                        <span class="text-xs text-neutral-dark">2023-07-15 14:30</span>
+                        <button class="view-details text-primary text-sm hover:text-blue-700 transition-all-300 flex items-center">
+                            查看详情 <i class="fa fa-angle-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="report-details hidden p-4 bg-gray-50 border-t border-gray-100">
+                    <div class="space-y-3">
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">被举报人信息</h4>
+                            <p class="text-sm text-gray-600">用户名：张三</p>
+                            <p class="text-sm text-gray-600">QQ号码：123456789</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">违规信息</h4>
+                            <p class="text-sm text-gray-600">违规类型：虚假/谣言信息</p>
+                            <p class="text-sm text-gray-600">详细描述：该用户在群内发布虚假气象信息，声称近期将有强台风登陆，但经核实为虚假信息。这种行为可能会引起不必要的恐慌，影响社区的正常交流氛围。</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">处理进度</h4>
+                            <div class="flex items-center mt-2">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 33%"></div>
+                                </div>
+                                <span class="text-xs text-gray-600 ml-2">33%</span>
+                            </div>
+                            <div class="flex justify-between mt-1 text-xs text-gray-500">
+                                <span>举报提交</span>
+                                <span>正在处理</span>
+                                <span>处理完成</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-card bg-white rounded-xl shadow-card overflow-hidden card-hover" data-status="processing">
+                <div class="p-4 border-b border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-gray-800">举报用户：李四</h3>
+                            <p class="text-sm text-gray-600 mt-1">群聊：粤东气象爱好者</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            处理中
+                        </span>
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-sm text-gray-600 line-clamp-2">
+                            该用户在群内发布与气象无关的广告信息，频繁发送商品链接，影响正常交流。
+                        </p>
+                    </div>
+                    <div class="mt-3 flex justify-between items-center">
+                        <span class="text-xs text-neutral-dark">2023-07-10 09:15</span>
+                        <button class="view-details text-primary text-sm hover:text-blue-700 transition-all-300 flex items-center">
+                            查看详情 <i class="fa fa-angle-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="report-details hidden p-4 bg-gray-50 border-t border-gray-100">
+                    <div class="space-y-3">
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">被举报人信息</h4>
+                            <p class="text-sm text-gray-600">用户名：李四</p>
+                            <p class="text-sm text-gray-600">QQ号码：987654321</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">违规信息</h4>
+                            <p class="text-sm text-gray-600">违规类型：无关的广告信息</p>
+                            <p class="text-sm text-gray-600">详细描述：该用户在群内发布与气象无关的广告信息，频繁发送商品链接，影响正常交流。多次提醒后仍不改正。</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">处理进度</h4>
+                            <div class="flex items-center mt-2">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-blue-500 h-2.5 rounded-full" style="width: 66%"></div>
+                                </div>
+                                <span class="text-xs text-gray-600 ml-2">66%</span>
+                            </div>
+                            <div class="flex justify-between mt-1 text-xs text-gray-500">
+                                <span>举报提交</span>
+                                <span>正在处理</span>
+                                <span>处理完成</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-card bg-white rounded-xl shadow-card overflow-hidden card-hover" data-status="completed">
+                <div class="p-4 border-b border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-gray-800">举报用户：王五</h3>
+                            <p class="text-sm text-gray-600 mt-1">群聊：江西气象爱好者</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            已处理
+                        </span>
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-sm text-gray-600 line-clamp-2">
+                            该用户在群内辱骂其他成员，使用侮辱性语言，严重影响群内氛围。
+                        </p>
+                    </div>
+                    <div class="mt-3 flex justify-between items-center">
+                        <span class="text-xs text-neutral-dark">2023-07-05 16:45</span>
+                        <button class="view-details text-primary text-sm hover:text-blue-700 transition-all-300 flex items-center">
+                            查看详情 <i class="fa fa-angle-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="report-details hidden p-4 bg-gray-50 border-t border-gray-100">
+                    <div class="space-y-3">
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">被举报人信息</h4>
+                            <p class="text-sm text-gray-600">用户名：王五</p>
+                            <p class="text-sm text-gray-600">QQ号码：567891234</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">违规信息</h4>
+                            <p class="text-sm text-gray-600">违规类型：辱骂/侮辱他人</p>
+                            <p class="text-sm text-gray-600">详细描述：该用户在群内辱骂其他成员，使用侮辱性语言，严重影响群内氛围。</p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">处理进度</h4>
+                            <div class="flex items-center mt-2">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-green-500 h-2.5 rounded-full" style="width: 100%"></div>
+                                </div>
+                                <span class="text-xs text-gray-600 ml-2">100%</span>
+                            </div>
+                            <div class="flex justify-between mt-1 text-xs text-gray-500">
+                                <span>举报提交</span>
+                                <span>正在处理</span>
+                                <span>处理完成</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">处理结果</h4>
+                            <p class="text-sm text-gray-600">该用户因违反社区规则，已被禁言7天。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 无举报记录提示 -->
+        <div id="no-reports" class="hidden bg-white rounded-xl shadow-card p-8 text-center">
+            <div class="w-16 h-16 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-2xl mx-auto mb-4">
+                <i class="fa fa-flag-o"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-800 mb-2">暂无举报记录</h3>
+            <p class="text-gray-600 mb-6">
+                您还没有提交过举报，如有违规行为需要举报，请点击下方按钮。
+            </p>
+            <a href="report.html" class="inline-block px-6 py-2.5 bg-primary hover:bg-blue-700 text-white font-medium rounded-md transition-all-300">
+                我要举报
+            </a>
+        </div>
+    </main>
+
+    <!-- 底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-10">
+        <div class="flex justify-around">
+            <a href="index.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-home text-xl"></i>
+                <span class="text-xs mt-1">首页</span>
+            </a>
+            <a href="report.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-flag text-xl"></i>
+                <span class="text-xs mt-1">我要举报</span>
+            </a>
+            <a href="progress.html" class="flex flex-col items-center py-3 px-4 text-primary">
+                <i class="fa fa-tasks text-xl"></i>
+                <span class="text-xs mt-1">处理进度</span>
+            </a>
+            <a href="more.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-ellipsis-h text-xl"></i>
+                <span class="text-xs mt-1">更多</span>
+            </a>
+            <a href="user-center.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-user text-xl"></i>
+                <span class="text-xs mt-1">我</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        // 检查本地存储是否可用
+        function isStorageAvailable(type) {
+            try {
+                const storage = window[type];
+                const x = '__storage_test__';
+                storage.setItem(x, x);
+                storage.removeItem(x);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // 创建模拟用户数据
+        function createMockUser() {
+            return {
+                id: 'user-001',
+                username: '测试用户',
+                qqNumber: '123456789',
+                role: 'user'
+            };
+        }
+
+        // 显示登录提示
+        function showLoginPrompt() {
+            const promptDiv = document.createElement('div');
+            promptDiv.className = 'fixed top-0 left-0 right-0 bg-yellow-50 border-b border-yellow-200 text-yellow-800 p-3 text-center z-50';
+            promptDiv.innerHTML = `
+                <div class="container mx-auto flex items-center justify-center">
+                    <i class="fa fa-info-circle mr-2"></i>
+                    <span>您正在以访客模式浏览，部分功能可能受限。</span>
+                    <a href="login.html" class="ml-3 bg-primary text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                        登录
+                    </a>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.body.insertBefore(promptDiv, document.body.firstChild);
+        }
+
+        // 检查用户是否已登录
+        function checkLogin() {
+            // 检查URL参数，如果有skipLogin=true，则直接返回模拟用户
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('skipLogin') && urlParams.get('skipLogin') === 'true') {
+                console.log('跳过登录检查，使用模拟用户');
+                return createMockUser();
+            }
+            
+            // 检查sessionStorage是否可用
+            if (!isStorageAvailable('sessionStorage')) {
+                console.warn('sessionStorage不可用，使用模拟登录状态');
+                showLoginPrompt();
+                return createMockUser();
+            }
+            
+            const currentUser = sessionStorage.getItem('currentUser');
+            if (!currentUser) {
+                // 用户未登录，显示提示信息而不是跳转
+                showLoginPrompt();
+                return createMockUser(); // 返回模拟用户以显示页面
+            }
+            
+            try {
+                return JSON.parse(currentUser);
+            } catch (e) {
+                console.error('解析用户数据失败', e);
+                return createMockUser();
+            }
+        }
+
+        // 获取状态对应的样式
+        function getStatusStyle(status) {
+            switch (status) {
+                case 'pending':
+                    return {
+                        bg: 'bg-yellow-100',
+                        text: 'text-yellow-800',
+                        label: '待处理',
+                        progress: '33%',
+                        progressBg: 'bg-yellow-500'
+                    };
+                case 'processing':
+                    return {
+                        bg: 'bg-blue-100',
+                        text: 'text-blue-800',
+                        label: '处理中',
+                        progress: '66%',
+                        progressBg: 'bg-blue-500'
+                    };
+                case 'completed':
+                    return {
+                        bg: 'bg-green-100',
+                        text: 'text-green-800',
+                        label: '已处理',
+                        progress: '100%',
+                        progressBg: 'bg-green-500'
+                    };
+                default:
+                    return {
+                        bg: 'bg-gray-100',
+                        text: 'text-gray-800',
+                        label: '未知',
+                        progress: '0%',
+                        progressBg: 'bg-gray-500'
+                    };
+            }
+        }
+
+        // 加载用户的举报记录
+        function loadUserReports() {
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            const reports = JSON.parse(localStorage.getItem('reports')) || [];
+            
+            // 筛选当前用户的举报记录
+            const userReports = reports.filter(report => report.reporterId === currentUser.id);
+            
+            // 按时间倒序排序
+            userReports.sort((a, b) => new Date(b.createTime) - new Date(a.createTime));
+            
+            const reportList = document.getElementById('report-list');
+            const noReports = document.getElementById('no-reports');
+            
+            // 如果没有举报记录，显示无记录提示
+            if (userReports.length === 0) {
+                reportList.classList.add('hidden');
+                noReports.classList.remove('hidden');
+                return;
+            }
+            
+            // 显示举报列表，隐藏无记录提示
+            reportList.classList.remove('hidden');
+            noReports.classList.add('hidden');
+            
+            // 清空现有列表
+            reportList.innerHTML = '';
+            
+            // 生成举报卡片
+            userReports.forEach(report => {
+                const statusStyle = getStatusStyle(report.status);
+                
+                // 格式化日期
+                const createTime = new Date(report.createTime).toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                // 创建举报卡片
+                const reportCard = document.createElement('div');
+                reportCard.className = `report-card bg-white rounded-xl shadow-card overflow-hidden card-hover`;
+                reportCard.setAttribute('data-status', report.status);
+                reportCard.innerHTML = `
+                    <div class="p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-medium text-gray-800">举报用户：${report.reportedUsername}</h3>
+                                <p class="text-sm text-gray-600 mt-1">群聊：${report.groupChat}</p>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-xs font-medium ${statusStyle.bg} ${statusStyle.text}">
+                                ${statusStyle.label}
+                            </span>
+                        </div>
+                        <div class="mt-3">
+                            <p class="text-sm text-gray-600 line-clamp-2">
+                                ${report.description.substring(0, 100)}${report.description.length > 100 ? '...' : ''}
+                            </p>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="text-xs text-neutral-dark">${createTime}</span>
+                            <button class="view-details text-primary text-sm hover:text-blue-700 transition-all-300 flex items-center">
+                                查看详情 <i class="fa fa-angle-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="report-details hidden p-4 bg-gray-50 border-t border-gray-100">
+                        <div class="space-y-3">
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-700">被举报人信息</h4>
+                                <p class="text-sm text-gray-600">用户名：${report.reportedUsername}</p>
+                                <p class="text-sm text-gray-600">QQ号码：${report.reportedQqNumber}</p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-700">违规信息</h4>
+                                <p class="text-sm text-gray-600">违规类型：${report.violationType}${report.otherReason ? `（${report.otherReason}）` : ''}</p>
+                                <p class="text-sm text-gray-600">详细描述：${report.description}</p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-700">处理进度</h4>
+                                <div class="flex items-center mt-2">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="${statusStyle.progressBg} h-2.5 rounded-full" style="width: ${statusStyle.progress}"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-600 ml-2">${statusStyle.progress}</span>
+                                </div>
+                                <div class="flex justify-between mt-1 text-xs text-gray-500">
+                                    <span>举报提交</span>
+                                    <span>正在处理</span>
+                                    <span>处理完成</span>
+                                </div>
+                            </div>
+                            ${report.status === 'completed' ? `
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700">处理结果</h4>
+                                    <p class="text-sm text-gray-600">${report.result || '暂无处理结果'}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                reportList.appendChild(reportCard);
+            });
+            
+            // 添加查看详情按钮点击事件
+            document.querySelectorAll('.view-details').forEach(button => {
+                button.addEventListener('click', () => {
+                    const reportCard = button.closest('.report-card');
+                    const reportDetails = reportCard.querySelector('.report-details');
+                    
+                    // 切换详情显示状态
+                    if (reportDetails.classList.contains('hidden')) {
+                        reportDetails.classList.remove('hidden');
+                        button.innerHTML = '收起详情 <i class="fa fa-angle-up ml-1"></i>';
+                    } else {
+                        reportDetails.classList.add('hidden');
+                        button.innerHTML = '查看详情 <i class="fa fa-angle-right ml-1"></i>';
+                    }
+                });
+            });
+        }
+
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLogin();
+            
+            // 返回按钮点击事件
+            document.getElementById('back-btn').addEventListener('click', () => {
+                window.history.back();
+            });
+            
+            // 加载用户的举报记录
+            loadUserReports();
+            
+            // 状态筛选按钮点击事件
+            document.querySelectorAll('.status-filter').forEach(button => {
+                button.addEventListener('click', () => {
+                    // 更新按钮样式
+                    document.querySelectorAll('.status-filter').forEach(btn => {
+                        btn.classList.remove('bg-primary', 'text-white');
+                        btn.classList.add('bg-gray-100', 'text-gray-700');
+                    });
+                    button.classList.remove('bg-gray-100', 'text-gray-700');
+                    button.classList.add('bg-primary', 'text-white');
+                    
+                    // 筛选举报记录
+                    const status = button.getAttribute('data-status');
+                    const reportCards = document.querySelectorAll('.report-card');
+                    
+                    reportCards.forEach(card => {
+                        if (status === 'all' || card.getAttribute('data-status') === status) {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    });
+                    
+                    // 检查是否有显示的举报记录
+                    const visibleCards = document.querySelectorAll('.report-card:not(.hidden)');
+                    const noReports = document.getElementById('no-reports');
+                    
+                    if (visibleCards.length === 0) {
+                        noReports.classList.remove('hidden');
+                    } else {
+                        noReports.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>江西粤东气象社区交流安全中心 - 更多</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#9ca3af',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-20">
+    <!-- 顶部导航栏 -->
+    <header class="bg-primary text-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex items-center">
+            <button id="back-btn" class="mr-4 text-white hover:text-gray-200 transition-all-300">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <h1 class="text-lg font-bold">更多</h1>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- 功能列表 -->
+        <section class="mb-8">
+            <div class="bg-white rounded-xl shadow-card overflow-hidden">
+                <a href="#" class="flex items-center justify-between p-4 border-b border-gray-100 hover:bg-gray-50 transition-all-300">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        <span class="ml-3 text-gray-800">社区规则</span>
+                    </div>
+                    <i class="fa fa-angle-right text-gray-400"></i>
+                </a>
+                <a href="#" class="flex items-center justify-between p-4 border-b border-gray-100 hover:bg-gray-50 transition-all-300">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-green-100 text-green-500 flex items-center justify-center">
+                            <i class="fa fa-question-circle"></i>
+                        </div>
+                        <span class="ml-3 text-gray-800">常见问题</span>
+                    </div>
+                    <i class="fa fa-angle-right text-gray-400"></i>
+                </a>
+                <a href="#" class="flex items-center justify-between p-4 border-b border-gray-100 hover:bg-gray-50 transition-all-300">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-500 flex items-center justify-center">
+                            <i class="fa fa-info-circle"></i>
+                        </div>
+                        <span class="ml-3 text-gray-800">关于我们</span>
+                    </div>
+                    <i class="fa fa-angle-right text-gray-400"></i>
+                </a>
+                <a href="#" class="flex items-center justify-between p-4 hover:bg-gray-50 transition-all-300">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-500 flex items-center justify-center">
+                            <i class="fa fa-envelope"></i>
+                        </div>
+                        <span class="ml-3 text-gray-800">联系我们</span>
+                    </div>
+                    <i class="fa fa-angle-right text-gray-400"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- 社区规则详情 -->
+        <section id="community-rules" class="mb-8">
+            <div class="bg-white rounded-xl shadow-card p-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fa fa-book text-primary mr-2"></i>
+                    社区规则
+                </h2>
+                
+                <!-- 规则选项卡 -->
+                <div class="flex border-b border-gray-200 mb-4">
+                    <button class="rule-tab py-2 px-4 border-b-2 border-primary text-primary font-medium" data-rule="jiangxi">
+                        江西粤东气象社区交流规范
+                    </button>
+                    <button class="rule-tab py-2 px-4 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-rule="qq">
+                        QQ群聊交流规范
+                    </button>
+                </div>
+                
+                <!-- 规则内容 -->
+                <div id="rule-content">
+                    <!-- 江西粤东气象社区交流规范 -->
+                    <div id="jiangxi-rule" class="rule-content">
+                        <div class="space-y-4">
+                            <p class="text-gray-600">
+                                为维护江西粤东气象社区的正常秩序，保障社区用户的合法权益，创造一个健康、和谐的网络交流环境，特制定本规范。
+                            </p>
+                            <div>
+                                <h3 class="font-medium text-gray-800 mb-2">一、基本原则</h3>
+                                <ol class="list-decimal list-inside text-gray-600 space-y-1 pl-2">
+                                    <li>遵守国家法律法规和社会主义核心价值观。</li>
+                                    <li>尊重他人，友善交流，禁止辱骂、侮辱他人。</li>
+                                    <li>禁止发布色情、暴力、血腥等不良内容。</li>
+                                    <li>禁止发布政治敏感信息和谣言。</li>
+                                    <li>禁止发布与气象无关的广告信息。</li>
+                                    <li>禁止私信骚扰他人。</li>
+                                    <li>保持交流环境的清洁，共同维护良好的社区氛围。</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-gray-800 mb-2">二、违规处理</h3>
+                                <ol class="list-decimal list-inside text-gray-600 space-y-1 pl-2">
+                                    <li>对于违反社区规则的行为，管理员有权根据情节轻重采取相应的处理措施。</li>
+                                    <li>轻微违规：警告、禁言1-3天。</li>
+                                    <li>中度违规：禁言7-14天、限制部分功能。</li>
+                                    <li>严重违规：禁言30天、永久禁言、封禁账号。</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-gray-800 mb-2">三、举报机制</h3>
+                                <ol class="list-decimal list-inside text-gray-600 space-y-1 pl-2">
+                                    <li>用户发现违规行为可通过举报功能进行举报。</li>
+                                    <li>举报时需提供充分的证据，如截图、聊天记录等。</li>
+                                    <li>管理员将在24小时内对举报进行处理，并反馈处理结果。</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-gray-800 mb-2">四、申诉机制</h3>
+                                <ol class="list-decimal list-inside text-gray-600 space-y-1 pl-2">
+                                    <li>用户对处罚有异议的，可在收到处罚通知后7天内提交申诉。</li>
+                                    <li>申诉时需提供充分的证据和理由。</li>
+                                    <li>管理员将在3个工作日内对申诉进行审核，并反馈审核结果。</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-gray-800 mb-2">五、附则</h3>
+                                <ol class="list-decimal list-inside text-gray-600 space-y-1 pl-2">
+                                    <li>本规范自发布之日起生效。</li>
+                                    <li>本规范最终解释权归江西粤东气象社区管理团队所有。</li>
+                                    <li>社区管理团队有权根据实际情况对本规范进行修改和完善。</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- QQ群聊交流规范 -->
+                    <div id="qq-rule" class="rule-content hidden">
+                        <div class="space-y-4">
+                            <p class="text-gray-600">
+                                为维护江西粤东气象社区QQ群的正常秩序，保障群成员的合法权益，创造一个健康、和谐的群聊环境，特制定本规范。
+                            </p>
+                            <div>
+                                <h3 class="font-medium text-gray-800 mb-2">一、基本原则</h3>
+                                <ol class="list-decimal list-inside text-gray-600 space-y-1 pl-2">
+                                    <li>遵守QQ群管理规定和社区交流规范。</li>
+                                    <li>群聊内容应以气象相关话题为主。</li>
+                                    <li>禁止在群内发布广告、推广等无关信息。</li>
+                                    <li>禁止在群内争吵、辱骂他人。</li>
+                                    <li>尊重群管理员，服从管理。</li>
+                                    <li>保护个人隐私，谨慎分享个人信息。</li>
+                                    <li>鼓励积极参与气象讨论，共同学习进步。</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-gray-800 mb-2">二、群聊礼仪</h3>
+                                <ol class="list-decimal list-inside text-gray-600 space-y-1 pl-2">
+                                    <li>入群后请修改群名片，建议使用真实姓名或常用昵称。</li>
+                                    <li>发言前请先查看群公告和历史消息，避免重复提问。</li>
+                                    <li>提问时请简明扼要，提供必要的背景信息。</li>
+                                    <li>回答问题时请耐心、友善，不要嘲笑新手。</li>
+                                    <li>避免刷屏、霸屏等影响他人交流的行为。</li>
+                                    <li>分享文件前请先确认是否有分享价值，并注明文件内容。</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-gray-800 mb-2">三、违规处理</h3>
+                                <ol class="list-decimal list-inside text-gray-600 space-y-1 pl-2">
+                                    <li>对于违反群聊规范的行为，群管理员有权根据情节轻重采取相应的处理措施。</li>
+                                    <li>轻微违规：警告、禁言1-3天。</li>
+                                    <li>中度违规：禁言7-14天。</li>
+                                    <li>严重违规：移出群聊、加入黑名单。</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-gray-800 mb-2">四、举报机制</h3>
+                                <ol class="list-decimal list-inside text-gray-600 space-y-1 pl-2">
+                                    <li>群成员发现违规行为可通过群举报功能或私聊管理员进行举报。</li>
+                                    <li>举报时需提供充分的证据，如截图、聊天记录等。</li>
+                                    <li>管理员将在24小时内对举报进行处理，并反馈处理结果。</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-gray-800 mb-2">五、附则</h3>
+                                <ol class="list-decimal list-inside text-gray-600 space-y-1 pl-2">
+                                    <li>本规范自发布之日起生效。</li>
+                                    <li>本规范最终解释权归江西粤东气象社区QQ群管理团队所有。</li>
+                                    <li>群管理团队有权根据实际情况对本规范进行修改和完善。</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 常见问题 -->
+        <section id="faq" class="mb-8">
+            <div class="bg-white rounded-xl shadow-card p-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fa fa-question-circle text-primary mr-2"></i>
+                    常见问题
+                </h2>
+                
+                <div class="space-y-4">
+                    <div class="border-b border-gray-100 pb-4">
+                        <h3 class="font-medium text-gray-800 mb-2">如何举报违规行为？</h3>
+                        <p class="text-gray-600">
+                            您可以通过以下步骤举报违规行为：<br>
+                            1. 登录江西粤东气象社区交流安全中心<br>
+                            2. 点击"我要举报"按钮<br>
+                            3. 填写被举报人信息、违规类型、描述经历等<br>
+                            4. 上传相关证据<br>
+                            5. 提交举报
+                        </p>
+                    </div>
+                    <div class="border-b border-gray-100 pb-4">
+                        <h3 class="font-medium text-gray-800 mb-2">如何查看举报处理进度？</h3>
+                        <p class="text-gray-600">
+                            您可以通过以下步骤查看举报处理进度：<br>
+                            1. 登录江西粤东气象社区交流安全中心<br>
+                            2. 点击"处理进度"按钮<br>
+                            3. 在列表中查看您提交的举报及其处理状态<br>
+                            4. 点击"查看详情"可查看更详细的处理信息
+                        </p>
+                    </div>
+                    <div class="border-b border-gray-100 pb-4">
+                        <h3 class="font-medium text-gray-800 mb-2">如何对处罚进行申诉？</h3>
+                        <p class="text-gray-600">
+                            您可以通过以下步骤对处罚进行申诉：<br>
+                            1. 登录江西粤东气象社区交流安全中心<br>
+                            2. 点击"违规处罚通知"按钮<br>
+                            3. 在列表中找到您要申诉的处罚通知<br>
+                            4. 点击"申诉"按钮<br>
+                            5. 填写申诉理由并上传相关证据<br>
+                            6. 提交申诉
+                        </p>
+                    </div>
+                    <div class="border-b border-gray-100 pb-4">
+                        <h3 class="font-medium text-gray-800 mb-2">举报处理需要多长时间？</h3>
+                        <p class="text-gray-600">
+                            我们会在收到举报后的24小时内进行初步审核，并在3个工作日内给出最终处理结果。
+                            对于复杂的举报案件，处理时间可能会延长，我们会尽快处理并通知您。
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-800 mb-2">申诉处理需要多长时间？</h3>
+                        <p class="text-gray-600">
+                            我们会在收到申诉后的3个工作日内进行审核，并给出最终处理结果。
+                            对于复杂的申诉案件，处理时间可能会延长，我们会尽快处理并通知您。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于我们 -->
+        <section id="about-us" class="mb-8">
+            <div class="bg-white rounded-xl shadow-card p-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fa fa-info-circle text-primary mr-2"></i>
+                    关于我们
+                </h2>
+                
+                <div class="space-y-4">
+                    <p class="text-gray-600">
+                        江西粤东气象社区成立于2015年，是一个专注于气象知识交流、气象信息分享的社区平台。
+                        我们致力于为广大气象爱好者提供一个健康、和谐的交流环境，促进气象知识的传播和普及。
+                    </p>
+                    <p class="text-gray-600">
+                        社区目前拥有江西气象爱好者和粤东气象爱好者两个主要QQ群，以及多个专题讨论组。
+                        社区成员包括气象专业人士、气象爱好者、学生等，大家共同探讨气象知识，分享气象信息。
+                    </p>
+                    <p class="text-gray-600">
+                        为了维护社区的正常秩序，保障社区用户的合法权益，我们成立了江西粤东气象社区交流安全中心，
+                        负责处理社区内的违规行为举报、处罚申诉等事务，确保社区交流环境的安全和规范。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系我们 -->
+        <section id="contact-us">
+            <div class="bg-white rounded-xl shadow-card p-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fa fa-envelope text-primary mr-2"></i>
+                    联系我们
+                </h2>
+                
+                <div class="space-y-4">
+                    <p class="text-gray-600">
+                        如果您有任何问题、建议或意见，欢迎通过以下方式联系我们：
+                    </p>
+                    <div class="space-y-2">
+                        <p class="text-gray-600 flex items-center">
+                            <i class="fa fa-envelope-o mr-2 text-gray-400"></i>
+                            邮箱：contact@weather-community.com
+                        </p>
+                        <p class="text-gray-600 flex items-center">
+                            <i class="fa fa-qq mr-2 text-gray-400"></i>
+                            QQ群：江西气象爱好者（群号：123456789）
+                        </p>
+                        <p class="text-gray-600 flex items-center">
+                            <i class="fa fa-qq mr-2 text-gray-400"></i>
+                            QQ群：粤东气象爱好者（群号：987654321）
+                        </p>
+                        <p class="text-gray-600 flex items-center">
+                            <i class="fa fa-weixin mr-2 text-gray-400"></i>
+                            微信公众号：江西粤东气象社区
+                        </p>
+                    </div>
+                    <p class="text-gray-600">
+                        我们会在收到您的消息后的24小时内回复您。
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-10">
+        <div class="flex justify-around">
+            <a href="index.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-home text-xl"></i>
+                <span class="text-xs mt-1">首页</span>
+            </a>
+            <a href="report.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-flag text-xl"></i>
+                <span class="text-xs mt-1">我要举报</span>
+            </a>
+            <a href="progress.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-tasks text-xl"></i>
+                <span class="text-xs mt-1">处理进度</span>
+            </a>
+            <a href="more.html" class="flex flex-col items-center py-3 px-4 text-primary">
+                <i class="fa fa-ellipsis-h text-xl"></i>
+                <span class="text-xs mt-1">更多</span>
+            </a>
+            <a href="user-center.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-user text-xl"></i>
+                <span class="text-xs mt-1">我</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        // 检查本地存储是否可用
+        function isStorageAvailable(type) {
+            try {
+                const storage = window[type];
+                const x = '__storage_test__';
+                storage.setItem(x, x);
+                storage.removeItem(x);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // 创建模拟用户数据
+        function createMockUser() {
+            return {
+                id: 'user-001',
+                username: '测试用户',
+                qqNumber: '123456789',
+                role: 'user'
+            };
+        }
+
+        // 显示登录提示
+        function showLoginPrompt() {
+            const promptDiv = document.createElement('div');
+            promptDiv.className = 'fixed top-0 left-0 right-0 bg-yellow-50 border-b border-yellow-200 text-yellow-800 p-3 text-center z-50';
+            promptDiv.innerHTML = `
+                <div class="container mx-auto flex items-center justify-center">
+                    <i class="fa fa-info-circle mr-2"></i>
+                    <span>您正在以访客模式浏览，部分功能可能受限。</span>
+                    <a href="login.html" class="ml-3 bg-primary text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                        登录
+                    </a>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.body.insertBefore(promptDiv, document.body.firstChild);
+        }
+
+        // 检查用户是否已登录
+        function checkLogin() {
+            // 检查URL参数，如果有skipLogin=true，则直接返回模拟用户
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('skipLogin') && urlParams.get('skipLogin') === 'true') {
+                console.log('跳过登录检查，使用模拟用户');
+                return createMockUser();
+            }
+            
+            // 检查sessionStorage是否可用
+            if (!isStorageAvailable('sessionStorage')) {
+                console.warn('sessionStorage不可用，使用模拟登录状态');
+                showLoginPrompt();
+                return createMockUser();
+            }
+            
+            const currentUser = sessionStorage.getItem('currentUser');
+            if (!currentUser) {
+                // 用户未登录，显示提示信息而不是跳转
+                showLoginPrompt();
+                return createMockUser(); // 返回模拟用户以显示页面
+            }
+            
+            try {
+                return JSON.parse(currentUser);
+            } catch (e) {
+                console.error('解析用户数据失败', e);
+                return createMockUser();
+            }
+        }
+
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLogin();
+            
+            // 返回按钮点击事件
+            document.getElementById('back-btn').addEventListener('click', () => {
+                window.history.back();
+            });
+            
+            // 规则选项卡切换
+            const ruleTabs = document.querySelectorAll('.rule-tab');
+            const ruleContents = document.querySelectorAll('.rule-content');
+            
+            ruleTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 更新选项卡样式
+                    ruleTabs.forEach(t => {
+                        t.classList.remove('border-primary', 'text-primary');
+                        t.classList.add('border-transparent', 'text-gray-500');
+                    });
+                    tab.classList.remove('border-transparent', 'text-gray-500');
+                    tab.classList.add('border-primary', 'text-primary');
+                    
+                    // 显示对应内容
+                    const ruleId = tab.getAttribute('data-rule');
+                    ruleContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    document.getElementById(`${ruleId}-rule`).classList.remove('hidden');
+                });
+            });
+            
+            // 功能列表点击事件
+            const featureLinks = document.querySelectorAll('section:first-child a');
+            
+            featureLinks.forEach((link, index) => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // 根据索引滚动到对应区域
+                    const sections = [
+                        document.getElementById('community-rules'),
+                        document.getElementById('faq'),
+                        document.getElementById('about-us'),
+                        document.getElementById('contact-us')
+                    ];
+                    
+                    if (sections[index]) {
+                        sections[index].scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

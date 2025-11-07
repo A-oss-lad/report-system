@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>举报管理系统</title>
+    <title>江西粤东气象社区交流安全中心 - 首页</title>
     <!-- Tailwind CSS v3 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -16,14 +16,18 @@
                         primary: '#1e40af',
                         secondary: '#3b82f6',
                         accent: '#60a5fa',
-                        danger: '#dc2626',
-                        warning: '#f59e0b',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#9ca3af',
                         success: '#10b981',
-                        light: '#f3f4f6',
-                        dark: '#1f2937'
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif']
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                     }
                 }
             }
@@ -32,2579 +36,375 @@
     <style type="text/tailwindcss">
         @layer utilities {
             .glass-effect {
-                background: rgba(255, 255, 255, 0.25);
+                background: rgba(255, 255, 255, 0.7);
                 backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.18);
+                -webkit-backdrop-filter: blur(10px);
             }
-            .card-shadow {
-                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
-            .btn-primary {
-                @apply bg-primary hover:bg-blue-800 text-white font-bold py-2 px-4 rounded transition-all duration-300;
+            .transition-all-300 {
+                transition: all 0.3s ease;
             }
-            .btn-secondary {
-                @apply bg-secondary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-all duration-300;
+            .card-hover {
+                transition: all 0.3s ease;
             }
-            .btn-danger {
-                @apply bg-danger hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-all duration-300;
-            }
-            .btn-outline {
-                @apply border border-primary text-primary hover:bg-primary hover:text-white font-bold py-2 px-4 rounded transition-all duration-300;
-            }
-            .input-field {
-                @apply w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
-            }
-            .label {
-                @apply block text-gray-700 text-sm font-bold mb-2;
-            }
-            .card {
-                @apply bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg;
-            }
-            .nav-link {
-                @apply block px-4 py-2 text-gray-700 hover:bg-primary hover:text-white rounded-md transition-all duration-300;
-            }
-            .nav-link.active {
-                @apply bg-primary text-white;
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             }
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-50 min-h-screen pb-20">
     <!-- 顶部导航栏 -->
-    <nav class="bg-primary text-white shadow-md">
+    <header class="bg-primary text-white shadow-md">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <i class="fa fa-shield text-2xl"></i>
-                <h1 class="text-xl font-bold">举报管理系统</h1>
+            <div class="flex items-center">
+                <i class="fa fa-shield text-xl mr-2"></i>
+                <h1 class="text-lg font-bold">江西粤东气象社区交流安全中心</h1>
             </div>
-            <div class="flex items-center space-x-4">
-                <a href="#" class="hover:text-accent transition-colors duration-300" id="home-link">首页</a>
-                <a href="#" class="hover:text-accent transition-colors duration-300" id="report-link">提交举报</a>
-                <a href="#" class="hover:text-accent transition-colors duration-300" id="progress-link">处理进度</a>
-                <a href="#" class="hover:text-accent transition-colors duration-300" id="admin-link">管理员入口</a>
+            <div class="flex items-center">
+                <button id="logout-btn" class="text-white hover:text-gray-200 transition-all-300 flex items-center">
+                    <i class="fa fa-sign-out mr-1"></i> 退出
+                </button>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- 主内容区 -->
-    <main class="container mx-auto px-4 py-8">
-        <!-- 首页内容 -->
-        <section id="home-section" class="mb-8">
-            <div class="bg-white rounded-lg shadow-md p-8 mb-8">
-                <h2 class="text-2xl font-bold mb-4 text-primary">欢迎使用举报管理系统</h2>
-                <p class="text-gray-700 mb-6">本系统用于处理群聊中的违规行为举报，确保网络环境的健康与安全。</p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="card p-6 text-center">
-                        <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fa fa-flag text-primary text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold mb-2">提交举报</h3>
-                        <p class="text-gray-600 mb-4">发现违规行为？请填写举报表单提交相关信息。</p>
-                        <button class="btn-primary" id="home-report-btn">立即举报</button>
+    <!-- 主要内容区域 -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- 欢迎信息 -->
+        <section class="mb-8">
+            <div class="bg-white rounded-xl shadow-card p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center text-xl">
+                        <i class="fa fa-user"></i>
                     </div>
-                    <div class="card p-6 text-center">
-                        <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fa fa-search text-success text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold mb-2">查询进度</h3>
-                        <p class="text-gray-600 mb-4">查看您提交的举报处理状态和结果。</p>
-                        <button class="btn-primary" id="home-progress-btn">查看进度</button>
-                    </div>
-                    <div class="card p-6 text-center">
-                        <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fa fa-user-circle text-purple-600 text-2xl"></i>
-                        </div>
-                        <h3 class="text-lg font-bold mb-2">管理员入口</h3>
-                        <p class="text-gray-600 mb-4">管理员登录系统处理举报和管理相关事务。</p>
-                        <button class="btn-primary" id="home-admin-btn">管理员登录</button>
+                    <div class="ml-4">
+                        <h2 class="text-xl font-bold text-gray-800" id="welcome-message">欢迎回来，用户</h2>
+                        <p class="text-neutral-dark" id="login-time">上次登录时间：未知</p>
                     </div>
                 </div>
+                <p class="text-gray-600">
+                    欢迎来到江西粤东气象社区交流安全中心。本中心致力于维护社区交流环境的安全与规范，
+                    为广大气象爱好者提供一个健康、和谐的交流平台。如有任何问题或发现违规行为，请及时举报。
+                </p>
             </div>
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h3 class="text-xl font-bold mb-4 text-primary">举报流程说明</h3>
-                <div class="flex flex-col md:flex-row justify-between">
-                    <div class="flex flex-col items-center mb-6 md:mb-0">
-                        <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mb-2">
-                            <span class="font-bold text-primary">1</span>
-                        </div>
-                        <p class="text-center">填写举报表单</p>
-                    </div>
-                    <div class="hidden md:block self-center">
-                        <i class="fa fa-arrow-right text-gray-400 text-xl"></i>
-                    </div>
-                    <div class="flex flex-col items-center mb-6 md:mb-0">
-                        <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mb-2">
-                            <span class="font-bold text-primary">2</span>
-                        </div>
-                        <p class="text-center">提交举报信息</p>
-                    </div>
-                    <div class="hidden md:block self-center">
-                        <i class="fa fa-arrow-right text-gray-400 text-xl"></i>
-                    </div>
-                    <div class="flex flex-col items-center mb-6 md:mb-0">
-                        <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mb-2">
-                            <span class="font-bold text-primary">3</span>
-                        </div>
-                        <p class="text-center">管理员审核处理</p>
-                    </div>
-                    <div class="hidden md:block self-center">
-                        <i class="fa fa-arrow-right text-gray-400 text-xl"></i>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mb-2">
-                            <span class="font-bold text-primary">4</span>
-                        </div>
-                        <p class="text-center">查看处理结果</p>
+        </section>
+
+        <!-- 公告栏 -->
+        <section class="mb-8">
+            <div class="bg-white rounded-xl shadow-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-gray-800 flex items-center">
+                        <i class="fa fa-bullhorn text-primary mr-2"></i>
+                        最新公告
+                    </h2>
+                    <span class="text-xs text-neutral-dark">更多 <i class="fa fa-angle-right"></i></span>
+                </div>
+                <div id="announcements-container">
+                    <!-- 公告内容将通过JavaScript动态生成 -->
+                    <div class="border-l-4 border-primary pl-4 py-2 mb-3">
+                        <h3 class="font-medium text-gray-800">欢迎使用江西粤东气象社区交流安全中心</h3>
+                        <p class="text-sm text-gray-600 mt-1">本中心已正式上线，为社区用户提供举报、申诉等服务，共同维护社区环境。</p>
+                        <p class="text-xs text-neutral-dark mt-2">2023-07-01</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 举报表单 -->
-        <section id="report-section" class="hidden mb-8">
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h2 class="text-2xl font-bold mb-6 text-primary">提交举报</h2>
-                <form id="report-form" class="space-y-6">
-                    <div>
-                        <label for="reportedUser" class="label">被举报用户名 <span class="text-danger">*</span></label>
-                        <input type="text" id="reportedUser" name="reportedUser" class="input-field" required>
+        <!-- 快捷功能 -->
+        <section class="mb-8">
+            <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fa fa-star text-primary mr-2"></i>
+                快捷功能
+            </h2>
+            <div class="grid grid-cols-2 gap-4">
+                <a href="report.html" class="bg-white rounded-xl shadow-card p-6 flex flex-col items-center justify-center card-hover">
+                    <div class="w-16 h-16 rounded-full bg-red-100 text-red-500 flex items-center justify-center text-2xl mb-3">
+                        <i class="fa fa-flag"></i>
                     </div>
-                    <div>
-                        <label for="reportedQQ" class="label">被举报QQ号 <span class="text-danger">*</span></label>
-                        <input type="text" id="reportedQQ" name="reportedQQ" class="input-field" required>
+                    <h3 class="font-medium text-gray-800">我要举报</h3>
+                    <p class="text-xs text-neutral-dark mt-1 text-center">举报违规行为</p>
+                </a>
+                <a href="progress.html" class="bg-white rounded-xl shadow-card p-6 flex flex-col items-center justify-center card-hover">
+                    <div class="w-16 h-16 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center text-2xl mb-3">
+                        <i class="fa fa-tasks"></i>
                     </div>
-                    <div>
-                        <label for="groupChat" class="label">群聊 <span class="text-danger">*</span></label>
-                        <select id="groupChat" name="groupChat" class="input-field" required>
-                            <option value="">请选择群聊</option>
-                            <option value="江西气象爱好者群">江西气象爱好者群</option>
-                            <option value="粤东气象爱好者群">粤东气象爱好者群</option>
-                        </select>
+                    <h3 class="font-medium text-gray-800">处理进度</h3>
+                    <p class="text-xs text-neutral-dark mt-1 text-center">查看举报处理状态</p>
+                </a>
+                <a href="notice.html" class="bg-white rounded-xl shadow-card p-6 flex flex-col items-center justify-center card-hover">
+                    <div class="w-16 h-16 rounded-full bg-yellow-100 text-yellow-500 flex items-center justify-center text-2xl mb-3">
+                        <i class="fa fa-bell"></i>
                     </div>
-                    <div>
-                        <label for="violationType" class="label">违规类型 <span class="text-danger">*</span></label>
-                        <select id="violationType" name="violationType" class="input-field" required>
-                            <option value="">请选择违规类型</option>
-                            <option value="色情低俗">色情低俗</option>
-                            <option value="虚假与谣言信息">虚假与谣言信息</option>
-                            <option value="发布不良行为">发布不良行为</option>
-                            <option value="广告与广告群聊">广告与广告群聊</option>
-                            <option value="违法违规">违法违规</option>
-                            <option value="政治敏感">政治敏感</option>
-                            <option value="侮辱他人">侮辱他人</option>
-                            <option value="人身攻击与辱骂他人">人身攻击与辱骂他人</option>
-                            <option value="私信骚扰行为">私信骚扰行为</option>
-                            <option value="其他">其他</option>
-                        </select>
+                    <h3 class="font-medium text-gray-800">处罚通知</h3>
+                    <p class="text-xs text-neutral-dark mt-1 text-center">查看违规处罚通知</p>
+                </a>
+                <a href="user-center.html" class="bg-white rounded-xl shadow-card p-6 flex flex-col items-center justify-center card-hover">
+                    <div class="w-16 h-16 rounded-full bg-green-100 text-green-500 flex items-center justify-center text-2xl mb-3">
+                        <i class="fa fa-user-circle"></i>
                     </div>
-                    <div>
-                        <label for="description" class="label">描述经历 <span class="text-danger">*</span></label>
-                        <textarea id="description" name="description" rows="5" class="input-field" required></textarea>
-                    </div>
-                    <div>
-                        <label for="attachments" class="label">附件证据</label>
-                        <input type="file" id="attachments" name="attachments" multiple class="input-field">
-                        <p class="text-sm text-gray-500 mt-1">支持图片、视频等格式，最多5个文件</p>
-                        <!-- 图片预览区域 -->
-                        <div id="preview-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                            <!-- 预览图片将在这里动态添加 -->
-                        </div>
-                    </div>
-                    <div class="flex justify-end space-x-4">
-                        <button type="button" class="btn-outline" id="cancel-report">取消</button>
-                        <button type="submit" class="btn-primary">提交举报</button>
-                    </div>
-                </form>
+                    <h3 class="font-medium text-gray-800">个人中心</h3>
+                    <p class="text-xs text-neutral-dark mt-1 text-center">查看个人信息</p>
+                </a>
             </div>
         </section>
 
-        <!-- 处理进度列表 -->
-        <section id="progress-section" class="hidden mb-8">
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h2 class="text-2xl font-bold mb-6 text-primary">处理进度查询</h2>
-                
-                <!-- 搜索和筛选 -->
-                <div class="mb-6 flex flex-col sm:flex-row gap-4">
-                    <div class="flex-grow">
-                        <div class="relative">
-                            <input type="text" id="progress-search" placeholder="搜索举报记录..." class="input-field pl-10">
-                            <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                        </div>
-                    </div>
-                    <div class="flex gap-2">
-                        <select id="status-filter" class="input-field">
-                            <option value="all">所有状态</option>
-                            <option value="待处理">待处理</option>
-                            <option value="处理中">处理中</option>
-                            <option value="已处理">已处理</option>
-                            <option value="已驳回">已驳回</option>
-                        </select>
-                        <select id="group-filter" class="input-field">
-                            <option value="all">所有群聊</option>
-                            <option value="江西气象爱好者群">江西气象爱好者群</option>
-                            <option value="粤东气象爱好者群">粤东气象爱好者群</option>
-                        </select>
-                    </div>
+        <!-- 社区规则摘要 -->
+        <section class="mb-8">
+            <div class="bg-white rounded-xl shadow-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-gray-800 flex items-center">
+                        <i class="fa fa-book text-primary mr-2"></i>
+                        社区规则摘要
+                    </h2>
+                    <a href="more.html" class="text-xs text-primary hover:text-blue-700 transition-all-300 flex items-center">
+                        查看全部 <i class="fa fa-angle-right ml-1"></i>
+                    </a>
                 </div>
-                
-                <!-- 卡片列表 -->
-                <div id="progress-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- 处理进度数据将通过JavaScript动态填充为卡片 -->
-                </div>
-                
-                <div id="no-reports-message" class="text-center py-8 text-gray-500">
-                    暂无举报记录
-                </div>
-                
-                <!-- 分页 -->
-                <div id="pagination" class="mt-8 flex justify-center hidden">
-                    <nav class="inline-flex rounded-md shadow">
-                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50" id="prev-page">上一页</a>
-                        <a href="#" class="py-2 px-4 bg-primary text-white border border-primary" id="current-page">1</a>
-                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50" id="next-page">下一页</a>
-                    </nav>
-                </div>
-            </div>
-        </section>
-
-        <!-- 管理员登录 -->
-        <section id="admin-login-section" class="hidden mb-8">
-            <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
-                <h2 class="text-2xl font-bold mb-6 text-primary text-center">管理员登录</h2>
-                <form id="admin-login-form" class="space-y-6">
+                <div class="space-y-4">
                     <div>
-                        <label for="adminUsername" class="label">用户名</label>
-                        <input type="text" id="adminUsername" name="adminUsername" class="input-field" required>
+                        <h3 class="font-medium text-gray-800 mb-2">江西粤东气象社区交流规范</h3>
+                        <ul class="text-sm text-gray-600 space-y-1 list-disc list-inside">
+                            <li>遵守国家法律法规和社会主义核心价值观</li>
+                            <li>尊重他人，友善交流，禁止辱骂、侮辱他人</li>
+                            <li>禁止发布色情、暴力、血腥等不良内容</li>
+                            <li>禁止发布政治敏感信息和谣言</li>
+                        </ul>
                     </div>
                     <div>
-                        <label for="adminPassword" class="label">密码</label>
-                        <input type="password" id="adminPassword" name="adminPassword" class="input-field" required>
+                        <h3 class="font-medium text-gray-800 mb-2">QQ群聊交流规范</h3>
+                        <ul class="text-sm text-gray-600 space-y-1 list-disc list-inside">
+                            <li>群聊内容应以气象相关话题为主</li>
+                            <li>禁止在群内发布广告、推广等无关信息</li>
+                            <li>禁止在群内争吵、辱骂他人</li>
+                            <li>尊重群管理员，服从管理</li>
+                        </ul>
                     </div>
-                    <div class="flex justify-end">
-                        <button type="button" class="btn-outline mr-4" id="cancel-login">取消</button>
-                        <button type="submit" class="btn-primary">登录</button>
-                    </div>
-                </form>
-                <div id="login-error" class="mt-4 text-danger text-center hidden">
-                    用户名或密码错误
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- 管理员后台 -->
-    <div id="admin-panel" class="hidden">
-        <!-- 管理员导航栏 -->
-        <nav class="bg-primary text-white shadow-md">
-            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-                <div class="flex items-center space-x-4">
-                    <i class="fa fa-shield text-2xl"></i>
-                    <h1 class="text-xl font-bold">管理员后台</h1>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <span id="admin-username" class="hidden">欢迎，管理员</span>
-                    <button id="logout-btn" class="hover:text-accent transition-colors duration-300">退出登录</button>
-                </div>
-            </div>
-        </nav>
-
-        <!-- 管理员侧边栏和内容区 -->
-        <div class="flex">
-            <!-- 侧边栏 -->
-            <aside class="w-64 bg-gray-100 min-h-screen p-4">
-                <ul class="space-y-2">
-                    <li><a href="#" class="nav-link active" data-target="dashboard-section">控制台</a></li>
-                    <li><a href="#" class="nav-link" data-target="review-section">审核处理</a></li>
-                    <li><a href="#" class="nav-link" data-target="team-section">管理团队</a></li>
-                    <li><a href="#" class="nav-link" data-target="punishment-section">处罚管理</a></li>
-                    <li><a href="#" class="nav-link" data-target="appeal-section">申诉审核</a></li>
-                    <li><a href="#" class="nav-link" data-target="message-section">系统消息</a></li>
-                    <li><a href="#" class="nav-link" data-target="settings-section">系统设置</a></li>
-                </ul>
-            </aside>
-
-            <!-- 内容区 -->
-            <main class="flex-1 p-8">
-                <!-- 控制台 -->
-                <section id="dashboard-section" class="admin-section">
-                    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                        <h2 class="text-2xl font-bold mb-4 text-primary">控制台</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h3 class="text-lg font-semibold text-primary mb-2">待处理举报</h3>
-                                <p class="text-3xl font-bold" id="pending-reports-count">0</p>
-                            </div>
-                            <div class="bg-green-50 p-4 rounded-lg">
-                                <h3 class="text-lg font-semibold text-success mb-2">已处理举报</h3>
-                                <p class="text-3xl font-bold" id="processed-reports-count">0</p>
-                            </div>
-                            <div class="bg-purple-50 p-4 rounded-lg">
-                                <h3 class="text-lg font-semibold text-purple-600 mb-2">管理员数量</h3>
-                                <p class="text-3xl font-bold" id="admin-count">0</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-xl font-bold mb-4">最近举报</h3>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full bg-white">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="py-2 px-4 text-left">被举报人</th>
-                                        <th class="py-2 px-4 text-left">群聊</th>
-                                        <th class="py-2 px-4 text-left">违规类型</th>
-                                        <th class="py-2 px-4 text-left">举报时间</th>
-                                        <th class="py-2 px-4 text-left">状态</th>
-                                        <th class="py-2 px-4 text-left">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recent-reports-table">
-                                    <!-- 最近举报数据将通过JavaScript动态填充 -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 审核处理 -->
-                <section id="review-section" class="admin-section hidden">
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-2xl font-bold mb-4 text-primary">审核处理</h2>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full bg-white">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="py-2 px-4 text-left">ID</th>
-                                        <th class="py-2 px-4 text-left">被举报人</th>
-                                        <th class="py-2 px-4 text-left">QQ号码</th>
-                                        <th class="py-2 px-4 text-left">群聊</th>
-                                        <th class="py-2 px-4 text-left">违规类型</th>
-                                        <th class="py-2 px-4 text-left">举报时间</th>
-                                        <th class="py-2 px-4 text-left">状态</th>
-                                        <th class="py-2 px-4 text-left">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="review-table-body">
-                                    <!-- 审核处理数据将通过JavaScript动态填充 -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 管理团队 -->
-                <section id="team-section" class="admin-section hidden">
-                    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-2xl font-bold text-primary">管理团队</h2>
-                            <button id="add-admin-btn" class="btn-primary flex items-center">
-                                <i class="fa fa-plus mr-2"></i> 添加管理员
-                            </button>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full bg-white">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="py-2 px-4 text-left">用户名</th>
-                                        <th class="py-2 px-4 text-left">QQ邮箱</th>
-                                        <th class="py-2 px-4 text-left">角色</th>
-                                        <th class="py-2 px-4 text-left">创建时间</th>
-                                        <th class="py-2 px-4 text-left">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="admin-table-body">
-                                    <!-- 管理员数据将通过JavaScript动态填充 -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 处罚管理 -->
-                <section id="punishment-section" class="admin-section hidden">
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-2xl font-bold mb-4 text-primary">处罚管理</h2>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full bg-white">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="py-2 px-4 text-left">被举报人</th>
-                                        <th class="py-2 px-4 text-left">QQ号码</th>
-                                        <th class="py-2 px-4 text-left">违规类型</th>
-                                        <th class="py-2 px-4 text-left">处罚类型</th>
-                                        <th class="py-2 px-4 text-left">处罚时长</th>
-                                        <th class="py-2 px-4 text-left">处罚时间</th>
-                                        <th class="py-2 px-4 text-left">状态</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="punishment-table-body">
-                                    <!-- 处罚管理数据将通过JavaScript动态填充 -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 申诉审核 -->
-                <section id="appeal-section" class="admin-section hidden">
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-2xl font-bold mb-4 text-primary">申诉审核</h2>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full bg-white">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="py-2 px-4 text-left">ID</th>
-                                        <th class="py-2 px-4 text-left">申诉人</th>
-                                        <th class="py-2 px-4 text-left">QQ号码</th>
-                                        <th class="py-2 px-4 text-left">举报ID</th>
-                                        <th class="py-2 px-4 text-left">申诉时间</th>
-                                        <th class="py-2 px-4 text-left">状态</th>
-                                        <th class="py-2 px-4 text-left">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="appeal-table-body">
-                                    <!-- 申诉审核数据将通过JavaScript动态填充 -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 系统消息 -->
-                <section id="message-section" class="admin-section hidden">
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-2xl font-bold mb-4 text-primary">系统消息</h2>
-                        <div class="space-y-4" id="message-list">
-                            <!-- 系统消息将通过JavaScript动态填充 -->
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 系统设置 -->
-                <section id="settings-section" class="admin-section hidden">
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-2xl font-bold mb-4 text-primary">系统设置</h2>
-                        <form id="settings-form" class="space-y-6">
-                            <div>
-                                <label for="emailNotification" class="label">邮件通知</label>
-                                <select id="emailNotification" name="emailNotification" class="input-field">
-                                    <option value="enabled">启用</option>
-                                    <option value="disabled">禁用</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="autoAssign" class="label">自动分配审核</label>
-                                <select id="autoAssign" name="autoAssign" class="input-field">
-                                    <option value="enabled">启用</option>
-                                    <option value="disabled">禁用</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="reportLimit" class="label">每日举报上限</label>
-                                <input type="number" id="reportLimit" name="reportLimit" class="input-field" value="10">
-                            </div>
-                            <div class="flex justify-end">
-                                <button type="submit" class="btn-primary">保存设置</button>
-                            </div>
-                        </form>
-                    </div>
-                </section>
-            </main>
+    <!-- 底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-10">
+        <div class="flex justify-around">
+            <a href="index.html" class="flex flex-col items-center py-3 px-4 text-primary">
+                <i class="fa fa-home text-xl"></i>
+                <span class="text-xs mt-1">首页</span>
+            </a>
+            <a href="report.html?skipLogin=true" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-flag text-xl"></i>
+                <span class="text-xs mt-1">我要举报</span>
+            </a>
+            <a href="progress.html?skipLogin=true" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-tasks text-xl"></i>
+                <span class="text-xs mt-1">处理进度</span>
+            </a>
+            <a href="more.html?skipLogin=true" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-ellipsis-h text-xl"></i>
+                <span class="text-xs mt-1">更多</span>
+            </a>
+            <a href="user-center.html?skipLogin=true" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+                <i class="fa fa-user text-xl"></i>
+                <span class="text-xs mt-1">我</span>
+            </a>
         </div>
-    </div>
+    </nav>
 
-    <!-- 查看详情弹窗 -->
-    <div id="detail-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-primary">举报详情</h3>
-                    <button id="close-detail-modal" class="text-gray-500 hover:text-gray-700">
-                        <i class="fa fa-times text-xl"></i>
-                    </button>
-                </div>
-                <div class="space-y-4" id="report-detail-content">
-                    <!-- 举报详情内容将通过JavaScript动态填充 -->
-                </div>
-                <div class="mt-6 flex justify-end">
-                    <button id="close-detail-btn" class="btn-outline">关闭</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 处理举报弹窗 -->
-    <div id="process-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-primary">处理举报</h3>
-                    <button id="close-process-modal" class="text-gray-500 hover:text-gray-700">
-                        <i class="fa fa-times text-xl"></i>
-                    </button>
-                </div>
-                <div class="space-y-4" id="report-process-content">
-                    <!-- 举报处理内容将通过JavaScript动态填充 -->
-                </div>
-                <div class="mt-6 flex justify-end space-x-4">
-                    <button id="reject-report-btn" class="btn-outline">驳回</button>
-                    <button id="punish-report-btn" class="btn-primary">处罚</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 添加管理员弹窗 -->
-    <div id="add-admin-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-primary">添加管理员</h3>
-                    <button id="close-add-admin-modal" class="text-gray-500 hover:text-gray-700">
-                        <i class="fa fa-times text-xl"></i>
-                    </button>
-                </div>
-                <form id="add-admin-form" class="space-y-4">
-                    <div>
-                        <label for="newAdminUsername" class="label">用户名</label>
-                        <input type="text" id="newAdminUsername" name="newAdminUsername" class="input-field" required>
-                    </div>
-                    <div>
-                        <label for="newAdminPassword" class="label">密码</label>
-                        <input type="password" id="newAdminPassword" name="newAdminPassword" class="input-field" required>
-                    </div>
-                    <div>
-                        <label for="newAdminEmail" class="label">QQ邮箱</label>
-                        <input type="email" id="newAdminEmail" name="newAdminEmail" class="input-field" required>
-                    </div>
-                    <div>
-                        <label for="newAdminRole" class="label">角色</label>
-                        <select id="newAdminRole" name="newAdminRole" class="input-field">
-                            <option value="admin">普通管理员</option>
-                            <option value="superadmin">超级管理员</option>
-                        </select>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-4">
-                        <button type="button" id="cancel-add-admin" class="btn-outline">取消</button>
-                        <button type="submit" class="btn-primary">添加</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- 编辑管理员弹窗 -->
-    <div id="edit-admin-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-primary">编辑管理员</h3>
-                    <button id="close-edit-admin-modal" class="text-gray-500 hover:text-gray-700">
-                        <i class="fa fa-times text-xl"></i>
-                    </button>
-                </div>
-                <form id="edit-admin-form" class="space-y-4">
-                    <input type="hidden" id="editAdminId">
-                    <div>
-                        <label for="editAdminUsername" class="label">用户名</label>
-                        <input type="text" id="editAdminUsername" name="editAdminUsername" class="input-field" required>
-                    </div>
-                    <div>
-                        <label for="editAdminPassword" class="label">密码（留空则不修改）</label>
-                        <input type="password" id="editAdminPassword" name="editAdminPassword" class="input-field">
-                    </div>
-                    <div>
-                        <label for="editAdminEmail" class="label">QQ邮箱</label>
-                        <input type="email" id="editAdminEmail" name="editAdminEmail" class="input-field" required>
-                    </div>
-                    <div>
-                        <label for="editAdminRole" class="label">角色</label>
-                        <select id="editAdminRole" name="editAdminRole" class="input-field">
-                            <option value="admin">普通管理员</option>
-                            <option value="superadmin">超级管理员</option>
-                        </select>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-4">
-                        <button type="button" id="cancel-edit-admin" class="btn-outline">取消</button>
-                        <button type="submit" class="btn-primary">保存</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- 驳回举报弹窗 -->
-    <div id="reject-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-primary">驳回举报</h3>
-                    <button id="close-reject-modal" class="text-gray-500 hover:text-gray-700">
-                        <i class="fa fa-times text-xl"></i>
-                    </button>
-                </div>
-                <form id="reject-form" class="space-y-4">
-                    <input type="hidden" id="rejectReportId">
-                    <div>
-                        <label for="rejectReason" class="label">驳回理由</label>
-                        <textarea id="rejectReason" name="rejectReason" rows="4" class="input-field" required></textarea>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-4">
-                        <button type="button" id="cancel-reject" class="btn-outline">取消</button>
-                        <button type="submit" class="btn-danger">确认驳回</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- 处罚举报弹窗 -->
-    <div id="punish-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-primary">处罚设置</h3>
-                    <button id="close-punish-modal" class="text-gray-500 hover:text-gray-700">
-                        <i class="fa fa-times text-xl"></i>
-                    </button>
-                </div>
-                <form id="punish-form" class="space-y-4">
-                    <input type="hidden" id="punishReportId">
-                    <div>
-                        <label for="punishmentType" class="label">处罚类型</label>
-                        <select id="punishmentType" name="punishmentType" class="input-field" required>
-                            <option value="封禁权限">封禁权限</option>
-                            <option value="禁言">禁言</option>
-                            <option value="禁言群聊">禁言群聊</option>
-                            <option value="清除发言记录">清除发言记录</option>
-                            <option value="移除群聊">移除群聊</option>
-                            <option value="警告">警告</option>
-                            <option value="限制加入新群">限制加入新群</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="punishmentDuration" class="label">处罚时长</label>
-                        <select id="punishmentDuration" name="punishmentDuration" class="input-field" required>
-                            <option value="永久">永久</option>
-                            <option value="30天">30天</option>
-                            <option value="14天">14天</option>
-                            <option value="7天">7天</option>
-                            <option value="3天">3天</option>
-                            <option value="1天">1天</option>
-                            <option value="12小时">12小时</option>
-                            <option value="6小时">6小时</option>
-                            <option value="1小时">1小时</option>
-                            <option value="30分钟">30分钟</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="punishmentReason" class="label">处罚理由</label>
-                        <textarea id="punishmentReason" name="punishmentReason" rows="4" class="input-field" required placeholder="请详细说明处罚理由，以便用户了解处罚原因..."></textarea>
-                        <div class="mt-2 text-sm text-gray-500">
-                            <span id="reason-char-count">0</span> 字符
-                        </div>
-                    </div>
-                    <div class="mt-6 flex justify-end space-x-4">
-                        <button type="button" id="cancel-punish" class="btn-outline">取消</button>
-                        <button type="submit" class="btn-danger">确认处罚</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- 图片查看器弹窗 -->
-    <div id="image-viewer-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden">
-        <div class="relative max-w-6xl w-full max-h-[90vh] p-4">
-            <button id="close-image-viewer" class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
-                <i class="fa fa-times text-2xl"></i>
-            </button>
-            <div class="relative flex items-center justify-center h-full">
-                <img id="viewer-image" src="" alt="大图预览" class="max-w-full max-h-[80vh] object-contain">
-            </div>
-            <div class="absolute bottom-4 left-0 right-0 text-center">
-                <div class="bg-black bg-opacity-70 text-white p-2 rounded-md inline-block">
-                    <p id="viewer-image-name" class="text-lg"></p>
-                    <div class="flex justify-center space-x-4 mt-2">
-                        <button id="zoom-out" class="text-white hover:text-gray-300">
-                            <i class="fa fa-search-minus"></i> 缩小
-                        </button>
-                        <button id="zoom-in" class="text-white hover:text-gray-300">
-                            <i class="fa fa-search-plus"></i> 放大
-                        </button>
-                        <button id="reset-zoom" class="text-white hover:text-gray-300">
-                            <i class="fa fa-refresh"></i> 重置
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 成功提示弹窗 -->
-    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 text-center">
-            <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fa fa-check text-success text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-primary mb-2">操作成功</h3>
-            <p id="success-message" class="text-gray-700 mb-6">操作已成功完成</p>
-            <button id="close-success-modal" class="btn-primary">确定</button>
-        </div>
-    </div>
-
-    <!-- JavaScript -->
     <script>
-        // 图片预览功能
-        function setupImagePreview() {
-            const fileInput = document.getElementById('attachments');
-            const previewContainer = document.getElementById('preview-container');
-            
-            if (fileInput && previewContainer) {
-                fileInput.addEventListener('change', function() {
-                    const files = this.files;
-                    previewContainer.innerHTML = ''; // 清空现有预览
-                    
-                    // 限制最多显示5个预览
-                    const maxPreviews = Math.min(files.length, 5);
-                    
-                    for (let i = 0; i < maxPreviews; i++) {
-                        const file = files[i];
-                        
-                        // 只预览图片文件
-                        if (file.type.startsWith('image/')) {
-                            const reader = new FileReader();
-                            
-                            reader.onload = function(e) {
-                                const previewItem = document.createElement('div');
-                                previewItem.className = 'relative';
-                                
-                                const img = document.createElement('img');
-                                img.src = e.target.result;
-                                img.className = 'w-full h-40 object-cover rounded-md border border-gray-200';
-                                img.alt = file.name;
-                                
-                                // 添加删除按钮
-                                const deleteBtn = document.createElement('button');
-                                deleteBtn.className = 'absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600';
-                                deleteBtn.innerHTML = '<i class="fa fa-times"></i>';
-                                deleteBtn.onclick = function(e) {
-                                    e.preventDefault();
-                                    previewItem.remove();
-                                    
-                                    // 由于无法直接修改input的files列表，这里只能清空表单预览，但保留文件仍然会被上传
-                                    // 这里只是视觉上的删除
-                                };
-                                
-                                previewItem.appendChild(img);
-                                previewItem.appendChild(deleteBtn);
-                                previewContainer.appendChild(previewItem);
-                            };
-                            
-                            reader.readAsDataURL(file);
-                        }
-                    }
-                });
-            }
-        }
-        
-        // 处罚理由文件大小格式化
-        function formatFileSize(bytes) {
-            if (bytes < 1024) return bytes + ' B';
-            else if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
-            else return (bytes / 1048576).toFixed(2) + ' MB';
-        }
-        
-        // 处罚理由理由字符计数器
-        function setupReasonCounter() {
-            const reasonTextarea = document.getElementById('punishmentReason');
-            const charCountSpan = document.getElementById('reason-char-count');
-            
-            if (reasonTextarea && charCountSpan) {
-                reasonTextarea.addEventListener('input', function() {
-                    const charCount = this.value.length;
-                    charCountSpan.textContent = charCount;
-                    
-                    // 根据字符数变化颜色提示
-                    if (charCount < 10) {
-                        charCountSpan.classList.add('text-red-500');
-                        charCountSpan.classList.remove('text-yellow-500', 'text-green-500');
-                    } else if (charCount < 50) {
-                        charCountSpan.classList.add('text-yellow-500');
-                        charCountSpan.classList.remove('text-red-500', 'text-green-500');
-                    } else {
-                        charCountSpan.classList.add('text-green-500');
-                        charCountSpan.classList.remove('text-red-500', 'text-yellow-500');
-                    }
-                });
-            }
-        }
-        
-        // 初始化数据
-        function initData() {
-            // 初始化管理员数据
-            let admins = JSON.parse(localStorage.getItem('admins') || '[]');
-            
-            // 检查是否存在默认超级管理员
-            const defaultAdminExists = admins.some(admin => 
-                admin.username === '我就是天才' && 
-                admin.password === '189203615aazz' && 
-                admin.role === 'superadmin'
-            );
-            
-            // 如果不存在，则添加默认超级管理员
-            if (!defaultAdminExists) {
-                admins.push({
-                    id: '1',
-                    username: '我就是天才',
-                    password: '189203615aazz',
-                    qqEmail: 'admin@qq.com',
-                    role: 'superadmin',
-                    createTime: new Date().toISOString()
-                });
-                
-                localStorage.setItem('admins', JSON.stringify(admins));
-                console.log('已添加默认超级管理员账号');
-            }
-
-            // 初始化举报数据
-            if (!localStorage.getItem('reports')) {
-                const reports = [];
-                localStorage.setItem('reports', JSON.stringify(reports));
-            }
-
-            // 初始化处罚数据
-            if (!localStorage.getItem('punishments')) {
-                const punishments = [];
-                localStorage.setItem('punishments', JSON.stringify(punishments));
-            }
-
-            // 初始化申诉数据
-            if (!localStorage.getItem('appeals')) {
-                const appeals = [];
-                localStorage.setItem('appeals', JSON.stringify(appeals));
-            }
-
-            // 初始化系统设置
-            if (!localStorage.getItem('systemSettings')) {
-                const settings = {
-                    emailNotification: 'enabled',
-                    autoAssign: 'disabled',
-                    reportLimit: 10
-                };
-                localStorage.setItem('systemSettings', JSON.stringify(settings));
-            }
-
-            // 初始化系统消息
-            if (!localStorage.getItem('systemMessages')) {
-                const messages = [
-                    {
-                        id: '1',
-                        content: '系统已初始化完成',
-                        time: new Date().toISOString(),
-                        read: false
-                    }
-                ];
-                localStorage.setItem('systemMessages', JSON.stringify(messages));
-            }
-        }
-
-        // 页面加载完成后执行
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化数据
-            initData();
-            
-            // 设置处理进度筛选和搜索
-            setupProgressFilters();
-
-            // 导航链接点击事件
-            document.getElementById('home-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                showSection('home-section');
-            });
-
-            document.getElementById('report-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                showSection('report-section');
-            });
-
-            document.getElementById('progress-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                showSection('progress-section');
-                loadProgressData();
-            });
-
-            document.getElementById('admin-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                showSection('admin-login-section');
-            });
-
-            // 首页按钮点击事件
-            document.getElementById('home-report-btn').addEventListener('click', function() {
-                showSection('report-section');
-            });
-
-            document.getElementById('home-progress-btn').addEventListener('click', function() {
-                showSection('progress-section');
-                loadProgressData();
-            });
-
-            document.getElementById('home-admin-btn').addEventListener('click', function() {
-                showSection('admin-login-section');
-            });
-
-            // 取消举报按钮点击事件
-            document.getElementById('cancel-report').addEventListener('click', function() {
-                showSection('home-section');
-            });
-
-            // 取消登录按钮点击事件
-            document.getElementById('cancel-login').addEventListener('click', function() {
-                showSection('home-section');
-            });
-
-            // 举报表单提交事件
-            document.getElementById('report-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                submitReport();
-            });
-
-            // 管理员登录表单提交事件
-            document.getElementById('admin-login-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                adminLogin();
-            });
-
-            // 管理员侧边栏导航点击事件
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = this.getAttribute('data-target');
-                    showAdminSection(target);
-                    
-                    // 更新活动状态
-                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-
-            // 退出登录按钮点击事件
-            document.getElementById('logout-btn').addEventListener('click', function() {
-                logoutAdmin();
-            });
-
-            // 关闭详情弹窗按钮点击事件
-            document.getElementById('close-detail-modal').addEventListener('click', function() {
-                hideModal('detail-modal');
-            });
-
-            document.getElementById('close-detail-btn').addEventListener('click', function() {
-                hideModal('detail-modal');
-            });
-
-            // 关闭处理弹窗按钮点击事件
-            document.getElementById('close-process-modal').addEventListener('click', function() {
-                hideModal('process-modal');
-            });
-
-            // 关闭添加管理员弹窗按钮点击事件
-            document.getElementById('close-add-admin-modal').addEventListener('click', function() {
-                hideModal('add-admin-modal');
-            });
-
-            document.getElementById('cancel-add-admin').addEventListener('click', function() {
-                hideModal('add-admin-modal');
-            });
-
-            // 关闭编辑管理员弹窗按钮点击事件
-            document.getElementById('close-edit-admin-modal').addEventListener('click', function() {
-                hideModal('edit-admin-modal');
-            });
-
-            document.getElementById('cancel-edit-admin').addEventListener('click', function() {
-                hideModal('edit-admin-modal');
-            });
-
-            // 关闭驳回弹窗按钮点击事件
-            document.getElementById('close-reject-modal').addEventListener('click', function() {
-                hideModal('reject-modal');
-            });
-
-            document.getElementById('cancel-reject').addEventListener('click', function() {
-                hideModal('reject-modal');
-            });
-
-            // 关闭处罚弹窗按钮点击事件
-            document.getElementById('close-punish-modal').addEventListener('click', function() {
-                hideModal('punish-modal');
-            });
-
-            document.getElementById('cancel-punish').addEventListener('click', function() {
-                hideModal('punish-modal');
-            });
-
-            // 关闭成功提示弹窗按钮点击事件
-            document.getElementById('close-success-modal').addEventListener('click', function() {
-                hideModal('success-modal');
-            });
-
-            // 添加管理员按钮点击事件
-            document.getElementById('add-admin-btn').addEventListener('click', function() {
-                showModal('add-admin-modal');
-            });
-
-            // 添加管理员表单提交事件
-            document.getElementById('add-admin-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                addAdmin();
-            });
-
-            // 编辑管理员表单提交事件
-            document.getElementById('edit-admin-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                updateAdmin();
-            });
-
-            // 驳回举报按钮点击事件
-            document.getElementById('reject-report-btn').addEventListener('click', function() {
-                const reportId = this.getAttribute('data-report-id');
-                document.getElementById('rejectReportId').value = reportId;
-                hideModal('process-modal');
-                showModal('reject-modal');
-            });
-
-            // 处罚举报按钮点击事件
-            document.getElementById('punish-report-btn').addEventListener('click', function() {
-                const reportId = this.getAttribute('data-report-id');
-                document.getElementById('punishReportId').value = reportId;
-                hideModal('process-modal');
-                showModal('punish-modal');
-            });
-
-            // 驳回表单提交事件
-            document.getElementById('reject-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                rejectReport();
-            });
-
-            // 处罚表单提交事件
-            document.getElementById('punish-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                punishReport();
-            });
-
-            // 系统设置表单提交事件
-            document.getElementById('settings-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                saveSettings();
-            });
-
-            // 检查是否已登录管理员
-            checkAdminLogin();
-        });
-
-        // 显示指定部分
-        function showSection(sectionId) {
-            // 隐藏所有部分
-            document.getElementById('home-section').classList.add('hidden');
-            document.getElementById('report-section').classList.add('hidden');
-            document.getElementById('progress-section').classList.add('hidden');
-            document.getElementById('admin-login-section').classList.add('hidden');
-            
-            // 显示指定部分
-            document.getElementById(sectionId).classList.remove('hidden');
-        }
-
-        // 显示管理员指定部分
-        function showAdminSection(sectionId) {
-            // 隐藏所有管理员部分
-            document.querySelectorAll('.admin-section').forEach(section => {
-                section.classList.add('hidden');
-            });
-            
-            // 显示指定部分
-            document.getElementById(sectionId).classList.remove('hidden');
-
-            // 根据部分加载数据
-            if (sectionId === 'dashboard-section') {
-                loadDashboardData();
-            } else if (sectionId === 'review-section') {
-                loadReviewData();
-            } else if (sectionId === 'team-section') {
-                loadAdminData();
-            } else if (sectionId === 'punishment-section') {
-                loadPunishmentData();
-            } else if (sectionId === 'appeal-section') {
-                loadAppealData();
-            } else if (sectionId === 'message-section') {
-                loadMessageData();
-            } else if (sectionId === 'settings-section') {
-                loadSettingsData();
-            }
-        }
-
-        // 显示弹窗
-        function showModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
-        }
-
-        // 隐藏弹窗
-        function hideModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-
-        // 提交举报
-        function submitReport() {
-            const reportedUser = document.getElementById('reportedUser').value;
-            const reportedQQ = document.getElementById('reportedQQ').value;
-            const groupChat = document.getElementById('groupChat').value;
-            const violationType = document.getElementById('violationType').value;
-            const description = document.getElementById('description').value;
-            
-            // 获取文件
-            const fileInput = document.getElementById('attachments');
-            const files = fileInput.files;
-            
-            // 处理附件
-            const attachments = [];
-            const filePromises = [];
-            
-            // 限制最多5个文件
-            const maxFiles = Math.min(files.length, 5);
-            
-            for (let i = 0; i < maxFiles; i++) {
-                const file = files[i];
-                
-                // 创建一个Promise来处理文件读取
-                const filePromise = new Promise((resolve) => {
-                    const reader = new FileReader();
-                    
-                    // 对于图片文件，读取为Base64
-                    if (file.type.startsWith('image/')) {
-                        reader.onload = function(e) {
-                            attachments.push({
-                                name: file.name,
-                                size: file.size,
-                                type: file.type,
-                                dataUrl: e.target.result // 保存Base64数据
-                            });
-                            resolve();
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        // 对于非图片文件，只保存基本信息
-                        attachments.push({
-                            name: file.name,
-                            size: file.size,
-                            type: file.type
-                        });
-                        resolve();
-                    }
-                });
-                
-                filePromises.push(filePromise);
-            }
-            
-            // 等待所有所有文件处理完成后再提交
-            Promise.all(filePromises).then(() => {
-                // 创建举报对象
-                const report = {
-                    id: generateId(),
-                    reportedUser: reportedUser,
-                    reportedQQ: reportedQQ,
-                    groupChat: groupChat,
-                    violationType: violationType,
-                    description: description,
-                    attachments: attachments,
-                    reportTime: new Date().toISOString(),
-                    status: '待处理',
-                    handler: '',
-                    handleTime: '',
-                    punishment: null,
-                    appealStatus: '无'
-                };
-                
-                // 获取现有举报数据
-                const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-                
-                // 添加新举报
-                reports.push(report);
-                
-                // 保存到localStorage
-                localStorage.setItem('reports', JSON.stringify(reports));
-                
-                // 显示成功提示
-                document.getElementById('success-message').textContent = '举报已成功提交，我们将尽快处理！';
-                showModal('success-modal');
-                
-                // 重置表单
-                document.getElementById('report-form').reset();
-                // 重置预览区域
-                document.getElementById('preview-container').innerHTML = '';
-                
-                // 模拟发送邮件通知
-                sendEmailNotification(report);
-            });
-        }
-
-        // 发送邮件通知
-        function sendEmailNotification(report) {
-            // 获取系统设置
-            const settings = JSON.parse(localStorage.getItem('systemSettings') || '{}');
-            
-            // 检查是否启用邮件通知
-            if (settings.emailNotification === 'enabled') {
-                // 获取管理员列表
-                const admins = JSON.parse(localStorage.getItem('admins') || '[]');
-                
-                // 模拟发送邮件
-                console.log('发送邮件通知给管理员：');
-                admins.forEach(admin => {
-                    console.log(`发送到：${admin.qqEmail}`);
-                    console.log(`主题：新举报通知 - ${report.violationType}`);
-                    console.log(`内容：有新的举报需要处理，被举报人：${report.reportedUser}，群聊：${report.groupChat}`);
-                });
-                
-                // 添加系统消息
-                addSystemMessage(`收到新举报：${report.violationType}（被举报人：${report.reportedUser}）`);
-            }
-        }
-
-        // 添加系统消息
-        function addSystemMessage(content) {
-            const messages = JSON.parse(localStorage.getItem('systemMessages') || '[]');
-            
-            messages.push({
-                id: generateId(),
-                content: content,
-                time: new Date().toISOString(),
-                read: false
-            });
-            
-            localStorage.setItem('systemMessages', JSON.stringify(messages));
-        }
-
-        // 加载处理进度数据
-        function loadProgressData(filters = {}) {
-            const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-            const cardsContainer = document.getElementById('progress-cards-container');
-            const noReportsMessage = document.getElementById('no-reports-message');
-            const pagination = document.getElementById('pagination');
-            
-            // 清空卡片容器
-            cardsContainer.innerHTML = '';
-            
-            // 应用筛选
-            let filteredReports = reports;
-            
-            // 搜索筛选
-            if (filters.search) {
-                const searchTerm = filters.search.toLowerCase();
-                filteredReports = filteredReports.filter(report => 
-                    report.reportedUser.toLowerCase().includes(searchTerm) ||
-                    report.reportedQQ.toLowerCase().includes(searchTerm) ||
-                    report.groupChat.toLowerCase().includes(searchTerm) ||
-                    report.violationType.toLowerCase().includes(searchTerm) ||
-                    report.description.toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            // 状态筛选
-            if (filters.status && filters.status !== 'all') {
-                filteredReports = filteredReports.filter(report => report.status === filters.status);
-            }
-            
-            // 群聊筛选
-            if (filters.group && filters.group !== 'all') {
-                filteredReports = filteredReports.filter(report => report.groupChat === filters.group);
-            }
-            
-            // 按举报时间排序（最新的在前）
-            filteredReports.sort((a, b) => new Date(b.reportTime) - new Date(a.reportTime));
-            
-            // 检查是否有举报数据
-            if (filteredReports.length === 0) {
-                noReportsMessage.classList.remove('hidden');
-                cardsContainer.classList.add('hidden');
-                pagination.classList.add('hidden');
-                return;
-            }
-            
-            // 显示卡片容器，隐藏无数据消息
-            noReportsMessage.classList.add('hidden');
-            cardsContainer.classList.remove('hidden');
-            
-            // 如果报告数量超过6个，显示分页
-            if (filteredReports.length > 6) {
-                pagination.classList.remove('hidden');
-            } else {
-                pagination.classList.add('hidden');
-            }
-            
-            // 添加举报数据到卡片容器
-            filteredReports.forEach(report => {
-                // 限制描述长度
-                const shortDescription = report.description.length > 100 
-                    ? report.description.substring(0, 100) + '...' 
-                    : report.description;
-                
-                // 获取状态样式类
-                const statusClass = getStatusClass(report.status);
-                
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-100';
-                card.innerHTML = `
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">${report.reportedUser}</h3>
-                                <p class="text-sm text-gray-500">QQ: ${report.reportedQQ}</p>
-                            </div>
-                            <span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">${report.status}</span>
-                        </div>
-                        
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-center text-sm">
-                                <i class="fa fa-users text-gray-400 mr-2"></i>
-                                <span>${report.groupChat}</span>
-                            </div>
-                            <div class="flex items-center text-sm">
-                                <i class="fa fa-exclamation-triangle text-gray-400 mr-2"></i>
-                                <span>${report.violationType}</span>
-                            </div>
-                            <div class="flex items-center text-sm">
-                                <i class="fa fa-clock-o text-gray-400 mr-2"></i>
-                                <span>${formatDate(report.reportTime)}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <p class="text-sm text-gray-600 line-clamp-2">${shortDescription}</p>
-                        </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <div class="text-xs text-gray-500">
-                                ${report.attachments && report.attachments.length > 0 
-                                    ? `<i class="fa fa-paperclip mr-1"></i> ${report.attachments.length}个附件` 
-                                    : ''}
-                            </div>
-                            <button class="btn-primary-sm view-detail-btn" data-report-id="${report.id}">
-                                查看详情
-                            </button>
-                        </div>
-                    </div>
-                `;
-                cardsContainer.appendChild(card);
-            });
-            
-            // 添加查看详情按钮点击事件
-            document.querySelectorAll('.view-detail-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const reportId = this.getAttribute('data-report-id');
-                    viewReportDetail(reportId);
-                });
-            });
-        }
-        
-        // 设置处理进度筛选和搜索
-        function setupProgressFilters() {
-            const searchInput = document.getElementById('progress-search');
-            const statusFilter = document.getElementById('status-filter');
-            const groupFilter = document.getElementById('group-filter');
-            
-            // 搜索输入事件
-            searchInput.addEventListener('input', function() {
-                applyProgressFilters();
-            });
-            
-            // 状态筛选事件
-            statusFilter.addEventListener('change', function() {
-                applyProgressFilters();
-            });
-            
-            // 群聊筛选事件
-            groupFilter.addEventListener('change', function() {
-                applyProgressFilters();
-            });
-            
-            // 分页事件
-            document.getElementById('prev-page').addEventListener('click', function(e) {
-                e.preventDefault();
-                // 实现分页逻辑
-                alert('上一页功能待实现');
-            });
-            
-            document.getElementById('next-page').addEventListener('click', function(e) {
-                e.preventDefault();
-                // 实现分页逻辑
-                alert('下一页功能待实现');
-            });
-        }
-        
-        // 应用处理进度筛选
-        function applyProgressFilters() {
-            const filters = {
-                search: document.getElementById('progress-search').value.trim(),
-                status: document.getElementById('status-filter').value,
-                group: document.getElementById('group-filter').value
-            };
-            
-            loadProgressData(filters);
-        }
-
-        // 查看举报详情
-        function viewReportDetail(reportId) {
-            const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-            const report = reports.find(r => r.id === reportId);
-            
-            if (!report) return;
-            
-            const detailContent = document.getElementById('report-detail-content');
-            
-            // 构建详情内容
-            let content = `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <p class="font-semibold">被举报人：</p>
-                        <p>${report.reportedUser}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">QQ号码：</p>
-                        <p>${report.reportedQQ}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">群聊：</p>
-                        <p>${report.groupChat}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">违规类型：</p>
-                        <p>${report.violationType}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">举报时间：</p>
-                        <p>${formatDate(report.reportTime)}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">处理状态：</p>
-                        <p><span class="px-2 py-1 rounded ${getStatusClass(report.status)}">${report.status}</span></p>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <p class="font-semibold">描述经历：</p>
-                    <p class="bg-gray-50 p-4 rounded-md">${report.description}</p>
-                </div>
-            `;
-            
-            // 添加附件信息
-            if (report.attachments && report.attachments.length > 0) {
-                content += `
-                    <div class="mt-4">
-                        <p class="font-semibold">附件证据：</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-2">
-                `;
-                
-                report.attachments.forEach(file => {
-                    // 检查是否是图片且有dataUrl
-                    if (file.type.startsWith('image/') && file.dataUrl) {
-                        content += `
-                            <div class="bg-gray-50 p-3 rounded-md cursor-pointer hover:shadow-lg transition-shadow duration-300" onclick="openImageViewer('${file.dataUrl}', '${file.name}')">
-                                <div class="relative">
-                                    <img src="${file.dataUrl}" alt="${file.name}" class="w-full h-48 object-cover rounded-md mb-2">
-                                    <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 flex items-center justify-center transition-all duration-300">
-                                        <i class="fa fa-search-plus text-white text-2xl opacity-0 hover:opacity-100 transition-opacity duration-300"></i>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <p class="text-sm">${file.name}</p>
-                                    <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        content += `
-                            <div class="bg-gray-50 p-3 rounded-md flex items-center">
-                                <i class="fa fa-file-o text-primary mr-2"></i>
-                                <div>
-                                    <p class="text-sm">${file.name}</p>
-                                    <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-                
-                content += `
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // 添加处理信息
-            if (report.status !== '待处理') {
-                content += `
-                    <div class="mt-4">
-                        <p class="font-semibold">处理信息：</p>
-                        <div class="bg-gray-50 p-4 rounded-md">
-                            <p><span class="font-medium">处理人：</span>${report.handler}</p>
-                            <p><span class="font-medium">处理时间：</span>${formatDate(report.handleTime)}</p>
-                `;
-                
-                // 添加处罚信息
-                if (report.punishment) {
-                    content += `
-                        <p><span class="font-medium">处罚类型：</span>${report.punishment.type}</p>
-                        <p><span class="font-medium">处罚时长：</span>${report.punishment.duration}</p>
-                        <p><span class="font-medium">处罚理由：</span>${report.punishment.reason}</p>
-                    `;
-                }
-                
-                content += `
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // 添加申诉状态
-            if (report.appealStatus !== '无') {
-                content += `
-                    <div class="mt-4">
-                        <p class="font-semibold">申诉状态：</p>
-                        <p><span class="px-2 py-1 rounded ${getStatusClass(report.appealStatus)}">${report.appealStatus}</span></p>
-                    </div>
-                `;
-            }
-            
-            detailContent.innerHTML = content;
-            showModal('detail-modal');
-        }
-
-        // 管理员登录
-        function adminLogin() {
-            const username = document.getElementById('adminUsername').value;
-            const password = document.getElementById('adminPassword').value;
-            
-            // 获取管理员数据
-            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
-            
-            // 查找管理员
-            const admin = admins.find(a => a.username === username && a.password === password);
-            
-            if (admin) {
-                // 登录成功，保存登录状态
-                sessionStorage.setItem('adminLoggedIn', 'true');
-                sessionStorage.setItem('adminId', admin.id);
-                sessionStorage.setItem('adminUsername', admin.username);
-                sessionStorage.setItem('adminRole', admin.role);
-                
-                // 显示管理员后台
-                showAdminPanel();
-            } else {
-                // 登录失败，显示错误信息
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
-
-        // 显示管理员后台
-        function showAdminPanel() {
-            // 隐藏用户端内容
-            document.querySelector('nav').classList.add('hidden');
-            document.querySelector('main').classList.add('hidden');
-            
-            // 显示管理员后台
-            document.getElementById('admin-panel').classList.remove('hidden');
-            
-            // 设置管理员用户名
-            document.getElementById('admin-username').textContent = `欢迎，${sessionStorage.getItem('adminUsername')}`;
-            document.getElementById('admin-username').classList.remove('hidden');
-            
-            // 显示控制台
-            showAdminSection('dashboard-section');
-        }
-
-        // 检查管理员登录状态
-        function checkAdminLogin() {
-            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
-                showAdminPanel();
-            }
-        }
-
-        // 管理员退出登录
-        function logoutAdmin() {
-            // 清除登录状态
-            sessionStorage.removeItem('adminLoggedIn');
-            sessionStorage.removeItem('adminId');
-            sessionStorage.removeItem('adminUsername');
-            sessionStorage.removeItem('adminRole');
-            
-            // 隐藏管理员后台
-            document.getElementById('admin-panel').classList.add('hidden');
-            
-            // 显示用户端内容
-            document.querySelector('nav').classList.remove('hidden');
-            document.querySelector('main').classList.remove('hidden');
-            
-            // 显示首页
-            showSection('home-section');
-        }
-
-        // 加载控制台数据
-        function loadDashboardData() {
-            // 获取举报数据
-            const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-            
-            // 计算待处理和已处理举报数量
-            const pendingReports = reports.filter(r => r.status === '待处理').length;
-            const processedReports = reports.filter(r => r.status !== '待处理').length;
-            
-            // 更新统计数据
-            document.getElementById('pending-reports-count').textContent = pendingReports;
-            document.getElementById('processed-reports-count').textContent = processedReports;
-            
-            // 获取管理员数量
-            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
-            document.getElementById('admin-count').textContent = admins.length;
-            
-            // 加载最近举报
-            const recentReportsTable = document.getElementById('recent-reports-table');
-            recentReportsTable.innerHTML = '';
-            
-            // 获取最近的5条举报
-            const recentReports = [...reports].sort((a, b) => new Date(b.reportTime) - new Date(a.reportTime)).slice(0, 5);
-            
-            recentReports.forEach(report => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="py-2 px-4 border-b">${report.reportedUser}</td>
-                    <td class="py-2 px-4 border-b">${report.groupChat}</td>
-                    <td class="py-2 px-4 border-b">${report.violationType}</td>
-                    <td class="py-2 px-4 border-b">${formatDate(report.reportTime)}</td>
-                    <td class="py-2 px-4 border-b">
-                        <span class="px-2 py-1 rounded ${getStatusClass(report.status)}">${report.status}</span>
-                    </td>
-                    <td class="py-2 px-4 border-b">
-                        <button class="text-primary hover:text-blue-700 process-report-btn" data-report-id="${report.id}">
-                            ${report.status === '待处理' ? '处理' : '查看'}
-                        </button>
-                    </td>
-                `;
-                recentReportsTable.appendChild(row);
-            });
-            
-            // 添加处理按钮点击事件
-            document.querySelectorAll('.process-report-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const reportId = this.getAttribute('data-report-id');
-                    const report = reports.find(r => r.id === reportId);
-                    
-                    if (report.status === '待处理') {
-                        processReport(reportId);
-                    } else {
-                        viewReportDetail(reportId);
-                    }
-                });
-            });
-        }
-
-        // 加载审核处理数据
-        function loadReviewData() {
-            const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-            const tableBody = document.getElementById('review-table-body');
-            
-            // 清空表格
-            tableBody.innerHTML = '';
-            
-            // 添加举报数据到表格
-            reports.forEach(report => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="py-2 px-4 border-b">${report.id}</td>
-                    <td class="py-2 px-4 border-b">${report.reportedUser}</td>
-                    <td class="py-2 px-4 border-b">${report.reportedQQ}</td>
-                    <td class="py-2 px-4 border-b">${report.groupChat}</td>
-                    <td class="py-2 px-4 border-b">${report.violationType}</td>
-                    <td class="py-2 px-4 border-b">${formatDate(report.reportTime)}</td>
-                    <td class="py-2 px-4 border-b">
-                        <span class="px-2 py-1 rounded ${getStatusClass(report.status)}">${report.status}</span>
-                    </td>
-                    <td class="py-2 px-4 border-b">
-                        <button class="text-primary hover:text-blue-700 process-report-btn" data-report-id="${report.id}">
-                            ${report.status === '待处理' ? '处理' : '查看'}
-                        </button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-            
-            // 添加处理按钮点击事件
-            document.querySelectorAll('.process-report-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const reportId = this.getAttribute('data-report-id');
-                    const report = reports.find(r => r.id === reportId);
-                    
-                    if (report.status === '待处理') {
-                        processReport(reportId);
-                    } else {
-                        viewReportDetail(reportId);
-                    }
-                });
-            });
-        }
-
-        // 处理举报
-        function processReport(reportId) {
-            const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-            const report = reports.find(r => r.id === reportId);
-            
-            if (!report) return;
-            
-            const processContent = document.getElementById('report-process-content');
-            
-            // 构建处理内容
-            let content = `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <p class="font-semibold">被举报人：</p>
-                        <p>${report.reportedUser}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">QQ号码：</p>
-                        <p>${report.reportedQQ}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">群聊：</p>
-                        <p>${report.groupChat}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">违规类型：</p>
-                        <p>${report.violationType}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">举报时间：</p>
-                        <p>${formatDate(report.reportTime)}</p>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <p class="font-semibold">描述经历：</p>
-                    <p class="bg-gray-50 p-4 rounded-md">${report.description}</p>
-                </div>
-            `;
-            
-            // 添加附件信息
-            if (report.attachments && report.attachments.length > 0) {
-                content += `
-                    <div class="mt-4">
-                        <p class="font-semibold">附件证据：</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-2">
-                `;
-                
-                report.attachments.forEach(file => {
-                    // 检查是否是图片且有dataUrl
-                    if (file.type.startsWith('image/') && file.dataUrl) {
-                        content += `
-                            <div class="bg-gray-50 p-3 rounded-md cursor-pointer hover:shadow-lg transition-shadow duration-300" onclick="openImageViewer('${file.dataUrl}', '${file.name}')">
-                                <div class="relative">
-                                    <img src="${file.dataUrl}" alt="${file.name}" class="w-full h-48 object-cover rounded-md mb-2">
-                                    <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 flex items-center justify-center transition-all duration-300">
-                                        <i class="fa fa-search-plus text-white text-2xl opacity-0 hover:opacity-100 transition-opacity duration-300"></i>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <p class="text-sm">${file.name}</p>
-                                    <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        content += `
-                            <div class="bg-gray-50 p-3 rounded-md flex items-center">
-                                <i class="fa fa-file-o text-primary mr-2"></i>
-                                <div>
-                                    <p class="text-sm">${file.name}</p>
-                                    <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-                
-                content += `
-                        </div>
-                    </div>
-                `;
-            }
-            
-            processContent.innerHTML = content;
-            
-            // 设置处理按钮的举报ID
-            document.getElementById('reject-report-btn').setAttribute('data-report-id', reportId);
-            document.getElementById('punish-report-btn').setAttribute('data-report-id', reportId);
-            
-            showModal('process-modal');
-        }
-
-        // 驳回举报
-        function rejectReport() {
-            const reportId = document.getElementById('rejectReportId').value;
-            const rejectReason = document.getElementById('rejectReason').value;
-            
-            // 获取举报数据
-            const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-            const reportIndex = reports.findIndex(r => r.id === reportId);
-            
-            if (reportIndex !== -1) {
-                // 更新举报状态
-                reports[reportIndex].status = '已驳回';
-                reports[reportIndex].handler = sessionStorage.getItem('adminUsername');
-                reports[reportIndex].handleTime = new Date().toISOString();
-                reports[reportIndex].punishment = {
-                    type: '驳回',
-                    duration: '',
-                    reason: rejectReason
-                };
-                
-                // 保存到localStorage
-                localStorage.setItem('reports', JSON.stringify(reports));
-                
-                // 隐藏驳回弹窗
-                hideModal('reject-modal');
-                
-                // 显示成功提示
-                document.getElementById('success-message').textContent = '举报已成功驳回！';
-                showModal('success-modal');
-                
-                // 刷新审核处理页面
-                loadReviewData();
-                
-                // 添加系统消息
-                addSystemMessage(`举报已驳回：${reports[reportIndex].violationType}（被举报人：${reports[reportIndex].reportedUser}）`);
-            }
-        }
-
-        // 处罚举报
-        function punishReport() {
-            const reportId = document.getElementById('punishReportId').value;
-            const punishmentType = document.getElementById('punishmentType').value;
-            const punishmentDuration = document.getElementById('punishmentDuration').value;
-            const punishmentReason = document.getElementById('punishmentReason').value;
-            
-            // 获取举报数据
-            const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-            const reportIndex = reports.findIndex(r => r.id === reportId);
-            
-            if (reportIndex !== -1) {
-                // 更新举报状态
-                reports[reportIndex].status = '已处理';
-                reports[reportIndex].handler = sessionStorage.getItem('adminUsername');
-                reports[reportIndex].handleTime = new Date().toISOString();
-                reports[reportIndex].punishment = {
-                    type: punishmentType,
-                    duration: punishmentDuration,
-                    reason: punishmentReason
-                };
-                
-                // 保存到localStorage
-                localStorage.setItem('reports', JSON.stringify(reports));
-                
-                // 添加处罚记录
-                addPunishmentRecord(reports[reportIndex]);
-                
-                // 隐藏处罚弹窗
-                hideModal('punish-modal');
-                
-                // 显示成功提示
-                document.getElementById('success-message').textContent = '处罚已成功执行！';
-                showModal('success-modal');
-                
-                // 刷新审核处理页面
-                loadReviewData();
-                
-                // 添加系统消息
-                addSystemMessage(`举报已处理：${reports[reportIndex].violationType}（被举报人：${reports[reportIndex].reportedUser}）`);
-            }
-        }
-
-        // 添加处罚记录
-        function addPunishmentRecord(report) {
-            const punishments = JSON.parse(localStorage.getItem('punishments') || '[]');
-            
-            punishments.push({
-                id: generateId(),
-                reportedUser: report.reportedUser,
-                reportedQQ: report.reportedQQ,
-                violationType: report.violationType,
-                punishmentType: report.punishment.type,
-                punishmentDuration: report.punishment.duration,
-                punishmentReason: report.punishment.reason,
-                punishmentTime: new Date().toISOString(),
-                status: '执行中',
-                reportId: report.id
-            });
-            
-            localStorage.setItem('punishments', JSON.stringify(punishments));
-        }
-
-        // 加载管理员数据
-        function loadAdminData() {
-            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
-            const tableBody = document.getElementById('admin-table-body');
-            
-            // 获取当前管理员角色
-            const currentAdminRole = sessionStorage.getItem('adminRole');
-            
-            // 清空表格
-            tableBody.innerHTML = '';
-            
-            // 添加管理员数据到表格
-            admins.forEach(admin => {
-                const row = document.createElement('tr');
-                
-                // 构建操作按钮
-                let actionButtons = '';
-                
-                // 超级管理员可以编辑和删除所有管理员，普通管理员只能查看
-                if (currentAdminRole === 'superadmin') {
-                    // 不能删除超级管理员自己
-                    const deleteButton = (admin.role === 'superadmin' && admin.username === sessionStorage.getItem('adminUsername')) 
-                        ? '' 
-                        : `<button class="text-danger hover:text-red-700 delete-admin-btn" data-admin-id="${admin.id}">删除</button>`;
-                    
-                    actionButtons = `
-                        <button class="text-primary hover:text-blue-700 mr-2 view-admin-btn" data-admin-id="${admin.id}">查看详情</button>
-                        <button class="text-secondary hover:text-blue-700 mr-2 edit-admin-btn" data-admin-id="${admin.id}">编辑</button>
-                        ${deleteButton}
-                    `;
-                } else {
-                    actionButtons = `
-                        <button class="text-primary hover:text-blue-700 view-admin-btn" data-admin-id="${admin.id}">查看详情</button>
-                    `;
-                }
-                
-                row.innerHTML = `
-                    <td class="py-2 px-4 border-b">${admin.username}</td>
-                    <td class="py-2 px-4 border-b">${admin.qqEmail}</td>
-                    <td class="py-2 px-4 border-b">
-                        <span class="px-2 py-1 rounded ${admin.role === 'superadmin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">
-                            ${admin.role === 'superadmin' ? '超级管理员' : '普通管理员'}
-                        </span>
-                    </td>
-                    <td class="py-2 px-4 border-b">${formatDate(admin.createTime)}</td>
-                    <td class="py-2 px-4 border-b">
-                        ${actionButtons}
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-            
-            // 添加查看详情按钮点击事件
-            document.querySelectorAll('.view-admin-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const adminId = this.getAttribute('data-admin-id');
-                    viewAdminDetail(adminId);
-                });
-            });
-            
-            // 添加编辑按钮点击事件
-            document.querySelectorAll('.edit-admin-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const adminId = this.getAttribute('data-admin-id');
-                    editAdmin(adminId);
-                });
-            });
-            
-            // 添加删除按钮点击事件
-            document.querySelectorAll('.delete-admin-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const adminId = this.getAttribute('data-admin-id');
-                    deleteAdmin(adminId);
-                });
-            });
-        }
-
-        // 查看管理员详情
-        function viewAdminDetail(adminId) {
-            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
-            const admin = admins.find(a => a.id === adminId);
-            
-            if (!admin) return;
-            
-            // 构建详情内容
-            const detailContent = `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <p class="font-semibold">用户名：</p>
-                        <p>${admin.username}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">QQ邮箱：</p>
-                        <p>${admin.qqEmail}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">角色：</p>
-                        <p>
-                            <span class="px-2 py-1 rounded ${admin.role === 'superadmin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">
-                                ${admin.role === 'superadmin' ? '超级管理员' : '普通管理员'}
-                            </span>
-                        </p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">创建时间：</p>
-                        <p>${formatDate(admin.createTime)}</p>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('report-detail-content').innerHTML = detailContent;
-            showModal('detail-modal');
-        }
-
-        // 编辑管理员
-        function editAdmin(adminId) {
-            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
-            const admin = admins.find(a => a.id === adminId);
-            
-            if (!admin) return;
-            
-            // 填充表单数据
-            document.getElementById('editAdminId').value = admin.id;
-            document.getElementById('editAdminUsername').value = admin.username;
-            document.getElementById('editAdminEmail').value = admin.qqEmail;
-            document.getElementById('editAdminRole').value = admin.role;
-            
-            // 清空密码字段
-            document.getElementById('editAdminPassword').value = '';
-            
-            showModal('edit-admin-modal');
-        }
-
-        // 更新管理员
-        function updateAdmin() {
-            const adminId = document.getElementById('editAdminId').value;
-            const username = document.getElementById('editAdminUsername').value;
-            const password = document.getElementById('editAdminPassword').value;
-            const email = document.getElementById('editAdminEmail').value;
-            const role = document.getElementById('editAdminRole').value;
-            
-            // 获取管理员数据
-            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
-            const adminIndex = admins.findIndex(a => a.id === adminId);
-            
-            if (adminIndex !== -1) {
-                // 更新管理员信息
-                admins[adminIndex].username = username;
-                if (password) {
-                    admins[adminIndex].password = password;
-                }
-                admins[adminIndex].qqEmail = email;
-                admins[adminIndex].role = role;
-                
-                // 保存到localStorage
-                localStorage.setItem('admins', JSON.stringify(admins));
-                
-                // 隐藏编辑弹窗
-                hideModal('edit-admin-modal');
-                
-                // 显示成功提示
-                document.getElementById('success-message').textContent = '管理员信息已成功更新！';
-                showModal('success-modal');
-                
-                // 刷新管理员列表
-                loadAdminData();
-                
-                // 添加系统消息
-                addSystemMessage(`管理员信息已更新：${username}`);
-            }
-        }
-
-        // 添加管理员
-        function addAdmin() {
-            const username = document.getElementById('newAdminUsername').value;
-            const password = document.getElementById('newAdminPassword').value;
-            const email = document.getElementById('newAdminEmail').value;
-            const role = document.getElementById('newAdminRole').value;
-            
-            // 获取管理员数据
-            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
-            
-            // 检查用户名是否已存在
-            const usernameExists = admins.some(a => a.username === username);
-            if (usernameExists) {
-                alert('用户名已存在，请选择其他用户名！');
-                return;
-            }
-            
-            // 创建新管理员
-            const newAdmin = {
-                id: generateId(),
-                username: username,
-                password: password,
-                qqEmail: email,
-                role: role,
-                createTime: new Date().toISOString()
-            };
-            
-            // 添加新管理员
-            admins.push(newAdmin);
-            
-            // 保存到localStorage
-            localStorage.setItem('admins', JSON.stringify(admins));
-            
-            // 隐藏添加弹窗
-            hideModal('add-admin-modal');
-            
-            // 重置表单
-            document.getElementById('add-admin-form').reset();
-            
-            // 显示成功提示
-            document.getElementById('success-message').textContent = '管理员已成功添加！';
-            showModal('success-modal');
-            
-            // 刷新管理员列表
-            loadAdminData();
-            
-            // 添加系统消息
-            addSystemMessage(`新管理员已添加：${username}（${role === 'superadmin' ? '超级管理员' : '普通管理员'}）`);
-        }
-
-        // 删除管理员
-        function deleteAdmin(adminId) {
-            if (confirm('确定要删除这个管理员吗？')) {
-                // 获取管理员数据
-                const admins = JSON.parse(localStorage.getItem('admins') || '[]');
-                const adminIndex = admins.findIndex(a => a.id === adminId);
-                
-                if (adminIndex !== -1) {
-                    const deletedAdmin = admins[adminIndex];
-                    
-                    // 删除管理员
-                    admins.splice(adminIndex, 1);
-                    
-                    // 保存到localStorage
-                    localStorage.setItem('admins', JSON.stringify(admins));
-                    
-                    // 显示成功提示
-                    document.getElementById('success-message').textContent = '管理员已成功删除！';
-                    showModal('success-modal');
-                    
-                    // 刷新管理员列表
-                    loadAdminData();
-                    
-                    // 添加系统消息
-                    addSystemMessage(`管理员已删除：${deletedAdmin.username}`);
-                }
-            }
-        }
-
-        // 检查处罚是否到期
-        function checkPunishmentExpiry() {
-            const punishments = JSON.parse(localStorage.getItem('punishments') || '[]');
-            const now = new Date();
-            let updated = false;
-            
-            // 定义处罚时长对应的毫秒数
-            const durationMap = {
-                '永久': Infinity,
-                '30天': 30 * 24 * 60 * 60 * 1000,
-                '14天': 14 * 24 * 60 * 60 * 1000,
-                '7天': 7 * 24 * 60 * 60 * 1000,
-                '3天': 3 * 24 * 60 * 60 * 1000,
-                '1天': 24 * 60 * 60 * 1000,
-                '12小时': 12 * 60 * 60 * 1000,
-                '6小时': 6 * 60 * 60 * 1000,
-                '1小时': 60 * 60 * 1000,
-                '30分钟': 30 * 60 * 1000
-            };
-            
-            // 检查每个处罚是否到期
-            punishments.forEach(punishment => {
-                // 只检查状态为"执行中"的处罚
-                if (punishment.status === '执行中') {
-                    const punishmentTime = new Date(punishment.punishmentTime);
-                    const durationMs = durationMap[punishment.punishmentDuration] || Infinity;
-                    
-                    // 如果不是永久处罚，并且当前时间已经超过处罚开始时间加上处罚时长
-                    if (durationMs !== Infinity && now - punishmentTime >= durationMs) {
-                        punishment.status = '已失效';
-                        punishment.endTime = now.toISOString();
-                        updated = true;
-                    }
-                }
-            });
-            
-            // 如果有处罚状态被更新，保存到localStorage
-            if (updated) {
-                localStorage.setItem('punishments', JSON.stringify(punishments));
+        // 检查本地存储是否可用
+        function isStorageAvailable(type) {
+            try {
+                const storage = window[type];
+                const x = '__storage_test__';
+                storage.setItem(x, x);
+                storage.removeItem(x);
                 return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // 检查用户是否已登录
+        function checkLogin() {
+            // 检查URL参数，如果有skipLogin=true，则直接返回模拟用户
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('skipLogin') && urlParams.get('skipLogin') === 'true') {
+                console.log('跳过登录检查，使用模拟用户');
+                return createMockUser();
             }
             
-            return false;
+            // 检查sessionStorage是否可用
+            if (!isStorageAvailable('sessionStorage')) {
+                console.warn('sessionStorage不可用，使用模拟登录状态');
+                return createMockUser();
+            }
+            
+            const currentUser = sessionStorage.getItem('currentUser');
+            if (!currentUser) {
+                // 尝试从URL参数获取登录状态
+                if (urlParams.has('loggedIn') && urlParams.get('loggedIn') === 'true') {
+                    return createMockUser();
+                }
+                
+                // 用户未登录，显示提示信息而不是跳转
+                showLoginPrompt();
+                return createMockUser(); // 返回模拟用户以显示页面
+            }
+            
+            try {
+                return JSON.parse(currentUser);
+            } catch (e) {
+                console.error('解析用户数据失败', e);
+                return createMockUser();
+            }
         }
         
-        // 加载处罚管理数据
-        function loadPunishmentData() {
-            // 先检查处罚是否到期
-            checkPunishmentExpiry();
-            
-            const punishments = JSON.parse(localStorage.getItem('punishments') || '[]');
-            const tableBody = document.getElementById('punishment-table-body');
-            
-            // 清空表格
-            tableBody.innerHTML = '';
-            
-            // 添加处罚数据到表格
-            punishments.forEach(punishment => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="py-2 px-4 border-b">${punishment.reportedUser}</td>
-                    <td class="py-2 px-4 border-b">${punishment.reportedQQ}</td>
-                    <td class="py-2 px-4 border-b">${punishment.violationType}</td>
-                    <td class="py-2 px-4 border-b">${punishment.punishmentType}</td>
-                    <td class="py-2 px-4 border-b">${punishment.punishmentDuration}</td>
-                    <td class="py-2 px-4 border-b">${formatDate(punishment.punishmentTime)}</td>
-                    <td class="py-2 px-4 border-b">
-                        <span class="px-2 py-1 rounded ${getStatusClass(punishment.status)}">${punishment.status}</span>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-
-        // 加载申诉审核数据
-        function loadAppealData() {
-            const appeals = JSON.parse(localStorage.getItem('appeals') || '[]');
-            const tableBody = document.getElementById('appeal-table-body');
-            
-            // 清空表格
-            tableBody.innerHTML = '';
-            
-            // 添加申诉数据到表格
-            appeals.forEach(appeal => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="py-2 px-4 border-b">${appeal.id}</td>
-                    <td class="py-2 px-4 border-b">${appeal.appellant}</td>
-                    <td class="py-2 px-4 border-b">${appeal.appellantQQ}</td>
-                    <td class="py-2 px-4 border-b">${appeal.reportId}</td>
-                    <td class="py-2 px-4 border-b">${formatDate(appeal.appealTime)}</td>
-                    <td class="py-2 px-4 border-b">
-                        <span class="px-2 py-1 rounded ${getStatusClass(appeal.status)}">${appeal.status}</span>
-                    </td>
-                    <td class="py-2 px-4 border-b">
-                        <button class="text-primary hover:text-blue-700 view-appeal-btn" data-appeal-id="${appeal.id}">
-                            ${appeal.status === '待处理' ? '处理' : '查看'}
-                        </button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-            
-            // 添加查看按钮点击事件
-            document.querySelectorAll('.view-appeal-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const appealId = this.getAttribute('data-appeal-id');
-                    viewAppealDetail(appealId);
-                });
-            });
-        }
-
-        // 查看申诉详情
-        function viewAppealDetail(appealId) {
-            const appeals = JSON.parse(localStorage.getItem('appeals') || '[]');
-            const appeal = appeals.find(a => a.id === appealId);
-            
-            if (!appeal) return;
-            
-            // 构建详情内容
-            let content = `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <p class="font-semibold">申诉人：</p>
-                        <p>${appeal.appellant}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">QQ号码：</p>
-                        <p>${appeal.appellantQQ}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">举报ID：</p>
-                        <p>${appeal.reportId}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">申诉时间：</p>
-                        <p>${formatDate(appeal.appealTime)}</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold">申诉状态：</p>
-                        <p><span class="px-2 py-1 rounded ${getStatusClass(appeal.status)}">${appeal.status}</span></p>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <p class="font-semibold">申诉理由：</p>
-                    <p class="bg-gray-50 p-4 rounded-md">${appeal.reason}</p>
+        // 显示登录提示
+        function showLoginPrompt() {
+            const promptDiv = document.createElement('div');
+            promptDiv.className = 'fixed top-0 left-0 right-0 bg-yellow-50 border-b border-yellow-200 text-yellow-800 p-3 text-center z-50';
+            promptDiv.innerHTML = `
+                <div class="container mx-auto flex items-center justify-center">
+                    <i class="fa fa-info-circle mr-2"></i>
+                    <span>您正在以访客模式浏览，部分功能可能受限。</span>
+                    <a href="login.html" class="ml-3 bg-primary text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                        登录
+                    </a>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
                 </div>
             `;
-            
-            // 添加处理信息
-            if (appeal.status !== '待处理') {
-                content += `
-                    <div class="mt-4">
-                        <p class="font-semibold">处理信息：</p>
-                        <div class="bg-gray-50 p-4 rounded-md">
-                            <p><span class="font-medium">处理人：</span>${appeal.handler}</p>
-                            <p><span class="font-medium">处理时间：</span>${formatDate(appeal.handleTime)}</p>
-                            <p><span class="font-medium">处理结果：</span>${appeal.result}</p>
-                            <p><span class="font-medium">处理理由：</span>${appeal.handleReason}</p>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            document.getElementById('report-detail-content').innerHTML = content;
-            showModal('detail-modal');
+            document.body.insertBefore(promptDiv, document.body.firstChild);
         }
 
-        // 加载系统消息数据
-        function loadMessageData() {
-            const messages = JSON.parse(localStorage.getItem('systemMessages') || '[]');
-            const messageList = document.getElementById('message-list');
-            
-            // 清空消息列表
-            messageList.innerHTML = '';
-            
-            // 添加消息到列表
-            messages.forEach(message => {
-                const messageItem = document.createElement('div');
-                messageItem.className = `p-4 rounded-md ${message.read ? 'bg-gray-50' : 'bg-blue-50 border-l-4 border-primary'}`;
-                messageItem.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <p class="${message.read ? 'text-gray-800' : 'text-primary font-medium'}">${message.content}</p>
-                        <span class="text-xs text-gray-500">${formatDate(message.time)}</span>
-                    </div>
-                `;
-                messageList.appendChild(messageItem);
-                
-                // 标记为已读
-                if (!message.read) {
-                    message.read = true;
-                }
-            });
-            
-            // 保存已读状态
-            localStorage.setItem('systemMessages', JSON.stringify(messages));
-        }
-
-        // 加载系统设置数据
-        function loadSettingsData() {
-            const settings = JSON.parse(localStorage.getItem('systemSettings') || '{}');
-            
-            // 填充表单数据
-            document.getElementById('emailNotification').value = settings.emailNotification || 'enabled';
-            document.getElementById('autoAssign').value = settings.autoAssign || 'disabled';
-            document.getElementById('reportLimit').value = settings.reportLimit || 10;
-        }
-
-        // 保存系统设置
-        function saveSettings() {
-            const emailNotification = document.getElementById('emailNotification').value;
-            const autoAssign = document.getElementById('autoAssign').value;
-            const reportLimit = document.getElementById('reportLimit').value;
-            
-            // 创建设置对象
-            const settings = {
-                emailNotification: emailNotification,
-                autoAssign: autoAssign,
-                reportLimit: parseInt(reportLimit)
+        // 创建模拟用户数据
+        function createMockUser() {
+            return {
+                id: 'user-001',
+                username: '测试用户',
+                qqNumber: '123456789',
+                role: 'user'
             };
-            
-            // 保存到localStorage
-            localStorage.setItem('systemSettings', JSON.stringify(settings));
-            
-            // 显示成功提示
-            document.getElementById('success-message').textContent = '系统设置已成功保存！';
-            showModal('success-modal');
-            
-            // 添加系统消息
-            addSystemMessage('系统设置已更新');
         }
 
-        // 生成唯一ID
-        function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-        }
-
-        // 格式化日期
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-        }
-
-        // 格式化文件大小
-        function formatFileSize(bytes) {
-            if (bytes < 1024) return bytes + ' B';
-            else if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
-            else return (bytes / 1048576).toFixed(2) + ' MB';
-        }
-
-        // 获取状态样式类
-        function getStatusClass(status) {
-            switch (status) {
-                case '待处理':
-                    return 'bg-yellow-100 text-yellow-800';
-                case '已处理':
-                    return 'bg-green-100 text-green-800';
-                case '已驳回':
-                    return 'bg-gray-100 text-gray-800';
-                case '执行中':
-                    return 'bg-blue-100 text-blue-800';
-                case '已完成':
-                    return 'bg-green-100 text-green-800';
-                case '已拒绝':
-                    return 'bg-red-100 text-red-800';
-                default:
-                    return 'bg-gray-100 text-gray-800';
-            }
-        }
-        
-        // 图片查看器功能
-        let currentZoom = 1;
-        let currentImageSrc = '';
-        
-        // 打开图片查看器
-        function openImageViewer(imageSrc, imageName) {
-            currentImageSrc = imageSrc;
-            currentZoom = 1;
-            
-            const modal = document.getElementById('image-viewer-modal');
-            const img = document.getElementById('viewer-image');
-            const nameElement = document.getElementById('viewer-image-name');
-            
-            img.src = imageSrc;
-            img.style.transform = `scale(${currentZoom})`;
-            nameElement.textContent = imageName;
-            
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // 防止背景滚动
-            
-            // 添加关闭按钮事件（确保事件绑定）
-            document.getElementById('close-image-viewer').onclick = closeImageViewer;
-            
-            // 添加缩放按钮事件（确保事件绑定）
-            document.getElementById('zoom-in').onclick = () => zoomImage('in');
-            document.getElementById('zoom-out').onclick = () => zoomImage('out');
-            document.getElementById('reset-zoom').onclick = () => zoomImage('reset');
-        }
-        
-        // 关闭图片查看器
-        function closeImageViewer() {
-            const modal = document.getElementById('image-viewer-modal');
-            modal.classList.add('hidden');
-            document.body.style.overflow = ''; // 恢复背景滚动
-        }
-        
-        // 图片缩放功能
-        function zoomImage(direction) {
-            const img = document.getElementById('viewer-image');
-            const maxZoom = 3;
-            const minZoom = 0.5;
-            const zoomStep = 0.2; // 增大缩放步长，使缩放更明显
-            
-            // 添加过渡效果
-            img.style.transition = 'transform 0.2s ease-in-out';
-            
-            if (direction === 'in') {
-                currentZoom = Math.min(currentZoom + zoomStep, maxZoom);
-            } else if (direction === 'out') {
-                currentZoom = Math.max(currentZoom - zoomStep, minZoom);
-            } else if (direction === 'reset') {
-                currentZoom = 1;
+        // 获取用户最后登录时间
+        function getLastLoginTime(userId) {
+            // 检查localStorage是否可用
+            if (!isStorageAvailable('localStorage')) {
+                return new Date().toLocaleString('zh-CN');
             }
             
-            img.style.transform = `scale(${currentZoom})`;
-            
-            // 移除过渡效果，避免影响其他变换
-            setTimeout(() => {
-                img.style.transition = '';
-            }, 200);
+            try {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const user = users.find(u => u.id === userId);
+                if (user && user.lastLoginTime) {
+                    return new Date(user.lastLoginTime).toLocaleString('zh-CN');
+                }
+            } catch (e) {
+                console.error('获取登录时间失败', e);
+            }
+            return new Date().toLocaleString('zh-CN');
         }
-        
-        // 图片查看器事件监听
-        function setupImageViewer() {
-            // 键盘事件
-            document.addEventListener('keydown', function(e) {
-                const modal = document.getElementById('image-viewer-modal');
-                if (!modal.classList.contains('hidden')) {
-                    if (e.key === 'Escape') {
-                        closeImageViewer();
-                    } else if (e.key === '+' || e.key === '=') {
-                        zoomImage('in');
-                    } else if (e.key === '-' || e.key === '_') {
-                        zoomImage('out');
-                    } else if (e.key === '0') {
-                        zoomImage('reset');
+
+        // 加载公告
+        function loadAnnouncements() {
+            const container = document.getElementById('announcements-container');
+            
+            // 默认公告内容
+            const defaultAnnouncements = [
+                {
+                    title: '欢迎使用江西粤东气象社区交流安全中心',
+                    content: '本中心已正式上线，为社区用户提供举报、申诉等服务，共同维护社区环境。',
+                    createTime: '2023-07-01'
+                },
+                {
+                    title: '社区规则更新通知',
+                    content: '近期我们更新了社区交流规范，请所有用户仔细阅读并遵守，共同维护良好的交流环境。',
+                    createTime: '2023-06-15'
+                },
+                {
+                    title: '系统功能优化',
+                    content: '我们对举报处理流程进行了优化，现在处理速度更快，反馈更及时。',
+                    createTime: '2023-06-01'
+                }
+            ];
+            
+            // 尝试从localStorage加载公告
+            if (isStorageAvailable('localStorage')) {
+                try {
+                    const announcements = JSON.parse(localStorage.getItem('announcements')) || [];
+                    if (announcements.length > 0) {
+                        // 显示最新的3条公告
+                        const latestAnnouncements = announcements
+                            .filter(a => a.isActive !== false)
+                            .sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
+                            .slice(0, 3);
+                        
+                        container.innerHTML = latestAnnouncements.map(announcement => `
+                            <div class="border-l-4 border-primary pl-4 py-2 mb-3">
+                                <h3 class="font-medium text-gray-800">${announcement.title}</h3>
+                                <p class="text-sm text-gray-600 mt-1">${announcement.content.substring(0, 100)}${announcement.content.length > 100 ? '...' : ''}</p>
+                                <p class="text-xs text-neutral-dark mt-2">${new Date(announcement.createTime).toLocaleDateString('zh-CN')}</p>
+                            </div>
+                        `).join('');
+                        return;
                     }
+                } catch (e) {
+                    console.error('加载公告失败', e);
                 }
-            });
+            }
             
-            // 点击背景关闭
-            document.getElementById('image-viewer-modal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeImageViewer();
-                }
-            });
-            
-            // 鼠标滚轮缩放
-            const img = document.getElementById('viewer-image');
-            img.addEventListener('wheel', function(e) {
-                e.preventDefault();
-                
-                const delta = e.deltaY > 0 ? 'out' : 'in';
-                zoomImage(delta);
-            });
-            
-            // 简化的右键菜单，只保留下载功能
-            document.getElementById('viewer-image').addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                
-                // 创建简单的下载链接
-                const a = document.createElement('a');
-                a.href = currentImageSrc;
-                a.download = 'evidence-image.png';
-                a.click();
-            });
+            // 如果没有公告或加载失败，显示默认公告
+            container.innerHTML = defaultAnnouncements.map(announcement => `
+                <div class="border-l-4 border-primary pl-4 py-2 mb-3">
+                    <h3 class="font-medium text-gray-800">${announcement.title}</h3>
+                    <p class="text-sm text-gray-600 mt-1">${announcement.content}</p>
+                    <p class="text-xs text-neutral-dark mt-2">${announcement.createTime}</p>
+                </div>
+            `).join('');
         }
-        
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            initData();
-            renderReportList();
-            setupEventListeners();
-            updateNotificationBadge();
-            setupReasonCounter();
-            setupImagePreview();
-            setupImageViewer();
-            
-            // 检查处罚是否到期
-            checkPunishmentExpiry();
-            
-            // 每5分钟定期检查一次处罚是否到期
-            setInterval(function() {
-                const updated = checkPunishmentExpiry();
-                
-                // 如果有处罚状态被更新，并且处罚管理页面刷新
-                if (updated) {
-                    // 检查当前是否在处罚管理页面
-                    const punishmentSection = document.getElementById('punishment-section');
-                    if (punishmentSection && !punishmentSection.classList.contains('hidden')) {
-                        loadPunishmentData();
+
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const user = checkLogin();
+                if (user) {
+                    // 更新欢迎信息
+                    const welcomeElement = document.getElementById('welcome-message');
+                    const loginTimeElement = document.getElementById('login-time');
+                    
+                    if (welcomeElement) {
+                        welcomeElement.textContent = `欢迎回来，${user.username}`;
                     }
+                    
+                    if (loginTimeElement) {
+                        loginTimeElement.textContent = `上次登录时间：${getLastLoginTime(user.id)}`;
+                    }
+                    
+                    // 加载公告
+                    loadAnnouncements();
                 }
-            }, 5 * 60 * 1000); // 5分钟
+            } catch (e) {
+                console.error('页面初始化失败', e);
+                // 即使出错也要显示基本内容
+                loadAnnouncements();
+            }
+            
+            // 退出登录按钮点击事件
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    if (isStorageAvailable('sessionStorage')) {
+                        sessionStorage.removeItem('currentUser');
+                    }
+                    window.location.href = 'login.html';
+                });
+            }
         });
     </script>
 </body>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>江西粤东气象社区交流安全中心 - 登录</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#9ca3af',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <!-- Logo and Title -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary text-white text-2xl mb-4">
+                <i class="fa fa-shield"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-primary text-shadow">江西粤东气象社区交流安全中心</h1>
+            <p class="text-neutral-dark mt-2">保障社区交流环境安全规范</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex mb-6 glass-effect rounded-lg p-1 shadow-card">
+            <button id="login-tab" class="flex-1 py-3 px-4 rounded-md bg-white shadow-sm font-medium text-primary transition-all-300">
+                用户登录
+            </button>
+            <button id="register-tab" class="flex-1 py-3 px-4 rounded-md font-medium text-neutral-dark hover:text-primary transition-all-300">
+                用户注册
+            </button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="bg-white rounded-xl shadow-card p-6 transition-all-300">
+            <form id="login-user-form">
+                <div class="mb-4">
+                    <label for="login-qq" class="block text-sm font-medium text-gray-700 mb-1">QQ号码</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <i class="fa fa-qq"></i>
+                        </span>
+                        <input type="text" id="login-qq" name="qqNumber" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入QQ号码" required>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">密码</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        <input type="password" id="login-password" name="password" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入密码" required>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-md transition-all-300 flex items-center justify-center">
+                    <span>登录</span>
+                    <i class="fa fa-sign-in ml-2"></i>
+                </button>
+            </form>
+
+            <div class="mt-6 border-t border-gray-200 pt-4">
+                <button id="admin-login-btn" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2.5 px-4 rounded-md transition-all-300 flex items-center justify-center">
+                    <i class="fa fa-user-circle mr-2"></i>
+                    <span>管理员登录</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form" class="bg-white rounded-xl shadow-card p-6 hidden transition-all-300">
+            <form id="register-user-form">
+                <div class="mb-4">
+                    <label for="register-username" class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <i class="fa fa-user"></i>
+                        </span>
+                        <input type="text" id="register-username" name="username" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入用户名" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="register-qq" class="block text-sm font-medium text-gray-700 mb-1">QQ号码</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <i class="fa fa-qq"></i>
+                        </span>
+                        <input type="text" id="register-qq" name="qqNumber" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入QQ号码" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">密码</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        <input type="password" id="register-password" name="password" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入密码" required>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label for="register-confirm-password" class="block text-sm font-medium text-gray-700 mb-1">确认密码</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        <input type="password" id="register-confirm-password" name="confirmPassword" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请再次输入密码" required>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-md transition-all-300 flex items-center justify-center">
+                    <span>注册</span>
+                    <i class="fa fa-user-plus ml-2"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Admin Login Form -->
+        <div id="admin-login-form" class="bg-white rounded-xl shadow-card p-6 hidden transition-all-300">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-medium text-gray-900">管理员登录</h3>
+                <button id="back-to-user-login" class="text-sm text-primary hover:text-blue-700 transition-all-300">
+                    <i class="fa fa-arrow-left mr-1"></i> 返回用户登录
+                </button>
+            </div>
+            <form id="login-admin-form">
+                <div class="mb-4">
+                    <label for="admin-username" class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <i class="fa fa-user-circle"></i>
+                        </span>
+                        <input type="text" id="admin-username" name="username" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入管理员用户名" required>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label for="admin-password" class="block text-sm font-medium text-gray-700 mb-1">密码</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        <input type="password" id="admin-password" name="password" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入管理员密码" required>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-gray-800 hover:bg-gray-900 text-white font-medium py-2.5 px-4 rounded-md transition-all-300 flex items-center justify-center">
+                    <span>管理员登录</span>
+                    <i class="fa fa-sign-in ml-2"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error-message" class="mt-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md hidden">
+            <div class="flex items-center">
+                <i class="fa fa-exclamation-circle mr-2"></i>
+                <span id="error-text"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 检查本地存储是否可用
+        function isStorageAvailable(type) {
+            try {
+                const storage = window[type];
+                const x = '__storage_test__';
+                storage.setItem(x, x);
+                storage.removeItem(x);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // 获取默认用户数据
+        function getDefaultUsers() {
+            return [
+                {
+                    id: 'admin-001',
+                    username: '我就是天才',
+                    qqNumber: '189203615',
+                    password: '189203615aazz', // 实际应用中应该加密存储
+                    role: 'admin',
+                    createTime: new Date().toISOString(),
+                    lastLoginTime: null
+                },
+                {
+                    id: 'user-001',
+                    username: '气象爱好者',
+                    qqNumber: '123456789',
+                    password: 'password123', // 实际应用中应该加密存储
+                    role: 'user',
+                    createTime: new Date().toISOString(),
+                    lastLoginTime: null
+                }
+            ];
+        }
+
+        // 获取默认规则数据
+        function getDefaultRules() {
+            return [
+                {
+                    id: 'rule-001',
+                    title: '江西粤东气象社区交流规范',
+                    content: '1. 遵守国家法律法规和社会主义核心价值观。\n2. 尊重他人，友善交流，禁止辱骂、侮辱他人。\n3. 禁止发布色情、暴力、血腥等不良内容。\n4. 禁止发布政治敏感信息和谣言。\n5. 禁止发布与气象无关的广告信息。\n6. 禁止私信骚扰他人。\n7. 保持交流环境的清洁，共同维护良好的社区氛围。',
+                    createTime: new Date().toISOString(),
+                    updateTime: new Date().toISOString(),
+                    authorId: 'admin-001'
+                },
+                {
+                    id: 'rule-002',
+                    title: 'QQ群聊交流规范',
+                    content: '1. 遵守QQ群管理规定和社区交流规范。\n2. 群聊内容应以气象相关话题为主。\n3. 禁止在群内发布广告、推广等无关信息。\n4. 禁止在群内争吵、辱骂他人。\n5. 尊重群管理员，服从管理。\n6. 保护个人隐私，谨慎分享个人信息。\n7. 鼓励积极参与气象讨论，共同学习进步。',
+                    createTime: new Date().toISOString(),
+                    updateTime: new Date().toISOString(),
+                    authorId: 'admin-001'
+                }
+            ];
+        }
+
+        // 初始化数据
+        function initializeData() {
+            // 检查localStorage是否可用
+            if (!isStorageAvailable('localStorage')) {
+                console.warn('localStorage不可用，使用内存存储');
+                window.appData = window.appData || {
+                    users: getDefaultUsers(),
+                    reports: [],
+                    penalties: [],
+                    appeals: [],
+                    rules: getDefaultRules(),
+                    announcements: []
+                };
+                return;
+            }
+
+            try {
+                // 检查是否已有数据
+                if (!localStorage.getItem('users')) {
+                    // 存储用户数据
+                    localStorage.setItem('users', JSON.stringify(getDefaultUsers()));
+                }
+
+                // 初始化其他数据结构
+                if (!localStorage.getItem('reports')) {
+                    localStorage.setItem('reports', JSON.stringify([]));
+                }
+
+                if (!localStorage.getItem('penalties')) {
+                    localStorage.setItem('penalties', JSON.stringify([]));
+                }
+
+                if (!localStorage.getItem('appeals')) {
+                    localStorage.setItem('appeals', JSON.stringify([]));
+                }
+
+                if (!localStorage.getItem('rules')) {
+                    localStorage.setItem('rules', JSON.stringify(getDefaultRules()));
+                }
+
+                if (!localStorage.getItem('announcements')) {
+                    localStorage.setItem('announcements', JSON.stringify([]));
+                }
+            } catch (e) {
+                console.error('初始化数据失败', e);
+                // 回退到内存存储
+                window.appData = window.appData || {
+                    users: getDefaultUsers(),
+                    reports: [],
+                    penalties: [],
+                    appeals: [],
+                    rules: getDefaultRules(),
+                    announcements: []
+                };
+            }
+        }
+
+        // 获取用户数据
+        function getUsers() {
+            if (window.appData && window.appData.users) {
+                return window.appData.users;
+            }
+            
+            if (isStorageAvailable('localStorage')) {
+                try {
+                    return JSON.parse(localStorage.getItem('users') || '[]');
+                } catch (e) {
+                    console.error('获取用户数据失败', e);
+                }
+            }
+            
+            return getDefaultUsers();
+        }
+
+        // 保存用户数据
+        function saveUsers(users) {
+            if (window.appData) {
+                window.appData.users = users;
+                return true;
+            }
+            
+            if (isStorageAvailable('localStorage')) {
+                try {
+                    localStorage.setItem('users', JSON.stringify(users));
+                    return true;
+                } catch (e) {
+                    console.error('保存用户数据失败', e);
+                }
+            }
+            
+            return false;
+        }
+
+        // 初始化数据
+        initializeData();
+
+        // 标签切换功能
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const adminLoginForm = document.getElementById('admin-login-form');
+        const adminLoginBtn = document.getElementById('admin-login-btn');
+        const backToUserLoginBtn = document.getElementById('back-to-user-login');
+        const errorMessage = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+
+        // 显示错误消息
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+            setTimeout(() => {
+                errorMessage.classList.add('hidden');
+            }, 5000);
+        }
+
+        // 切换到登录标签
+        loginTab.addEventListener('click', () => {
+            loginTab.classList.add('bg-white', 'shadow-sm', 'text-primary');
+            loginTab.classList.remove('text-neutral-dark');
+            registerTab.classList.remove('bg-white', 'shadow-sm', 'text-primary');
+            registerTab.classList.add('text-neutral-dark');
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+            adminLoginForm.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+        });
+
+        // 切换到注册标签
+        registerTab.addEventListener('click', () => {
+            registerTab.classList.add('bg-white', 'shadow-sm', 'text-primary');
+            registerTab.classList.remove('text-neutral-dark');
+            loginTab.classList.remove('bg-white', 'shadow-sm', 'text-primary');
+            loginTab.classList.add('text-neutral-dark');
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+            adminLoginForm.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+        });
+
+        // 切换到管理员登录
+        adminLoginBtn.addEventListener('click', () => {
+            loginForm.classList.add('hidden');
+            adminLoginForm.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+        });
+
+        // 返回用户登录
+        backToUserLoginBtn.addEventListener('click', () => {
+            adminLoginForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+        });
+
+        // 用户登录表单提交
+        document.getElementById('login-user-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const qqNumber = document.getElementById('login-qq').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                // 获取用户数据
+                const users = getUsers();
+                const user = users.find(u => u.qqNumber === qqNumber && u.password === password && u.role === 'user');
+
+                if (user) {
+                    // 更新最后登录时间
+                    user.lastLoginTime = new Date().toISOString();
+                    saveUsers(users);
+
+                    // 存储登录状态
+                    if (isStorageAvailable('sessionStorage')) {
+                        sessionStorage.setItem('currentUser', JSON.stringify({
+                            id: user.id,
+                            username: user.username,
+                            qqNumber: user.qqNumber,
+                            role: user.role
+                        }));
+                    }
+
+                    // 跳转到首页
+                    window.location.href = 'index.html';
+                } else {
+                    showError('QQ号码或密码错误，请重新输入');
+                }
+            } catch (e) {
+                console.error('登录失败', e);
+                showError('登录失败，请稍后重试');
+            }
+        });
+
+        // 管理员登录表单提交
+        document.getElementById('login-admin-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+
+            try {
+                // 获取用户数据
+                const users = getUsers();
+                const admin = users.find(u => u.username === username && u.password === password && u.role === 'admin');
+
+                if (admin) {
+                    // 更新最后登录时间
+                    admin.lastLoginTime = new Date().toISOString();
+                    saveUsers(users);
+
+                    // 存储登录状态
+                    if (isStorageAvailable('sessionStorage')) {
+                        sessionStorage.setItem('currentUser', JSON.stringify({
+                            id: admin.id,
+                            username: admin.username,
+                            qqNumber: admin.qqNumber,
+                            role: admin.role
+                        }));
+                    }
+
+                    // 跳转到管理员页面
+                    window.location.href = 'admin.html';
+                } else {
+                    showError('管理员用户名或密码错误，请重新输入');
+                }
+            } catch (e) {
+                console.error('管理员登录失败', e);
+                showError('登录失败，请稍后重试');
+            }
+        });
+
+        // 用户注册表单提交
+        document.getElementById('register-user-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const qqNumber = document.getElementById('register-qq').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+
+            try {
+                // 验证密码
+                if (password !== confirmPassword) {
+                    showError('两次输入的密码不一致，请重新输入');
+                    return;
+                }
+
+                // 获取用户数据
+                const users = getUsers();
+
+                // 检查QQ号码是否已存在
+                if (users.some(u => u.qqNumber === qqNumber)) {
+                    showError('该QQ号码已注册，请使用其他QQ号码');
+                    return;
+                }
+
+                // 创建新用户
+                const newUser = {
+                    id: 'user-' + Date.now(),
+                    username: username,
+                    qqNumber: qqNumber,
+                    password: password, // 实际应用中应该加密存储
+                    role: 'user',
+                    createTime: new Date().toISOString(),
+                    lastLoginTime: null
+                };
+
+                // 添加新用户
+                users.push(newUser);
+                saveUsers(users);
+
+                // 显示成功消息并切换到登录标签
+                alert('注册成功，请登录');
+                loginTab.click();
+            } catch (e) {
+                console.error('注册失败', e);
+                showError('注册失败，请稍后重试');
+            }
+        });
+    </script>
+</body>
+</html>
