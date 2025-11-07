@@ -195,19 +195,19 @@
                 <i class="fa fa-home text-xl"></i>
                 <span class="text-xs mt-1">首页</span>
             </a>
-            <a href="report.html?skipLogin=true" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+            <a href="report.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
                 <i class="fa fa-flag text-xl"></i>
                 <span class="text-xs mt-1">我要举报</span>
             </a>
-            <a href="progress.html?skipLogin=true" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+            <a href="progress.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
                 <i class="fa fa-tasks text-xl"></i>
                 <span class="text-xs mt-1">处理进度</span>
             </a>
-            <a href="more.html?skipLogin=true" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+            <a href="more.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
                 <i class="fa fa-ellipsis-h text-xl"></i>
                 <span class="text-xs mt-1">更多</span>
             </a>
-            <a href="user-center.html?skipLogin=true" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
+            <a href="user-center.html" class="flex flex-col items-center py-3 px-4 text-neutral-dark hover:text-primary transition-all-300">
                 <i class="fa fa-user text-xl"></i>
                 <span class="text-xs mt-1">我</span>
             </a>
@@ -215,196 +215,76 @@
     </nav>
 
     <script>
-        // 检查本地存储是否可用
-        function isStorageAvailable(type) {
-            try {
-                const storage = window[type];
-                const x = '__storage_test__';
-                storage.setItem(x, x);
-                storage.removeItem(x);
-                return true;
-            } catch (e) {
-                return false;
-            }
-        }
-
         // 检查用户是否已登录
         function checkLogin() {
-            // 检查URL参数，如果有skipLogin=true，则直接返回模拟用户
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('skipLogin') && urlParams.get('skipLogin') === 'true') {
-                console.log('跳过登录检查，使用模拟用户');
-                return createMockUser();
-            }
-            
-            // 检查sessionStorage是否可用
-            if (!isStorageAvailable('sessionStorage')) {
-                console.warn('sessionStorage不可用，使用模拟登录状态');
-                return createMockUser();
-            }
-            
             const currentUser = sessionStorage.getItem('currentUser');
             if (!currentUser) {
-                // 尝试从URL参数获取登录状态
-                if (urlParams.has('loggedIn') && urlParams.get('loggedIn') === 'true') {
-                    return createMockUser();
-                }
-                
-                // 用户未登录，显示提示信息而不是跳转
-                showLoginPrompt();
-                return createMockUser(); // 返回模拟用户以显示页面
+                // 用户未登录，跳转到登录页面
+                window.location.href = 'login.html';
+                return null;
             }
-            
-            try {
-                return JSON.parse(currentUser);
-            } catch (e) {
-                console.error('解析用户数据失败', e);
-                return createMockUser();
-            }
-        }
-        
-        // 显示登录提示
-        function showLoginPrompt() {
-            const promptDiv = document.createElement('div');
-            promptDiv.className = 'fixed top-0 left-0 right-0 bg-yellow-50 border-b border-yellow-200 text-yellow-800 p-3 text-center z-50';
-            promptDiv.innerHTML = `
-                <div class="container mx-auto flex items-center justify-center">
-                    <i class="fa fa-info-circle mr-2"></i>
-                    <span>您正在以访客模式浏览，部分功能可能受限。</span>
-                    <a href="login.html" class="ml-3 bg-primary text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
-                        登录
-                    </a>
-                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-gray-500 hover:text-gray-700">
-                        <i class="fa fa-times"></i>
-                    </button>
-                </div>
-            `;
-            document.body.insertBefore(promptDiv, document.body.firstChild);
-        }
-
-        // 创建模拟用户数据
-        function createMockUser() {
-            return {
-                id: 'user-001',
-                username: '测试用户',
-                qqNumber: '123456789',
-                role: 'user'
-            };
+            return JSON.parse(currentUser);
         }
 
         // 获取用户最后登录时间
         function getLastLoginTime(userId) {
-            // 检查localStorage是否可用
-            if (!isStorageAvailable('localStorage')) {
-                return new Date().toLocaleString('zh-CN');
+            const users = JSON.parse(localStorage.getItem('users'));
+            const user = users.find(u => u.id === userId);
+            if (user && user.lastLoginTime) {
+                return new Date(user.lastLoginTime).toLocaleString('zh-CN');
             }
-            
-            try {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.id === userId);
-                if (user && user.lastLoginTime) {
-                    return new Date(user.lastLoginTime).toLocaleString('zh-CN');
-                }
-            } catch (e) {
-                console.error('获取登录时间失败', e);
-            }
-            return new Date().toLocaleString('zh-CN');
+            return '未知';
         }
 
         // 加载公告
         function loadAnnouncements() {
+            const announcements = JSON.parse(localStorage.getItem('announcements')) || [];
             const container = document.getElementById('announcements-container');
             
-            // 默认公告内容
-            const defaultAnnouncements = [
-                {
-                    title: '欢迎使用江西粤东气象社区交流安全中心',
-                    content: '本中心已正式上线，为社区用户提供举报、申诉等服务，共同维护社区环境。',
-                    createTime: '2023-07-01'
-                },
-                {
-                    title: '社区规则更新通知',
-                    content: '近期我们更新了社区交流规范，请所有用户仔细阅读并遵守，共同维护良好的交流环境。',
-                    createTime: '2023-06-15'
-                },
-                {
-                    title: '系统功能优化',
-                    content: '我们对举报处理流程进行了优化，现在处理速度更快，反馈更及时。',
-                    createTime: '2023-06-01'
-                }
-            ];
-            
-            // 尝试从localStorage加载公告
-            if (isStorageAvailable('localStorage')) {
-                try {
-                    const announcements = JSON.parse(localStorage.getItem('announcements')) || [];
-                    if (announcements.length > 0) {
-                        // 显示最新的3条公告
-                        const latestAnnouncements = announcements
-                            .filter(a => a.isActive !== false)
-                            .sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
-                            .slice(0, 3);
-                        
-                        container.innerHTML = latestAnnouncements.map(announcement => `
-                            <div class="border-l-4 border-primary pl-4 py-2 mb-3">
-                                <h3 class="font-medium text-gray-800">${announcement.title}</h3>
-                                <p class="text-sm text-gray-600 mt-1">${announcement.content.substring(0, 100)}${announcement.content.length > 100 ? '...' : ''}</p>
-                                <p class="text-xs text-neutral-dark mt-2">${new Date(announcement.createTime).toLocaleDateString('zh-CN')}</p>
-                            </div>
-                        `).join('');
-                        return;
-                    }
-                } catch (e) {
-                    console.error('加载公告失败', e);
-                }
+            // 如果没有公告，显示默认公告
+            if (announcements.length === 0) {
+                container.innerHTML = `
+                    <div class="border-l-4 border-primary pl-4 py-2 mb-3">
+                        <h3 class="font-medium text-gray-800">欢迎使用江西粤东气象社区交流安全中心</h3>
+                        <p class="text-sm text-gray-600 mt-1">本中心已正式上线，为社区用户提供举报、申诉等服务，共同维护社区环境。</p>
+                        <p class="text-xs text-neutral-dark mt-2">2023-07-01</p>
+                    </div>
+                `;
+                return;
             }
             
-            // 如果没有公告或加载失败，显示默认公告
-            container.innerHTML = defaultAnnouncements.map(announcement => `
+            // 显示最新的3条公告
+            const latestAnnouncements = announcements
+                .filter(a => a.isActive)
+                .sort((a, b) => new Date(b.createTime) - new Date(a.createTime))
+                .slice(0, 3);
+            
+            container.innerHTML = latestAnnouncements.map(announcement => `
                 <div class="border-l-4 border-primary pl-4 py-2 mb-3">
                     <h3 class="font-medium text-gray-800">${announcement.title}</h3>
-                    <p class="text-sm text-gray-600 mt-1">${announcement.content}</p>
-                    <p class="text-xs text-neutral-dark mt-2">${announcement.createTime}</p>
+                    <p class="text-sm text-gray-600 mt-1">${announcement.content.substring(0, 100)}${announcement.content.length > 100 ? '...' : ''}</p>
+                    <p class="text-xs text-neutral-dark mt-2">${new Date(announcement.createTime).toLocaleDateString('zh-CN')}</p>
                 </div>
             `).join('');
         }
 
         // 页面加载时执行
         document.addEventListener('DOMContentLoaded', () => {
-            try {
-                const user = checkLogin();
-                if (user) {
-                    // 更新欢迎信息
-                    const welcomeElement = document.getElementById('welcome-message');
-                    const loginTimeElement = document.getElementById('login-time');
-                    
-                    if (welcomeElement) {
-                        welcomeElement.textContent = `欢迎回来，${user.username}`;
-                    }
-                    
-                    if (loginTimeElement) {
-                        loginTimeElement.textContent = `上次登录时间：${getLastLoginTime(user.id)}`;
-                    }
-                    
-                    // 加载公告
-                    loadAnnouncements();
-                }
-            } catch (e) {
-                console.error('页面初始化失败', e);
-                // 即使出错也要显示基本内容
+            const user = checkLogin();
+            if (user) {
+                // 更新欢迎信息
+                document.getElementById('welcome-message').textContent = `欢迎回来，${user.username}`;
+                document.getElementById('login-time').textContent = `上次登录时间：${getLastLoginTime(user.id)}`;
+                
+                // 加载公告
                 loadAnnouncements();
             }
             
             // 退出登录按钮点击事件
-            const logoutBtn = document.getElementById('logout-btn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    if (isStorageAvailable('sessionStorage')) {
-                        sessionStorage.removeItem('currentUser');
-                    }
-                    window.location.href = 'login.html';
-                });
-            }
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                sessionStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            });
         });
     </script>
 </body>

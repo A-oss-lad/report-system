@@ -345,19 +345,19 @@
                     <div class="space-y-2">
                         <p class="text-gray-600 flex items-center">
                             <i class="fa fa-envelope-o mr-2 text-gray-400"></i>
-                            邮箱：189203615@qq.com
+                            邮箱：contact@weather-community.com
                         </p>
                         <p class="text-gray-600 flex items-center">
                             <i class="fa fa-qq mr-2 text-gray-400"></i>
-                            QQ群：江西气象爱好者（群号：595410178）
+                            QQ群：江西气象爱好者（群号：123456789）
                         </p>
                         <p class="text-gray-600 flex items-center">
                             <i class="fa fa-qq mr-2 text-gray-400"></i>
-                            QQ群：粤东气象爱好者（群号：1002430508）
+                            QQ群：粤东气象爱好者（群号：987654321）
                         </p>
                         <p class="text-gray-600 flex items-center">
                             <i class="fa fa-weixin mr-2 text-gray-400"></i>
-                            微信公众号：无
+                            微信公众号：江西粤东气象社区
                         </p>
                     </div>
                     <p class="text-gray-600">
@@ -395,77 +395,15 @@
     </nav>
 
     <script>
-        // 检查本地存储是否可用
-        function isStorageAvailable(type) {
-            try {
-                const storage = window[type];
-                const x = '__storage_test__';
-                storage.setItem(x, x);
-                storage.removeItem(x);
-                return true;
-            } catch (e) {
-                return false;
-            }
-        }
-
-        // 创建模拟用户数据
-        function createMockUser() {
-            return {
-                id: 'user-001',
-                username: '测试用户',
-                qqNumber: '123456789',
-                role: 'user'
-            };
-        }
-
-        // 显示登录提示
-        function showLoginPrompt() {
-            const promptDiv = document.createElement('div');
-            promptDiv.className = 'fixed top-0 left-0 right-0 bg-yellow-50 border-b border-yellow-200 text-yellow-800 p-3 text-center z-50';
-            promptDiv.innerHTML = `
-                <div class="container mx-auto flex items-center justify-center">
-                    <i class="fa fa-info-circle mr-2"></i>
-                    <span>您正在以访客模式浏览，部分功能可能受限。</span>
-                    <a href="login.html" class="ml-3 bg-primary text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
-                        登录
-                    </a>
-                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-gray-500 hover:text-gray-700">
-                        <i class="fa fa-times"></i>
-                    </button>
-                </div>
-            `;
-            document.body.insertBefore(promptDiv, document.body.firstChild);
-        }
-
         // 检查用户是否已登录
         function checkLogin() {
-            // 检查URL参数，如果有skipLogin=true，则直接返回模拟用户
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('skipLogin') && urlParams.get('skipLogin') === 'true') {
-                console.log('跳过登录检查，使用模拟用户');
-                return createMockUser();
-            }
-            
-            // 检查sessionStorage是否可用
-            if (!isStorageAvailable('sessionStorage')) {
-                console.warn('sessionStorage不可用，使用模拟登录状态');
-                showLoginPrompt();
-                return createMockUser();
-            }
-            
             const currentUser = sessionStorage.getItem('currentUser');
             if (!currentUser) {
-                // 用户未登录，显示提示信息而不是跳转
-                showLoginPrompt();
-                return createMockUser(); // 返回模拟用户以显示页面
+                // 用户未登录，跳转到登录页面
+                window.location.href = 'login.html';
+                return null;
             }
-            
-            try {
-                return JSON.parse(currentUser);
-            } catch (e) {
-                console.error('解析用户数据失败', e);
-                return createMockUser();
-            }
+            return JSON.parse(currentUser);
         }
 
         // 页面加载时执行

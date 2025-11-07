@@ -195,23 +195,12 @@
     </div>
 
     <script>
-        // 检查本地存储是否可用
-        function isStorageAvailable(type) {
-            try {
-                const storage = window[type];
-                const x = '__storage_test__';
-                storage.setItem(x, x);
-                storage.removeItem(x);
-                return true;
-            } catch (e) {
-                return false;
-            }
-        }
-
-        // 获取默认用户数据
-        function getDefaultUsers() {
-            return [
-                {
+        // 初始化数据
+        function initializeData() {
+            // 检查是否已有数据
+            if (!localStorage.getItem('users')) {
+                // 创建默认管理员账号
+                const adminUser = {
                     id: 'admin-001',
                     username: '我就是天才',
                     qqNumber: '189203615',
@@ -219,8 +208,10 @@
                     role: 'admin',
                     createTime: new Date().toISOString(),
                     lastLoginTime: null
-                },
-                {
+                };
+
+                // 创建示例普通用户
+                const sampleUser = {
                     id: 'user-001',
                     username: '气象爱好者',
                     qqNumber: '123456789',
@@ -228,123 +219,50 @@
                     role: 'user',
                     createTime: new Date().toISOString(),
                     lastLoginTime: null
-                }
-            ];
-        }
-
-        // 获取默认规则数据
-        function getDefaultRules() {
-            return [
-                {
-                    id: 'rule-001',
-                    title: '江西粤东气象社区交流规范',
-                    content: '1. 遵守国家法律法规和社会主义核心价值观。\n2. 尊重他人，友善交流，禁止辱骂、侮辱他人。\n3. 禁止发布色情、暴力、血腥等不良内容。\n4. 禁止发布政治敏感信息和谣言。\n5. 禁止发布与气象无关的广告信息。\n6. 禁止私信骚扰他人。\n7. 保持交流环境的清洁，共同维护良好的社区氛围。',
-                    createTime: new Date().toISOString(),
-                    updateTime: new Date().toISOString(),
-                    authorId: 'admin-001'
-                },
-                {
-                    id: 'rule-002',
-                    title: 'QQ群聊交流规范',
-                    content: '1. 遵守QQ群管理规定和社区交流规范。\n2. 群聊内容应以气象相关话题为主。\n3. 禁止在群内发布广告、推广等无关信息。\n4. 禁止在群内争吵、辱骂他人。\n5. 尊重群管理员，服从管理。\n6. 保护个人隐私，谨慎分享个人信息。\n7. 鼓励积极参与气象讨论，共同学习进步。',
-                    createTime: new Date().toISOString(),
-                    updateTime: new Date().toISOString(),
-                    authorId: 'admin-001'
-                }
-            ];
-        }
-
-        // 初始化数据
-        function initializeData() {
-            // 检查localStorage是否可用
-            if (!isStorageAvailable('localStorage')) {
-                console.warn('localStorage不可用，使用内存存储');
-                window.appData = window.appData || {
-                    users: getDefaultUsers(),
-                    reports: [],
-                    penalties: [],
-                    appeals: [],
-                    rules: getDefaultRules(),
-                    announcements: []
                 };
-                return;
+
+                // 存储用户数据
+                localStorage.setItem('users', JSON.stringify([adminUser, sampleUser]));
             }
 
-            try {
-                // 检查是否已有数据
-                if (!localStorage.getItem('users')) {
-                    // 存储用户数据
-                    localStorage.setItem('users', JSON.stringify(getDefaultUsers()));
-                }
-
-                // 初始化其他数据结构
-                if (!localStorage.getItem('reports')) {
-                    localStorage.setItem('reports', JSON.stringify([]));
-                }
-
-                if (!localStorage.getItem('penalties')) {
-                    localStorage.setItem('penalties', JSON.stringify([]));
-                }
-
-                if (!localStorage.getItem('appeals')) {
-                    localStorage.setItem('appeals', JSON.stringify([]));
-                }
-
-                if (!localStorage.getItem('rules')) {
-                    localStorage.setItem('rules', JSON.stringify(getDefaultRules()));
-                }
-
-                if (!localStorage.getItem('announcements')) {
-                    localStorage.setItem('announcements', JSON.stringify([]));
-                }
-            } catch (e) {
-                console.error('初始化数据失败', e);
-                // 回退到内存存储
-                window.appData = window.appData || {
-                    users: getDefaultUsers(),
-                    reports: [],
-                    penalties: [],
-                    appeals: [],
-                    rules: getDefaultRules(),
-                    announcements: []
-                };
+            // 初始化其他数据结构
+            if (!localStorage.getItem('reports')) {
+                localStorage.setItem('reports', JSON.stringify([]));
             }
-        }
 
-        // 获取用户数据
-        function getUsers() {
-            if (window.appData && window.appData.users) {
-                return window.appData.users;
+            if (!localStorage.getItem('penalties')) {
+                localStorage.setItem('penalties', JSON.stringify([]));
             }
-            
-            if (isStorageAvailable('localStorage')) {
-                try {
-                    return JSON.parse(localStorage.getItem('users') || '[]');
-                } catch (e) {
-                    console.error('获取用户数据失败', e);
-                }
-            }
-            
-            return getDefaultUsers();
-        }
 
-        // 保存用户数据
-        function saveUsers(users) {
-            if (window.appData) {
-                window.appData.users = users;
-                return true;
+            if (!localStorage.getItem('appeals')) {
+                localStorage.setItem('appeals', JSON.stringify([]));
             }
-            
-            if (isStorageAvailable('localStorage')) {
-                try {
-                    localStorage.setItem('users', JSON.stringify(users));
-                    return true;
-                } catch (e) {
-                    console.error('保存用户数据失败', e);
-                }
+
+            if (!localStorage.getItem('rules')) {
+                const defaultRules = [
+                    {
+                        id: 'rule-001',
+                        title: '江西粤东气象社区交流规范',
+                        content: '1. 遵守国家法律法规和社会主义核心价值观。\n2. 尊重他人，友善交流，禁止辱骂、侮辱他人。\n3. 禁止发布色情、暴力、血腥等不良内容。\n4. 禁止发布政治敏感信息和谣言。\n5. 禁止发布与气象无关的广告信息。\n6. 禁止私信骚扰他人。\n7. 保持交流环境的清洁，共同维护良好的社区氛围。',
+                        createTime: new Date().toISOString(),
+                        updateTime: new Date().toISOString(),
+                        authorId: 'admin-001'
+                    },
+                    {
+                        id: 'rule-002',
+                        title: 'QQ群聊交流规范',
+                        content: '1. 遵守QQ群管理规定和社区交流规范。\n2. 群聊内容应以气象相关话题为主。\n3. 禁止在群内发布广告、推广等无关信息。\n4. 禁止在群内争吵、辱骂他人。\n5. 尊重群管理员，服从管理。\n6. 保护个人隐私，谨慎分享个人信息。\n7. 鼓励积极参与气象讨论，共同学习进步。',
+                        createTime: new Date().toISOString(),
+                        updateTime: new Date().toISOString(),
+                        authorId: 'admin-001'
+                    }
+                ];
+                localStorage.setItem('rules', JSON.stringify(defaultRules));
             }
-            
-            return false;
+
+            if (!localStorage.getItem('announcements')) {
+                localStorage.setItem('announcements', JSON.stringify([]));
+            }
         }
 
         // 初始化数据
@@ -414,34 +332,27 @@
             const qqNumber = document.getElementById('login-qq').value;
             const password = document.getElementById('login-password').value;
 
-            try {
-                // 获取用户数据
-                const users = getUsers();
-                const user = users.find(u => u.qqNumber === qqNumber && u.password === password && u.role === 'user');
+            // 获取用户数据
+            const users = JSON.parse(localStorage.getItem('users'));
+            const user = users.find(u => u.qqNumber === qqNumber && u.password === password && u.role === 'user');
 
-                if (user) {
-                    // 更新最后登录时间
-                    user.lastLoginTime = new Date().toISOString();
-                    saveUsers(users);
+            if (user) {
+                // 更新最后登录时间
+                user.lastLoginTime = new Date().toISOString();
+                localStorage.setItem('users', JSON.stringify(users));
 
-                    // 存储登录状态
-                    if (isStorageAvailable('sessionStorage')) {
-                        sessionStorage.setItem('currentUser', JSON.stringify({
-                            id: user.id,
-                            username: user.username,
-                            qqNumber: user.qqNumber,
-                            role: user.role
-                        }));
-                    }
+                // 存储登录状态
+                sessionStorage.setItem('currentUser', JSON.stringify({
+                    id: user.id,
+                    username: user.username,
+                    qqNumber: user.qqNumber,
+                    role: user.role
+                }));
 
-                    // 跳转到首页
-                    window.location.href = 'index.html';
-                } else {
-                    showError('QQ号码或密码错误，请重新输入');
-                }
-            } catch (e) {
-                console.error('登录失败', e);
-                showError('登录失败，请稍后重试');
+                // 跳转到首页
+                window.location.href = 'index.html';
+            } else {
+                showError('QQ号码或密码错误，请重新输入');
             }
         });
 
@@ -451,34 +362,27 @@
             const username = document.getElementById('admin-username').value;
             const password = document.getElementById('admin-password').value;
 
-            try {
-                // 获取用户数据
-                const users = getUsers();
-                const admin = users.find(u => u.username === username && u.password === password && u.role === 'admin');
+            // 获取用户数据
+            const users = JSON.parse(localStorage.getItem('users'));
+            const admin = users.find(u => u.username === username && u.password === password && u.role === 'admin');
 
-                if (admin) {
-                    // 更新最后登录时间
-                    admin.lastLoginTime = new Date().toISOString();
-                    saveUsers(users);
+            if (admin) {
+                // 更新最后登录时间
+                admin.lastLoginTime = new Date().toISOString();
+                localStorage.setItem('users', JSON.stringify(users));
 
-                    // 存储登录状态
-                    if (isStorageAvailable('sessionStorage')) {
-                        sessionStorage.setItem('currentUser', JSON.stringify({
-                            id: admin.id,
-                            username: admin.username,
-                            qqNumber: admin.qqNumber,
-                            role: admin.role
-                        }));
-                    }
+                // 存储登录状态
+                sessionStorage.setItem('currentUser', JSON.stringify({
+                    id: admin.id,
+                    username: admin.username,
+                    qqNumber: admin.qqNumber,
+                    role: admin.role
+                }));
 
-                    // 跳转到管理员页面
-                    window.location.href = 'admin.html';
-                } else {
-                    showError('管理员用户名或密码错误，请重新输入');
-                }
-            } catch (e) {
-                console.error('管理员登录失败', e);
-                showError('登录失败，请稍后重试');
+                // 跳转到管理员页面
+                window.location.href = 'admin.html';
+            } else {
+                showError('管理员用户名或密码错误，请重新输入');
             }
         });
 
@@ -490,44 +394,39 @@
             const password = document.getElementById('register-password').value;
             const confirmPassword = document.getElementById('register-confirm-password').value;
 
-            try {
-                // 验证密码
-                if (password !== confirmPassword) {
-                    showError('两次输入的密码不一致，请重新输入');
-                    return;
-                }
-
-                // 获取用户数据
-                const users = getUsers();
-
-                // 检查QQ号码是否已存在
-                if (users.some(u => u.qqNumber === qqNumber)) {
-                    showError('该QQ号码已注册，请使用其他QQ号码');
-                    return;
-                }
-
-                // 创建新用户
-                const newUser = {
-                    id: 'user-' + Date.now(),
-                    username: username,
-                    qqNumber: qqNumber,
-                    password: password, // 实际应用中应该加密存储
-                    role: 'user',
-                    createTime: new Date().toISOString(),
-                    lastLoginTime: null
-                };
-
-                // 添加新用户
-                users.push(newUser);
-                saveUsers(users);
-
-                // 显示成功消息并切换到登录标签
-                alert('注册成功，请登录');
-                loginTab.click();
-            } catch (e) {
-                console.error('注册失败', e);
-                showError('注册失败，请稍后重试');
+            // 验证密码
+            if (password !== confirmPassword) {
+                showError('两次输入的密码不一致，请重新输入');
+                return;
             }
+
+            // 获取用户数据
+            const users = JSON.parse(localStorage.getItem('users'));
+
+            // 检查QQ号码是否已存在
+            if (users.some(u => u.qqNumber === qqNumber)) {
+                showError('该QQ号码已注册，请使用其他QQ号码');
+                return;
+            }
+
+            // 创建新用户
+            const newUser = {
+                id: 'user-' + Date.now(),
+                username: username,
+                qqNumber: qqNumber,
+                password: password, // 实际应用中应该加密存储
+                role: 'user',
+                createTime: new Date().toISOString(),
+                lastLoginTime: null
+            };
+
+            // 添加新用户
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // 显示成功消息并切换到登录标签
+            alert('注册成功，请登录');
+            loginTab.click();
         });
     </script>
 </body>
